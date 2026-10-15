@@ -30,8 +30,8 @@ local CONFIG = {
 local PIVOTS = {
 	["BD_Kick"] = {
 		["part"] = "BD_Kick_Finish",
-		["size"] = Vector3.new(2.1207, 2.1207, 1.7129),
-		["offset"] = Vector3.new(0.0, 0.0, -0.0),
+		["size"] = Vector3.new(1.9957, 1.9957, 1.6243),
+		["offset"] = Vector3.new(0.0, -0.0, 0.0),
 		["up"] = Vector3.new(0.0, 0.0, 1.0),
 		["face"] = Vector3.new(0.0, 1.0, -0.0),
 		["lane"] = "BD",
@@ -142,6 +142,7 @@ local SP = Enum.Material.SmoothPlastic
 local PALETTE = {
 	Chrome = { Color = Color3.fromRGB(214, 216, 222), Material = SP, Reflectance = 0.4 },
 	Finish = { Color = Color3.fromRGB(18, 18, 22), Material = SP, Reflectance = 0.12 },
+	Hoop = { Color = Color3.fromRGB(18, 18, 22), Material = SP, Reflectance = 0.12 },
 	Accent = { Color = Color3.fromRGB(175, 12, 24), Material = SP, Reflectance = 0.05 },
 	HeadCoated = { Color = Color3.fromRGB(236, 234, 226), Material = SP },
 	HeadBlack = { Color = Color3.fromRGB(16, 16, 18), Material = SP, Reflectance = 0.05 },

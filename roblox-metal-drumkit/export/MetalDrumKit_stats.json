@@ -1,6 +1,6 @@
 {
  "summary": {
-  "parts": 126,
+  "parts": 128,
   "triangles": 219336,
   "max_part_triangles": 9072,
   "size_studs": [
@@ -23,7 +23,7 @@
   {
    "name": "Kick_L_Finish",
    "material": "Finish",
-   "tris": 3168
+   "tris": 864
   },
   {
    "name": "Kick_L_Accent",
@@ -44,6 +44,11 @@
    "name": "Kick_L_Chrome",
    "material": "Chrome",
    "tris": 7196
+  },
+  {
+   "name": "Kick_L_Hoop",
+   "material": "Hoop",
+   "tris": 2304
   },
   {
    "name": "Kick_L_Rubber",
@@ -88,7 +93,7 @@
   {
    "name": "Kick_R_Finish",
    "material": "Finish",
-   "tris": 3168
+   "tris": 864
   },
   {
    "name": "Kick_R_Accent",
@@ -109,6 +114,11 @@
    "name": "Kick_R_Chrome",
    "material": "Chrome",
    "tris": 7196
+  },
+  {
+   "name": "Kick_R_Hoop",
+   "material": "Hoop",
+   "tris": 2304
   },
   {
    "name": "Kick_R_Rubber",

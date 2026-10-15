@@ -10,7 +10,8 @@ IRON STORM は、ゲーム内のお金または Robux で買うと、今のド�
 2. ノーツを叩いたときに、キットが動くようにする（シンバルの揺れ、ビーター、ハイハットの開閉、ヘッドの発光）
 3. **音は今のキットと変える**（IRON STORM 専用のサウンドセット）
 4. ゲーム内のお金と Robux のどちらかで買えるようにし、持っている人だけが装備を切り替えられるようにする
-5. スマホでも重くならないこと（今のモデルは 63,456 ポリゴン、MeshPart 82 個）
+5. スマホでも重くならないこと（今のモデルは 63,456 ポリゴン、MeshPart 83 個）
+6. **色と模様を選べるようにする**（シェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッドも選べる。おすすめの組み合わせ 8 種）
 
 ## 素材の場所
 
@@ -27,6 +28,9 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
 | `export/beatdrummer/BeatDrummer_IronStorm_Setup.lua` | 読み込み後に 1 回実行するセットアップ（色・整理・Lane 属性・回転の中心） |
 | `export/beatdrummer/BeatDrummer_IronStorm_lanes.json` | 各パーツのレーンと回転の中心のデータ |
 | `roblox/DrumKitFX.lua` | 叩いたときの動きを付ける ModuleScript（クライアント用） |
+| `roblox/DrumKitStyles.lua` | 色・模様を切り替える ModuleScript（選択肢とプリセットの一覧もここ） |
+| `export/styles/pattern_*.png`（6 枚）と `logo_overlay.png` | 模様とロゴの画像。Roblox にアップロードして使う |
+| `preview/beatdrummer/styles_lineup.jpg` | プリセット 8 種を並べた画像 |
 | `generator/specs/beatdrummer_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
 | `generator/kitspec.py` | 設定ファイルからモデルを作るスクリプト |
 
@@ -160,9 +164,49 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 - 持っているかどうかは必ずサーバーで確認し、クライアントから送られた内容だけで装備させないでください
 - GamePass の作成と価格設定はユーザーが Creator Dashboard で行います
 
-### 9. 確認
+### 9. 色と模様を選べるようにする（DrumKitStyles）
+
+`roblox/DrumKitStyles.lua` を ModuleScript として ReplicatedStorage に入れます（サーバーとクライアントの両方から使います）。
+
+**仕組み**
+
+- シェルのパーツ（`*_Finish`）の `TextureID` に模様の画像を入れ、`Color` にシェルの色を入れます。
+  画像の透明な部分にシェルの色が見えるので、模様 1 枚でどの色とも組み合わせられます
+- ロゴ（`*_HeadLogo`）も同じ仕組みで、エンブレムと文字のふちが差し色になります
+- 差し色はピンストライプ、バスドラムのフープのライン、フェルトにも使われます
+- 金物（クローム / ブラックニッケル / ゴールド）、シンバル（ブリリアント / ダーク / ブラック）、打面のヘッド（ホワイト / ブラック）も切り替えられます
+
+**準備（画像のアップロードはユーザーの手作業）**
+
+1. `export/styles/` の 7 枚（`pattern_sparkle.png` / `pattern_flames.png` / `pattern_tiger.png` / `pattern_carbon.png` /
+   `pattern_burst.png` / `pattern_lightning.png` / `logo_overlay.png`）を、Studio のアセットマネージャー（一括インポート）か
+   Creator Dashboard でアップロードしてもらう
+2. 出てきた画像の ID を、`DrumKitStyles.lua` の先頭の `Styles.TEXTURES` に `"rbxassetid://…"` の形で入れる。
+   ID が空の模様はソリッド（単色）で表示されるので、途中の状態でも壊れません
+
+**ゲームへの組み込み**
+
+```lua
+local Styles = require(ReplicatedStorage.BeatDrummer.DrumKitStyles)
+
+-- サーバー: キットを置いたとき・見た目を変えたときに反映 (全員に同じ見た目が見える)
+Styles.apply(kitModel, Styles.decode(savedStyleString))
+
+-- 保存 (DataStore には文字列 1 つ)
+local text = Styles.encode(style)   -- 例 "orange/flames/orange/black/dark/black"
+```
+
+- 選ぶ画面（ショップや装備画面）では、`Styles.Presets`（おすすめ 8 種）と、各項目の一覧
+  （`Styles.Colors` / `Patterns` / `Hardware` / `Cymbals` / `Heads`）をそのまま並べられます。
+  各項目に日本語名（`name`）と英語名（`nameEn`）が入っています
+- クライアントから届いた選択は、サーバーで `Styles.normalize` を通してから使ってください（知らない値は既定値に置き換わります）
+- 模様ごとに販売する場合は、`Styles.Patterns` の `id` を商品として扱い、持っていない模様を選べないようにサーバーで確認します
+- 見た目のイメージは `preview/beatdrummer/styles_lineup.jpg` と、ユーザーに渡した 3D プレビューで確認できます
+
+### 10. 確認
 
 - プレイテストで、9 つのキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）すべてで、対応するパーツが動くこと（オートプレイで全曲を通す）
+- プリセット 8 種を順に適用して、模様・ロゴ・金物・シンバルの色が変わること。再入場しても選んだ見た目が残ること
 - スマホのエミュレーター（デバイス設定）で、フレームレートが下がらないこと
 - キットを入れ替えても、カメラ・ノーツ表示・バンドのメンバーの位置がずれないこと
 - 買っていないプレイヤーは装備できないこと、買った後は再入場しても持っていること

@@ -8,9 +8,11 @@ PY=${PY:-python3}
 BPY_PY=${BPY_PY:-python3}
 OUT=../export
 PREV=../preview
+mkdir -p "$OUT/styles"
 SAMPLES=${SAMPLES:-64}
 
-$PY make_logo.py "$OUT/kick_logo.png"
+$PY make_logo.py "$OUT/kick_logo.png" "$OUT/styles/logo_overlay.png"
+$PY make_patterns.py "$OUT/styles"
 
 # OBJ (+MTL) in studs
 $PY drumkit.py --out "$OUT" --name MetalDrumKit
@@ -32,4 +34,7 @@ if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json \
     --renders "$PREV/beatdrummer" --samples "$SAMPLES" \
     --views bd_front,bd_drummer,bd_pedals
+  $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json \
+    --renders "$PREV/beatdrummer" --lineup "$PREV/beatdrummer/styles_lineup.jpg" \
+    --views bd_front --samples 24 --res 800x500
 fi

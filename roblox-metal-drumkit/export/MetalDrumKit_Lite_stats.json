@@ -1,7 +1,7 @@
 {
  "summary": {
-  "parts": 126,
-  "triangles": 105244,
+  "parts": 128,
+  "triangles": 105184,
   "max_part_triangles": 4876,
   "size_studs": [
    10.71,
@@ -23,7 +23,7 @@
   {
    "name": "Kick_L_Finish",
    "material": "Finish",
-   "tris": 1584
+   "tris": 432
   },
   {
    "name": "Kick_L_Accent",
@@ -44,6 +44,11 @@
    "name": "Kick_L_Chrome",
    "material": "Chrome",
    "tris": 4876
+  },
+  {
+   "name": "Kick_L_Hoop",
+   "material": "Hoop",
+   "tris": 1152
   },
   {
    "name": "Kick_L_Rubber",
@@ -88,7 +93,7 @@
   {
    "name": "Kick_R_Finish",
    "material": "Finish",
-   "tris": 1584
+   "tris": 432
   },
   {
    "name": "Kick_R_Accent",
@@ -109,6 +114,11 @@
    "name": "Kick_R_Chrome",
    "material": "Chrome",
    "tris": 4876
+  },
+  {
+   "name": "Kick_R_Hoop",
+   "material": "Hoop",
+   "tris": 1152
   },
   {
    "name": "Kick_R_Rubber",
@@ -368,7 +378,7 @@
   {
    "name": "Snare_Chrome",
    "material": "Chrome",
-   "tris": 4648
+   "tris": 4588
   },
   {
    "name": "Snare_Rubber",

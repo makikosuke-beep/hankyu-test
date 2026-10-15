@@ -56,23 +56,57 @@ def star_poly(cx, cy, r_out, r_in, n, rot=0.0):
     return pts
 
 
-def main(out):
-    img = Image.new("RGB", (N, N), (10, 10, 11))
-    d = ImageDraw.Draw(img)
+class Painter:
+    """Draws the artwork twice at once: an RGB layer and an 'accent' mask.
+    Accent areas take the kit's accent colour: in the recolourable texture
+    they are transparent (the MeshPart Color shows through in Roblox)."""
+
+    def __init__(self, bg):
+        self.img = Image.new("RGB", (N, N), bg)
+        self.acc = Image.new("L", (N, N), 0)
+
+    def _mask(self, draw_fn):
+        m = Image.new("L", (N, N), 0)
+        draw_fn(ImageDraw.Draw(m))
+        return m
+
+    def paint(self, mask, color):
+        self.img = Image.composite(Image.new("RGB", (N, N), color), self.img, mask)
+        self.acc = Image.composite(Image.new("L", (N, N), 0), self.acc, mask)
+
+    def paint_img(self, src, mask):
+        self.img = Image.composite(src, self.img, mask)
+        self.acc = Image.composite(Image.new("L", (N, N), 0), self.acc, mask)
+
+    def accent(self, mask):
+        self.acc = ImageChops.lighter(self.acc, mask)
+
+    def shape(self, draw_fn, color=None):
+        m = self._mask(draw_fn)
+        if color is None:
+            self.accent(m)
+        else:
+            self.paint(m, color)
+        return m
+
+
+def draw(p):
     c = N / 2
     # subtle radial sheen on the black head
     sheen = Image.new("L", (N, N), 0)
     ImageDraw.Draw(sheen).ellipse([c - N * 0.42, c - N * 0.55, c + N * 0.42,
                                    c + N * 0.05], fill=26)
     sheen = sheen.filter(ImageFilter.GaussianBlur(N * 0.08))
-    img = Image.composite(Image.new("RGB", (N, N), (60, 60, 66)), img, sheen)
-    d = ImageDraw.Draw(img)
+    p.img = Image.composite(Image.new("RGB", (N, N), (60, 60, 66)), p.img, sheen)
 
-    # rim rings
-    for r, w, col in ((0.482, 0.006, (150, 10, 18)), (0.468, 0.0025,
-                                                      (170, 170, 176))):
-        d.ellipse([c - r * N, c - r * N, c + r * N, c + r * N], outline=col,
-                  width=int(w * N))
+    # rim rings: outer one in the accent colour, inner one silver
+    r = 0.482
+    p.shape(lambda d: d.ellipse([c - r * N, c - r * N, c + r * N, c + r * N],
+                                outline=255, width=int(0.006 * N)))
+    r2 = 0.468
+    p.shape(lambda d: d.ellipse([c - r2 * N, c - r2 * N, c + r2 * N, c + r2 * N],
+                                outline=255, width=int(0.0025 * N)),
+            (170, 170, 176))
 
     # emblem: saw-blade ring around a dark disc, above the port holes
     ex, ey = px(0.5, 0.665)
@@ -81,14 +115,12 @@ def main(out):
     glow = Image.new("L", (N, N), 0)
     ImageDraw.Draw(glow).polygon(blade, fill=255)
     glow = glow.filter(ImageFilter.GaussianBlur(N * 0.02))
-    img = Image.composite(Image.new("RGB", (N, N), (120, 0, 8)), img,
-                          glow.point(lambda v: int(v * 0.6)))
-    d = ImageDraw.Draw(img)
-    d.polygon(blade, fill=(165, 8, 20))
-    d.ellipse([ex - R * 0.80, ey - R * 0.80, ex + R * 0.80, ey + R * 0.80],
-              fill=(185, 185, 192))
-    d.ellipse([ex - R * 0.75, ey - R * 0.75, ex + R * 0.75, ey + R * 0.75],
-              fill=(14, 14, 16))
+    p.accent(glow.point(lambda v: int(v * 0.45)))
+    p.shape(lambda d: d.polygon(blade, fill=255))
+    p.shape(lambda d: d.ellipse([ex - R * 0.80, ey - R * 0.80, ex + R * 0.80,
+                                 ey + R * 0.80], fill=255), (185, 185, 192))
+    p.shape(lambda d: d.ellipse([ex - R * 0.75, ey - R * 0.75, ex + R * 0.75,
+                                 ey + R * 0.75], fill=255), (14, 14, 16))
     # crossed drumsticks
     for sgn in (-1, 1):
         a = math.radians(55 * sgn)
@@ -98,51 +130,63 @@ def main(out):
         w = R * 0.07
         nx, ny = -dy / L * w / 2, dx / L * w / 2
         tip = 0.35
-        d.polygon([(x0 + nx, y0 + ny), (x1 + nx * tip, y1 + ny * tip),
-                   (x1 - nx * tip, y1 - ny * tip), (x0 - nx, y0 - ny)],
-                  fill=(205, 205, 210))
-        d.ellipse([x1 - w * 0.3, y1 - w * 0.3, x1 + w * 0.3, y1 + w * 0.3],
-                  fill=(205, 205, 210))
-    # lightning bolt in the middle
+        poly = [(x0 + nx, y0 + ny), (x1 + nx * tip, y1 + ny * tip),
+                (x1 - nx * tip, y1 - ny * tip), (x0 - nx, y0 - ny)]
+        p.shape(lambda d: (d.polygon(poly, fill=255),
+                           d.ellipse([x1 - w * 0.3, y1 - w * 0.3, x1 + w * 0.3,
+                                      y1 + w * 0.3], fill=255)), (205, 205, 210))
+    # lightning bolt in the middle (accent colour, light outline)
     s = R * 0.5
-    bolt = [(0.10, -1.0), (-0.42, 0.10), (-0.02, 0.10), (-0.16, 1.0),
-            (0.42, -0.16), (0.02, -0.16), (0.24, -1.0)]
-    d.polygon([(ex + x * s, ey + y * s) for x, y in bolt], fill=(220, 20, 32),
-              outline=(255, 210, 210), width=int(N * 0.002))
+    bolt = [(ex + x * s, ey + y * s) for x, y in
+            [(0.10, -1.0), (-0.42, 0.10), (-0.02, 0.10), (-0.16, 1.0),
+             (0.42, -0.16), (0.02, -0.16), (0.24, -1.0)]]
+    p.shape(lambda d: d.polygon(bolt, outline=255, width=int(N * 0.004)),
+            (240, 240, 244))
+    p.shape(lambda d: d.polygon(bolt, fill=255))
 
-    # chrome lettering below the emblem
+    # chrome lettering below the emblem, outlined in the accent colour
     text = "IRON STORM"
     f = font(int(N * 0.088))
-    bb = d.textbbox((0, 0), text, font=f)
+    bb = ImageDraw.Draw(p.img).textbbox((0, 0), text, font=f)
     tw, th = bb[2] - bb[0], bb[3] - bb[1]
     tx, ty = px(0.5, 0.415)
     tx -= tw / 2
     ty -= th / 2 + bb[1]
     mask = Image.new("L", (N, N), 0)
     ImageDraw.Draw(mask).text((tx, ty), text, font=f, fill=255)
-    # slant it for an aggressive look
     yc = ty + bb[1] + th / 2
     mask = mask.transform((N, N), Image.AFFINE, (1, 0.22, -0.22 * yc, 0, 1, 0),
                           resample=Image.BICUBIC)
-    outline = mask.filter(ImageFilter.MaxFilter(int(N * 0.012) | 1))
-    img = Image.composite(Image.new("RGB", (N, N), (165, 8, 20)), img, outline)
+    p.accent(mask.filter(ImageFilter.MaxFilter(int(N * 0.012) | 1)))
     y0 = int(ty + bb[1])
     chrome = vgrad(N, N, [(0, (40, 40, 44)), (y0 / N, (250, 250, 255)),
                           ((y0 + th * 0.48) / N, (120, 122, 130)),
                           ((y0 + th * 0.52) / N, (60, 60, 66)),
                           ((y0 + th) / N, (235, 235, 240)), (1, (40, 40, 44))])
-    img = Image.composite(chrome, img, mask)
-    d = ImageDraw.Draw(img)
+    p.paint_img(chrome, mask)
     f2 = font(int(N * 0.026))
     sub = "- DRUM WORKS -"
-    bb = d.textbbox((0, 0), sub, font=f2)
+    bb = ImageDraw.Draw(p.img).textbbox((0, 0), sub, font=f2)
     sx, sy = px(0.5, 0.33)
-    d.text((sx - (bb[2] - bb[0]) / 2, sy), sub, font=f2, fill=(190, 190, 196))
+    p.shape(lambda d: d.text((sx - (bb[2] - bb[0]) / 2, sy), sub, font=f2,
+                             fill=255), (190, 190, 196))
 
-    img = img.resize((1024, 1024), Image.LANCZOS)
-    img.save(out)
+
+def main(out, overlay_out=None, accent=(165, 8, 20)):
+    p = Painter((10, 10, 11))
+    draw(p)
+    # flat version (accent baked in) - embedded in the FBX / OBJ
+    flat = Image.composite(Image.new("RGB", (N, N), accent), p.img, p.acc)
+    flat.resize((1024, 1024), Image.LANCZOS).save(out)
     print("wrote", out)
+    if overlay_out:
+        # recolourable version: accent areas transparent
+        rgba = p.img.copy()
+        rgba.putalpha(ImageChops.invert(p.acc))
+        rgba.resize((1024, 1024), Image.LANCZOS).save(overlay_out)
+        print("wrote", overlay_out)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "kick_logo.png")
+    main(sys.argv[1] if len(sys.argv) > 1 else "kick_logo.png",
+         sys.argv[2] if len(sys.argv) > 2 else None)

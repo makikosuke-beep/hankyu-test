@@ -42,6 +42,7 @@ local SP = Enum.Material.SmoothPlastic
 local PALETTE = {
 	Chrome = { Color = Color3.fromRGB(214, 216, 222), Material = SP, Reflectance = 0.4 },
 	Finish = { Color = Color3.fromRGB(18, 18, 22), Material = SP, Reflectance = 0.12 },
+	Hoop = { Color = Color3.fromRGB(18, 18, 22), Material = SP, Reflectance = 0.12 },
 	Accent = { Color = Color3.fromRGB(175, 12, 24), Material = SP, Reflectance = 0.05 },
 	HeadCoated = { Color = Color3.fromRGB(236, 234, 226), Material = SP },
 	HeadBlack = { Color = Color3.fromRGB(16, 16, 18), Material = SP, Reflectance = 0.05 },

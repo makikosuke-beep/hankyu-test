@@ -224,11 +224,15 @@ def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
     MIR = Sc(1, -1, 1)
 
     # shell ------------------------------------------------------------
+    # UVs for the selectable finishes: u wraps once around the shell,
+    # v runs along the depth (0 = resonant side, 1 = batter side)
     t = 0.0075
-    g.add("Finish", lathe([(R - t, -h + 0.0012), (R - 0.0016, -h + 0.0012),
-                           (R, -h + 0.0028), (R, h - 0.0028),
-                           (R - 0.0016, h - 0.0012), (R - t, h - 0.0012)],
-                          seg, closed=True))
+    shell = lathe([(R - t, -h + 0.0012), (R - 0.0016, -h + 0.0012),
+                   (R, -h + 0.0028), (R, h - 0.0028),
+                   (R - 0.0016, h - 0.0012), (R - t, h - 0.0012)],
+                  seg, closed=True)
+    shell.cuv[..., 1] = np.clip((shell.v[shell.f][..., 1] + h) / (2 * h), 0, 1)
+    g.add("Finish", shell)
     if stripes:
         off = 0.06 if kind == "kick" else 0.035
         for yc in (-h + off, h - off):
@@ -275,7 +279,7 @@ def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
                       seg)
         for side in (1, -1):
             Ms = Sc(1, side, 1)
-            g.add("Finish", hoop, Ms)
+            g.add("Hoop", hoop, Ms)
             g.add("Accent", inlay, Ms)
         u = 0.0295
         claw = Polygon([(0.0095, 0.0118), (0.0103, 0.0148), (0.0215, 0.0148),
@@ -1199,7 +1203,8 @@ EXPORT_ROT = Sc(1, 1, -1)
 MATERIALS = {
     # name: (diffuse rgb 0-1, specular, roughness-ish, roblox hint)
     "Chrome":     ((0.80, 0.81, 0.84), "Chrome hardware"),
-    "Finish":     ((0.035, 0.035, 0.04), "Gloss black lacquer shells & hoops"),
+    "Finish":     ((0.035, 0.035, 0.04), "Gloss black lacquer shells (pattern UVs)"),
+    "Hoop":       ((0.035, 0.035, 0.04), "Bass drum wood hoops"),
     "Accent":     ((0.62, 0.02, 0.04), "Blood-red pinstripes / inlays"),
     "HeadCoated": ((0.93, 0.92, 0.88), "White coated batter heads"),
     "HeadBlack":  ((0.05, 0.05, 0.055), "Black resonant heads"),

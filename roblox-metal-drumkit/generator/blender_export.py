@@ -19,6 +19,7 @@ import drumkit  # noqa: E402
 PBR = {
     "Chrome":     ((0.90, 0.91, 0.93), 1.0, 0.07, 0.0),
     "Finish":     ((0.010, 0.010, 0.012), 0.0, 0.32, 0.55),
+    "Hoop":       ((0.010, 0.010, 0.012), 0.0, 0.32, 0.55),
     "Accent":     ((0.55, 0.005, 0.012), 0.2, 0.25, 1.0),
     "HeadCoated": ((0.88, 0.87, 0.82), 0.0, 0.75, 0.0),
     "HeadBlack":  ((0.02, 0.02, 0.022), 0.0, 0.45, 0.0),
@@ -164,6 +165,111 @@ def render_views(out_dir, views, res=(1600, 1000), samples=64):
         print("rendered", name, flush=True)
 
 
+def srgb_to_lin(c):
+    c = c / 255.0
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+def lin(rgb):
+    return tuple(srgb_to_lin(x) for x in rgb) + (1.0,)
+
+
+def overlay_material(m, color, image_path, roughness=None, metallic=None):
+    """Base colour = image over a flat colour, using the image alpha - the
+    same way Roblox shows a MeshPart TextureID over the part Color."""
+    nt = m.node_tree
+    bsdf = nt.nodes.get("Principled BSDF")
+    for n in list(nt.nodes):
+        if n.type in ("TEX_IMAGE", "MIX"):
+            nt.nodes.remove(n)
+    if roughness is not None:
+        bsdf.inputs["Roughness"].default_value = roughness
+    if metallic is not None:
+        bsdf.inputs["Metallic"].default_value = metallic
+    if not image_path:
+        bsdf.inputs["Base Color"].default_value = lin(color)
+        return
+    img = bpy.data.images.load(image_path, check_existing=True)
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = img
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type = "RGBA"
+    a = next(i for i in mix.inputs if i.identifier == "A_Color")
+    b = next(i for i in mix.inputs if i.identifier == "B_Color")
+    out = next(o for o in mix.outputs if o.identifier == "Result_Color")
+    a.default_value = lin(color)
+    nt.links.new(tex.outputs["Alpha"], mix.inputs["Factor"])
+    nt.links.new(tex.outputs["Color"], b)
+    nt.links.new(out, bsdf.inputs["Base Color"])
+
+
+def apply_style(mats, style, data, styles_dir):
+    by = data["by_id"]
+    col = by["Colors"][style["color"]]["color"]
+    pat = by["Patterns"][style["pattern"]]
+    acc = by["Colors"][style["accent"]]["color"]
+    hw = by["Hardware"][style["hardware"]]
+    cym = by["Cymbals"][style["cymbals"]]
+    head = by["Heads"][style["heads"]]
+    tex = None if pat["id"] == "solid" else os.path.join(styles_dir,
+                                                           "pattern_%s.png" % pat["id"])
+    rough = {"sparkle": 0.22, "carbon": 0.35}.get(pat["id"], 0.3)
+    overlay_material(mats["Finish"], col, tex, roughness=rough, metallic=0.0)
+    hoop = (18, 18, 22) if pat.get("hoop") == "black" and tex else col
+    overlay_material(mats["Hoop"], hoop, None)
+    overlay_material(mats["Accent"], acc, None)
+    overlay_material(mats["Felt"], tuple(int(c * 0.85) for c in acc), None)
+    overlay_material(mats["HeadLogo"], acc, os.path.join(styles_dir, "logo_overlay.png"))
+    hw_rough = {"chrome": 0.07, "black": 0.2, "gold": 0.12}[hw["id"]]
+    overlay_material(mats["Chrome"], hw["color"], None, roughness=hw_rough,
+                     metallic=1.0)
+    cym_rough = {"brilliant": 0.18, "dark": 0.38, "black": 0.25}[cym["id"]]
+    overlay_material(mats["Bronze"], cym["main"], None, roughness=cym_rough)
+    overlay_material(mats["BronzeDark"], cym["dark"], None, roughness=cym_rough)
+    overlay_material(mats["HeadCoated"], head["color"], None)
+
+
+def render_lineup(mats, out_path, view, res=(800, 500), samples=24):
+    import tempfile
+
+    from PIL import Image, ImageDraw, ImageFont
+
+    import styles_data
+    data = styles_data.load()
+    here = os.path.dirname(os.path.abspath(__file__))
+    styles_dir = os.path.join(here, "..", "export", "styles")
+    tmp = tempfile.mkdtemp()
+    tiles = []
+    for p in data["Presets"]:
+        apply_style(mats, p["style"], data, styles_dir)
+        render_views(tmp, [(p["id"], *view)], res, samples)
+        tiles.append((p, os.path.join(tmp, p["id"] + ".jpg")))
+    cols = 4
+    rows = (len(tiles) + cols - 1) // cols
+    w, h = res
+    sheet = Image.new("RGB", (cols * w, rows * (h + 56)), (14, 14, 16))
+    try:
+        font = ImageFont.truetype(
+            "/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf", 30)
+        small = ImageFont.truetype("/usr/share/fonts/opentype/inter/Inter-Regular.otf", 17)
+    except OSError:
+        font = small = ImageFont.load_default()
+    by = data["by_id"]
+    for i, (p, path) in enumerate(tiles):
+        x, y = (i % cols) * w, (i // cols) * (h + 56)
+        sheet.paste(Image.open(path), (x, y))
+        d = ImageDraw.Draw(sheet)
+        d.text((x + 16, y + h + 6), p["name"], font=font, fill=(235, 232, 225))
+        st = p["style"]
+        sub = "%s / %s / %s" % (by["Colors"][st["color"]]["nameEn"],
+                                by["Patterns"][st["pattern"]]["nameEn"],
+                                by["Hardware"][st["hardware"]]["nameEn"])
+        d.text((x + 16 + d.textlength(p["name"], font=font) + 14, y + h + 16), sub,
+               font=small, fill=(150, 152, 158))
+    sheet.save(out_path, quality=88)
+    print("lineup", out_path, flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--detail", type=float, default=None)
@@ -173,6 +279,8 @@ def main():
     ap.add_argument("--samples", type=int, default=64)
     ap.add_argument("--res", default="1600x1000")
     ap.add_argument("--name", default=None)
+    ap.add_argument("--lineup", default=None,
+                    help="render every style preset into one image")
     ap.add_argument("--spec", default=None,
                     help="build from a kit spec JSON (see kitspec.py)")
     a = ap.parse_args()
@@ -226,8 +334,11 @@ def main():
         }
         sel = list(views) if a.views == "all" else a.views.split(",")
         w, h = (int(x) for x in a.res.split("x"))
-        render_views(a.renders, [(k, *views[k]) for k in sel], (w, h),
-                     a.samples)
+        if a.lineup:
+            render_lineup(mats, a.lineup, views[sel[0]], (w, h), a.samples)
+        else:
+            render_views(a.renders, [(k, *views[k]) for k in sel], (w, h),
+                         a.samples)
 
     if a.out:
         for ob in list(bpy.data.objects):

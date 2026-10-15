@@ -16,13 +16,22 @@
 
 Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構成に合わせた、購入用キット向けの版です。
 画面のキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）に 1 対 1 で対応します（SL / SR は同じスネア）。
-ツインペダル、ラック、ロゴ入りのフロントヘッドはそのままで、スマホ向けに軽くしています（63,456 ポリゴン / MeshPart 82 個）。
+ツインペダル、ラック、ロゴ入りのフロントヘッドはそのままで、スマホ向けに軽くしています（63,456 ポリゴン / MeshPart 83 個）。
 
 - モデル: `export/beatdrummer/BeatDrummer_IronStorm.fbx`（OBJ もあり）
 - セットアップ: `export/beatdrummer/BeatDrummer_IronStorm_Setup.lua`（Lane 属性と回転の中心も設定）
 - 叩いたときの動き: `roblox/DrumKitFX.lua`
+- 色と模様の切り替え: `roblox/DrumKitStyles.lua`（シェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッド、プリセット 8 種）
+- 模様とロゴの画像: `export/styles/`（Roblox にアップロードして `DrumKitStyles.lua` に ID を入れる）
 - 構成の設定: `generator/specs/beatdrummer_spec.json`（パーツを増減して `kitspec.py` で作り直せます）
 - ゲームへの組み込み手順（PC の Claude Code 向け）: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md)
+
+### 色と模様のプリセット
+
+![プリセット](preview/beatdrummer/styles_lineup.jpg)
+
+模様は、透明な部分にシェルの色が見える画像なので、どの色とも組み合わせられます
+（スパークル、ファイヤー、タイガー、カーボン、バースト、ライトニング、ソリッド）。
 
 ## 構成（ショーケース版）
 
@@ -39,9 +48,9 @@ Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構�
 
 | ファイル | 説明 |
 | --- | --- |
-| `export/MetalDrumKit.fbx` | **おすすめ**。標準版（219,336 ポリゴン / 126 MeshPart）。ロゴ画像を埋め込み済み |
+| `export/MetalDrumKit.fbx` | **おすすめ**。標準版（219,336 ポリゴン / 128 MeshPart）。ロゴ画像を埋め込み済み |
 | `export/MetalDrumKit.obj` + `.mtl` + `kick_logo.png` | 同じモデルの OBJ 版（3 ファイルを同じフォルダに置いて読み込む） |
-| `export/MetalDrumKit_Lite.fbx` / `.obj` | 軽量版（105,244 ポリゴン）。モバイル向けや複数台置くとき用 |
+| `export/MetalDrumKit_Lite.fbx` / `.obj` | 軽量版（105,184 ポリゴン）。モバイル向けや複数台置くとき用 |
 | `export/MetalDrumKit.glb` | glTF 版（メートル単位）。Roblox 以外のツールでの確認用 |
 | `export/kick_logo.png` | バスドラム前面ヘッドのロゴ（1024×1024） |
 | `roblox/DrumKitSetup.lua` | 読み込み後に実行するセットアップスクリプト |
@@ -53,7 +62,7 @@ Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構�
 2. インポート画面のプレビューでサイズを確認する。
    正しく読み込めていれば **幅 約 10.7 × 高さ 約 5.5 × 奥行き 約 7.5 studs**（ラグ込み）です。
    極端に小さい／大きい場合は、インポート設定の **File Dimensions（ファイルの寸法）を `Studs`** にしてください。
-3. 「インポート」を押すと、126 個の MeshPart が入った Model がワークスペースに追加されます。
+3. 「インポート」を押すと、128 個の MeshPart が入った Model がワークスペースに追加されます。
 4. エクスプローラーでその Model を選択し、**表示 > コマンドバー** に `roblox/DrumKitSetup.lua` の中身をすべて貼り付けて Enter。
    - パーツ名の末尾（`_Chrome`、`_Bronze` など）から色とマテリアルを自動設定
    - `Drums` / `Cymbals` / `Hardware` ごとに Model を整理
@@ -78,8 +87,8 @@ Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構�
 
 | 項目 | 標準版 | 軽量版 |
 | --- | --- | --- |
-| ポリゴン数 | 219,336 | 105,244 |
-| MeshPart 数 | 126 | 126 |
+| ポリゴン数 | 219,336 | 105,184 |
+| MeshPart 数 | 128 | 128 |
 | 1 MeshPart の最大ポリゴン数 | 9,072（Roblox 上限 20,000） | 4,876 |
 | サイズ | 10.7 × 5.5 × 7.5 studs（3.0 × 1.55 × 2.1 m） | 同じ |
 | スローン座面の高さ | 2.0 studs | 同じ |

@@ -1,6 +1,6 @@
 {
  "summary": {
-  "parts": 82,
+  "parts": 83,
   "triangles": 63456,
   "max_part_triangles": 4876,
   "size_studs": [
@@ -23,7 +23,7 @@
   {
    "name": "BD_Kick_Finish",
    "material": "Finish",
-   "tris": 1584
+   "tris": 432
   },
   {
    "name": "BD_Kick_Accent",
@@ -44,6 +44,11 @@
    "name": "BD_Kick_Chrome",
    "material": "Chrome",
    "tris": 4876
+  },
+  {
+   "name": "BD_Kick_Hoop",
+   "material": "Hoop",
+   "tris": 1152
   },
   {
    "name": "BD_Kick_Rubber",

@@ -7,8 +7,17 @@ Ns 200
 d 1
 illum 2
 
-# Gloss black lacquer shells & hoops
+# Gloss black lacquer shells (pattern UVs)
 newmtl Finish
+Kd 0.035 0.035 0.040
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Bass drum wood hoops
+newmtl Hoop
 Kd 0.035 0.035 0.040
 Ka 0 0 0
 Ks 0.5 0.5 0.5
