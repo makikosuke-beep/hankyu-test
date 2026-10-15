@@ -1,0 +1,394 @@
+{
+ "summary": {
+  "parts": 74,
+  "triangles": 58368,
+  "max_part_triangles": 4876,
+  "size_studs": [
+   7.08,
+   5.12,
+   6.64
+  ],
+  "size_m": [
+   1.983,
+   1.433,
+   1.86
+  ],
+  "seat_studs": [
+   0.0,
+   2.018,
+   2.357
+  ]
+ },
+ "parts": [
+  {
+   "name": "BD_Kick_Finish",
+   "material": "Finish",
+   "tris": 1584
+  },
+  {
+   "name": "BD_Kick_Accent",
+   "material": "Accent",
+   "tris": 988
+  },
+  {
+   "name": "BD_Kick_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 504
+  },
+  {
+   "name": "BD_Kick_HeadLogo",
+   "material": "HeadLogo",
+   "tris": 656
+  },
+  {
+   "name": "BD_Kick_Chrome",
+   "material": "Chrome",
+   "tris": 4876
+  },
+  {
+   "name": "BD_Kick_Rubber",
+   "material": "Rubber",
+   "tris": 276
+  },
+  {
+   "name": "Pedal_Main_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1440
+  },
+  {
+   "name": "Pedal_Main_Rubber",
+   "material": "Rubber",
+   "tris": 96
+  },
+  {
+   "name": "Pedal_Main_Chrome",
+   "material": "Chrome",
+   "tris": 3040
+  },
+  {
+   "name": "Pedal_Main_Accent",
+   "material": "Accent",
+   "tris": 44
+  },
+  {
+   "name": "Pedal_Main_BeaterR_Chrome",
+   "material": "Chrome",
+   "tris": 140
+  },
+  {
+   "name": "Pedal_Main_BeaterR_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 72
+  },
+  {
+   "name": "Pedal_Main_BeaterR_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 72
+  },
+  {
+   "name": "Pedal_Main_BeaterL_Chrome",
+   "material": "Chrome",
+   "tris": 140
+  },
+  {
+   "name": "Pedal_Main_BeaterL_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 72
+  },
+  {
+   "name": "Pedal_Main_BeaterL_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 72
+  },
+  {
+   "name": "Pedal_Slave_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1352
+  },
+  {
+   "name": "Pedal_Slave_Rubber",
+   "material": "Rubber",
+   "tris": 96
+  },
+  {
+   "name": "Pedal_Slave_Chrome",
+   "material": "Chrome",
+   "tris": 2800
+  },
+  {
+   "name": "Pedal_Slave_Accent",
+   "material": "Accent",
+   "tris": 44
+  },
+  {
+   "name": "Pedal_DriveShaft_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 240
+  },
+  {
+   "name": "Pedal_DriveShaft_Chrome",
+   "material": "Chrome",
+   "tris": 152
+  },
+  {
+   "name": "HT_Tom_Finish",
+   "material": "Finish",
+   "tris": 336
+  },
+  {
+   "name": "HT_Tom_Accent",
+   "material": "Accent",
+   "tris": 460
+  },
+  {
+   "name": "HT_Tom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 392
+  },
+  {
+   "name": "HT_Tom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 392
+  },
+  {
+   "name": "HT_Tom_Chrome",
+   "material": "Chrome",
+   "tris": 3312
+  },
+  {
+   "name": "HT_Tom_Rubber",
+   "material": "Rubber",
+   "tris": 104
+  },
+  {
+   "name": "TomArm_HT_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 168
+  },
+  {
+   "name": "TomArm_HT_Chrome",
+   "material": "Chrome",
+   "tris": 324
+  },
+  {
+   "name": "FT_FloorTom_Finish",
+   "material": "Finish",
+   "tris": 384
+  },
+  {
+   "name": "FT_FloorTom_Accent",
+   "material": "Accent",
+   "tris": 508
+  },
+  {
+   "name": "FT_FloorTom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 448
+  },
+  {
+   "name": "FT_FloorTom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 448
+  },
+  {
+   "name": "FT_FloorTom_Chrome",
+   "material": "Chrome",
+   "tris": 4200
+  },
+  {
+   "name": "FT_FloorTom_Rubber",
+   "material": "Rubber",
+   "tris": 384
+  },
+  {
+   "name": "SN_Snare_Finish",
+   "material": "Finish",
+   "tris": 336
+  },
+  {
+   "name": "SN_Snare_Accent",
+   "material": "Accent",
+   "tris": 460
+  },
+  {
+   "name": "SN_Snare_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 392
+  },
+  {
+   "name": "SN_Snare_HeadClear",
+   "material": "HeadClear",
+   "tris": 392
+  },
+  {
+   "name": "SN_Snare_Chrome",
+   "material": "Chrome",
+   "tris": 4588
+  },
+  {
+   "name": "SN_Snare_Rubber",
+   "material": "Rubber",
+   "tris": 148
+  },
+  {
+   "name": "SN_Snare_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 44
+  },
+  {
+   "name": "SnareStand_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 720
+  },
+  {
+   "name": "SnareStand_Chrome",
+   "material": "Chrome",
+   "tris": 880
+  },
+  {
+   "name": "SnareStand_Rubber",
+   "material": "Rubber",
+   "tris": 336
+  },
+  {
+   "name": "HiHatStand_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1436
+  },
+  {
+   "name": "HiHatStand_Chrome",
+   "material": "Chrome",
+   "tris": 1032
+  },
+  {
+   "name": "HiHatStand_Rubber",
+   "material": "Rubber",
+   "tris": 236
+  },
+  {
+   "name": "HiHatStand_Accent",
+   "material": "Accent",
+   "tris": 44
+  },
+  {
+   "name": "HiHatStand_Felt",
+   "material": "Felt",
+   "tris": 80
+  },
+  {
+   "name": "HH_Bottom_Bronze",
+   "material": "Bronze",
+   "tris": 1344
+  },
+  {
+   "name": "HH_Top_Bronze",
+   "material": "Bronze",
+   "tris": 1344
+  },
+  {
+   "name": "HH_Top_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "HH_Top_Chrome",
+   "material": "Chrome",
+   "tris": 224
+  },
+  {
+   "name": "Boom_CR_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 552
+  },
+  {
+   "name": "Boom_CR_Chrome",
+   "material": "Chrome",
+   "tris": 1040
+  },
+  {
+   "name": "Boom_CR_Rubber",
+   "material": "Rubber",
+   "tris": 88
+  },
+  {
+   "name": "Boom_CR_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "CR_Crash_Bronze",
+   "material": "Bronze",
+   "tris": 2088
+  },
+  {
+   "name": "Boom_RD_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 552
+  },
+  {
+   "name": "Boom_RD_Chrome",
+   "material": "Chrome",
+   "tris": 1040
+  },
+  {
+   "name": "Boom_RD_Rubber",
+   "material": "Rubber",
+   "tris": 88
+  },
+  {
+   "name": "Boom_RD_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "RD_Ride_Bronze",
+   "material": "Bronze",
+   "tris": 2376
+  },
+  {
+   "name": "Rack_Chrome",
+   "material": "Chrome",
+   "tris": 1032
+  },
+  {
+   "name": "Rack_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 696
+  },
+  {
+   "name": "Rack_Rubber",
+   "material": "Rubber",
+   "tris": 960
+  },
+  {
+   "name": "Throne_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 728
+  },
+  {
+   "name": "Throne_Chrome",
+   "material": "Chrome",
+   "tris": 576
+  },
+  {
+   "name": "Throne_Rubber",
+   "material": "Rubber",
+   "tris": 192
+  },
+  {
+   "name": "Throne_Leather",
+   "material": "Leather",
+   "tris": 528
+  },
+  {
+   "name": "Throne_Accent",
+   "material": "Accent",
+   "tris": 576
+  },
+  {
+   "name": "Rug_Rug",
+   "material": "Rug",
+   "tris": 124
+  }
+ ]
+}

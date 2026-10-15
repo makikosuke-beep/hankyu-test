@@ -166,17 +166,32 @@ def render_views(out_dir, views, res=(1600, 1000), samples=64):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--detail", type=float, default=1.0)
+    ap.add_argument("--detail", type=float, default=None)
     ap.add_argument("--out", default=None)
     ap.add_argument("--renders", default=None)
     ap.add_argument("--views", default="all")
     ap.add_argument("--samples", type=int, default=64)
     ap.add_argument("--res", default="1600x1000")
-    ap.add_argument("--name", default="MetalDrumKit")
+    ap.add_argument("--name", default=None)
+    ap.add_argument("--spec", default=None,
+                    help="build from a kit spec JSON (see kitspec.py)")
     a = ap.parse_args()
 
+    a.detail_set = a.detail is not None
+    if a.detail is None:
+        a.detail = 1.0
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    kit = drumkit.build_kit(a.detail)
+    scale = 1.0
+    if a.spec:
+        import json
+        import kitspec
+        spec = json.load(open(a.spec, encoding="utf-8"))
+        kit = kitspec.build_from_spec(spec, a.detail if a.detail_set else None)
+        scale = spec.get("scale", 1.0)
+        a.name = a.name or spec.get("name", "DrumKit")
+    else:
+        kit = drumkit.build_kit(a.detail)
+        a.name = a.name or "MetalDrumKit"
     parts = kit.merged()
     here = os.path.dirname(os.path.abspath(__file__))
     tex = os.path.join(a.out or os.path.join(here, "..", "export"),
@@ -204,6 +219,10 @@ def main():
             "detail": ((0.9, 1.7, 1.3), (-0.3, 0.0, 0.75), 50),
             "snare": ((-0.75, -1.0, 0.85), (-0.12, -0.12, 0.45), 40),
             "hihat": ((-1.9, -1.3, 1.45), (-0.85, 0.0, 0.95), 40),
+            "bd_front": ((2.1, 3.7, 1.9), (0.0, 0.0, 0.72), 35),
+            "bd_drummer": ((0.0, -1.62, 1.72), (0.0, 0.3, 0.85), 26),
+            "bd_pedals": ((-0.8, -0.95, 0.55), (-0.12, 0.0, 0.15), 32),
+            "bd_top": ((0.0, -0.1, 5.2), (0.0, 0.0, 0.0), 30),
         }
         sel = list(views) if a.views == "all" else a.views.split(",")
         w, h = (int(x) for x in a.res.split("x"))
@@ -220,7 +239,7 @@ def main():
                                   export_normals=True, export_texcoords=True)
         # FBX in studs: 1 Blender unit = 1 stud, unit scale 0.01 (cm) so the
         # raw FBX values are studs, which is what Roblox Studio expects.
-        s = 1.0 / drumkit.STUD
+        s = scale / drumkit.STUD
         for ob in bpy.data.objects:
             ob.scale = (s, s, s)
         bpy.ops.object.select_all(action="SELECT")

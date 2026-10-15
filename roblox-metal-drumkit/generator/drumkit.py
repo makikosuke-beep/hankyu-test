@@ -574,10 +574,10 @@ def build_throne(kit, cx, cz, seat_h=0.565):
     return np.array([cx, seat_h, cz])
 
 
-def build_snare_stand(kit, cx, cz, top_y, axis):
+def build_snare_stand(kit, cx, cz, top_y, axis, legs=(0, 120, 240)):
     """Snare basket stand. top_y = height of the basket arms."""
     g = G(kit, "SnareStand")
-    tripod(g, cx, cz, 0.20, 0.23, 0.0095, (0, 120, 240), 0.0125)
+    tripod(g, cx, cz, 0.20, 0.23, 0.0095, legs, 0.0125)
     g.add("Chrome", cylinder(0.0125, 0.30, S(16), y0=0.16, bevel=0.002),
           T(cx, 0, cz))
     height_clamp(g, (cx, 0.455, cz), 0.0095, 0.0125)
@@ -607,11 +607,13 @@ def build_snare_stand(kit, cx, cz, top_y, axis):
                                       * 0.006, 0.0085, S(12), bevel=0.002))
 
 
-def build_hihat(kit, cx, cz, bottom_y):
+def build_hihat(kit, cx, cz, bottom_y,
+                names=("HiHat_Stand", "HiHat_Bottom", "HiHat_Top"), size=14,
+                legs=(90, 210, 330)):
     """Hi-hat stand + cymbals. bottom_y = height of the bottom-hat seat."""
-    g = G(kit, "HiHat_Stand")
+    g = G(kit, names[0])
     tube_r = 0.0135
-    tripod(g, cx, cz, 0.33, 0.27, 0.0095, (90, 210, 330), tube_r)
+    tripod(g, cx, cz, 0.33, 0.27, 0.0095, legs, tube_r)
     # pedal (toward -Z)
     gp = g.sub(T(cx, 0, cz))
     gp.add("BlackMetal", rbox(0.10, 0.008, 0.40, center=(0, 0.004, -0.18)))
@@ -666,15 +668,15 @@ def build_hihat(kit, cx, cz, bottom_y):
     g.add("Felt", cylinder(0.021, 0.009, S(20), y0=bottom_y - 0.009,
                            bevel=0.0015), T(cx, 0, cz))
     # cymbals: bottom hat bell-down, top hat bell-up with clutch
-    bot, ib = cymbal_mesh(14 * IN, "hihat")
-    top, it = cymbal_mesh(14 * IN, "hihat")
-    gb = G(kit, "HiHat_Bottom", T(cx, bottom_y + ib["top"], cz))
+    bot, ib = cymbal_mesh(size * IN, "hihat")
+    top, it = cymbal_mesh(size * IN, "hihat")
+    gb = G(kit, names[1], T(cx, bottom_y + ib["top"], cz))
     gb.add("Bronze", bot, Rx(math.pi))
     # bottom hat edge height (flipped): bell side down
     edge_b = bottom_y + ib["top"] - ib["edge_bot"]
     gap = 0.014
     top_seat = edge_b + gap - it["edge_bot"]
-    gt = G(kit, "HiHat_Top", T(cx, top_seat, cz))
+    gt = G(kit, names[2], T(cx, top_seat, cz))
     gt.add("Bronze", top)
     # clutch
     gt.add("Felt", cylinder(0.0165, 0.009, S(20), y0=-0.009, bevel=0.0015))
@@ -690,11 +692,17 @@ def build_hihat(kit, cx, cz, bottom_y):
     # pull rod
     g.add("Chrome", cylinder(0.0035, top_seat + 0.09 - (bottom_y - 0.02), S(10),
                              y0=bottom_y - 0.02, bevel=0.001), T(cx, 0, cz))
+    return {"top_seat": top_seat, "bottom_seat": bottom_y}
 
 
-def build_pedal(kit, comp, px, side):
-    """Single bass drum pedal at x=px. side=+1 puts the spring on +X."""
-    g = G(kit, comp, T(px, 0, 0))
+def build_pedal(kit, comp, px, side, beaters=((0.0, "_Beater"),),
+                hoop_clamp=True, chain_x=None, pz=0.0):
+    """Bass drum pedal at x=px.  side=+1 puts the spring on +X.
+    beaters: (x offset, component suffix) for each beater on the axle.
+    A double pedal's slave unit uses beaters=() and hoop_clamp=False."""
+    if chain_x is None:
+        chain_x = beaters[0][0] if beaters else 0.0
+    g = G(kit, comp, T(px, 0, pz))
     seg = S(16)
     # base plate & heel
     base = Polygon([(-0.052, -0.225), (0.052, -0.225), (0.056, 0.12),
@@ -727,10 +735,11 @@ def build_pedal(kit, comp, px, side):
     g.add("BlackMetal", rbox(0.07, 0.012, 0.012, center=(0, 0.004, fl - 0.008)),
           Mf)
     # hoop clamp under the batter hoop
-    g.add("BlackMetal", rbox(0.105, 0.012, 0.06, center=(0, 0.006, 0.152)))
-    g.add("BlackMetal", rbox(0.105, 0.03, 0.012, center=(0, 0.018, 0.177)))
-    g.add("Chrome", t_handle(0.028, 0.0034, 0.02),
-          chain(T(0.054 * side, 0.016, 0.155), Rz(-side * math.pi / 2)))
+    if hoop_clamp:
+        g.add("BlackMetal", rbox(0.105, 0.012, 0.06, center=(0, 0.006, 0.152)))
+        g.add("BlackMetal", rbox(0.105, 0.03, 0.012, center=(0, 0.018, 0.177)))
+        g.add("Chrome", t_handle(0.028, 0.0034, 0.02),
+              chain(T(0.054 * side, 0.016, 0.155), Rz(-side * math.pi / 2)))
     # frame posts
     prof = Polygon([(0.068, 0.006), (0.13, 0.006), (0.118, 0.13),
                     (0.092, 0.13)])
@@ -747,12 +756,15 @@ def build_pedal(kit, comp, px, side):
     cam = lathe([(0.005, -0.007), (0.024, -0.007), (0.026, -0.005),
                  (0.026, 0.005), (0.024, 0.007), (0.005, 0.007)], S(28),
                 closed=True)
-    g.add("Chrome", cam, chain(T(0, axle_y, axle_z), Rz(math.pi / 2)))
+    cam_xs = sorted({chain_x} | {bx for bx, _ in beaters})
+    for cx_ in cam_xs:
+        g.add("Chrome", cam, chain(T(cx_, axle_y, axle_z), Rz(math.pi / 2)))
     # chain links: up from the toe, over the back of the cam
-    pts = [np.array([0, 0.098, 0.081]), np.array([0, axle_y, 0.081])]
+    cx_ = chain_x
+    pts = [np.array([cx_, 0.098, 0.081]), np.array([cx_, axle_y, 0.081])]
     for a in np.linspace(180, 95, 4):
         ar = math.radians(a)
-        pts.append(np.array([0, axle_y + 0.026 * math.sin(ar),
+        pts.append(np.array([cx_, axle_y + 0.026 * math.sin(ar),
                              axle_z + 0.026 * math.cos(ar)]))
     path = []
     for i in range(len(pts) - 1):
@@ -780,18 +792,43 @@ def build_pedal(kit, comp, px, side):
     g.add("Chrome", hex_nut(0.0065, 0.006), T(sx, 0.038, axle_z - 0.03))
     g.add("BlackMetal", rbox(0.014, 0.012, 0.02, center=(sx, 0.012,
                                                           axle_z - 0.03)))
-    # beater (separate component so it can be animated)
-    gb = G(kit, comp + "_Beater", chain(T(px, axle_y, axle_z), Rx(-0.55)))
-    gb.add("Chrome", rbox(0.022, 0.03, 0.024, center=(0, 0.004, 0)))
-    gb.add("Chrome", key_bolt(0.003, 0.006), chain(T(0, 0.006, 0.012),
-                                                   Rx(math.pi / 2)))
-    gb.add("Chrome", cylinder(0.0036, 0.19, S(10), y0=0.0))
-    gb.add("Chrome", cylinder(0.0055, 0.008, S(12), y0=0.13))
-    head = chain(T(0, 0.185, 0), Rx(math.pi / 2))
-    gb.add("BlackMetal", lathe([(0, -0.03), (0.022, -0.03), (0.026, -0.022),
-                                (0.026, 0.0), (0, 0.0)], S(24)), head)
-    gb.add("HeadCoated", lathe([(0, 0.0), (0.026, 0.0), (0.026, 0.024),
-                                (0.02, 0.031), (0, 0.033)], S(24)), head)
+    # beaters (separate components so they can be animated)
+    for bx, suffix in beaters:
+        gb = G(kit, comp + suffix, chain(T(px + bx, axle_y, pz + axle_z),
+                                         Rx(-0.55)))
+        gb.add("Chrome", rbox(0.022, 0.03, 0.024, center=(0, 0.004, 0)))
+        gb.add("Chrome", key_bolt(0.003, 0.006), chain(T(0, 0.006, 0.012),
+                                                       Rx(math.pi / 2)))
+        gb.add("Chrome", cylinder(0.0036, 0.19, S(10), y0=0.0))
+        gb.add("Chrome", cylinder(0.0055, 0.008, S(12), y0=0.13))
+        head = chain(T(0, 0.185, 0), Rx(math.pi / 2))
+        gb.add("BlackMetal", lathe([(0, -0.03), (0.022, -0.03), (0.026, -0.022),
+                                    (0.026, 0.0), (0, 0.0)], S(24)), head)
+        gb.add("HeadCoated", lathe([(0, 0.0), (0.026, 0.0), (0.026, 0.024),
+                                    (0.02, 0.031), (0, 0.033)], S(24)), head)
+    return np.array([px, axle_y, pz + axle_z])
+
+
+def build_drive_shaft(kit, comp, a, b):
+    """Telescoping double-pedal drive shaft with universal joints a -> b."""
+    g = G(kit, comp)
+    d = unit(b - a)
+    L = np.linalg.norm(b - a)
+    for p, s in ((a, 1), (b, -1)):
+        g.add("BlackMetal", rbox(0.018, 0.018, 0.018, bevel=0.003),
+              frame(p + d * s * 0.009, d, (0, 1, 0)))
+        g.add("Chrome", tube_between(p + d * s * 0.018 - np.array([0, 0.011, 0]),
+                                     p + d * s * 0.018 + np.array([0, 0.011, 0]),
+                                     0.0035, S(8)))
+        g.add("BlackMetal", rbox(0.014, 0.014, 0.014, bevel=0.003),
+              frame(p + d * s * 0.027, d, (0, 1, 0)))
+    g.add("Chrome", tube_between(a + d * 0.034, a + d * (L * 0.58), 0.0078, S(14)))
+    g.add("Chrome", tube_between(a + d * (L * 0.5), b - d * 0.034, 0.006, S(12)))
+    g.add("BlackMetal", tube_between(a + d * (L * 0.56), a + d * (L * 0.6),
+                                     0.0095, S(14), bevel=0.002))
+    g.add("Chrome", key_bolt(0.003, 0.006),
+          chain(M4(frame((0, 0, 0), (0, 1, 0), d)[:3, :3],
+                   t=a + d * (L * 0.58) + np.array([0, 0.0095, 0]))))
 
 
 def build_rack(kit, y=0.80):
@@ -931,6 +968,99 @@ def tom_arm(kit, comp, rack_pt, tdir, recv, recv_dir):
 
 
 # ---------------------------------------------------------------------------
+# per-drum hardware helpers (shared by the showcase kit and spec kits)
+# ---------------------------------------------------------------------------
+def kick_spurs(kit, comp, g, kx, c, kR, kH):
+    for phi in (math.radians(198), math.radians(342)):
+        yloc = -kH / 2 + 0.10
+        shell_bracket(g, kR, phi, yloc, (0.03, 0.06, 0.034))
+        p0 = g.world(np.array([(kR + 0.026) * math.cos(phi), yloc,
+                               (kR + 0.026) * math.sin(phi)]))
+        out = np.sign(math.cos(phi))
+        p1 = p0 + np.array([out * 0.05, -0.02, 0.02])
+        foot = np.array([kx + out * (kR + 0.12), 0.03, c[2] + kH / 2 + 0.06])
+        path = fillet_path([p0, p1, foot], 0.05, 8)
+        kit.add(comp, "Chrome", sweep(path, 0.0068, S(14)))
+        fd = unit(foot - p1)
+        kit.add(comp, "Rubber",
+                rubber_foot(0.0105, 0.04).transformed(frame(foot + fd * 0.004,
+                                                            -fd)))
+
+
+def rack_tom_mount(g, M, D, H, phi_m):
+    """Shell bracket + receiver on a rack tom.  Returns receiver (world)."""
+    R = D / 2
+    ym = -H * 0.18
+    shell_bracket(g, R, phi_m, ym, (0.028, 0.05, 0.036), bolt=False)
+    recv_l = np.array([(R + 0.045) * math.cos(phi_m), ym,
+                       (R + 0.045) * math.sin(phi_m)])
+    g.add("Chrome", rbox(0.034, 0.03, 0.03, center=(0, 0, 0)),
+          chain(az(phi_m), T(R + 0.04, ym, 0)))
+    g.add("Chrome", wing_nut(0.005, 0.01, 0.014),
+          chain(az(phi_m), T(R + 0.04, ym + 0.015, 0)))
+    return g.world(recv_l)
+
+
+def tom_mount_azimuth(M, toward=(0, 0, 1)):
+    dz = apply_dir(np.linalg.inv(M), toward)
+    return math.atan2(dz[2], dz[0])
+
+
+def floor_tom_legs(kit, comp, g, M, c, D, H, legs):
+    R = D / 2
+    for a in legs:
+        phi = math.radians(a)
+        yb = H / 2 - 0.085
+        shell_bracket(g, R, phi, yb, (0.028, 0.05, 0.03))
+        d = np.array([math.cos(phi), 0, math.sin(phi)])
+        top_p = g.world(np.array([0, H / 2 - 0.055, 0]) + d * (R + 0.032))
+        foot = np.array([c[0], 0.03, c[2]]) + apply_dir(M, d) * (R + 0.11)
+        kit.add(comp, "Chrome", tube_between(top_p, foot, 0.0055, S(12),
+                                             bevel=0.001))
+        fd = unit(foot - top_p)
+        kit.add(comp, "Rubber", rubber_foot(0.011, 0.04).transformed(
+            frame(foot + fd * 0.006, -fd)))
+
+
+def snare_hardware(g, an, sD, sH, phi_s=math.pi):
+    R = sD / 2
+    h = sH / 2
+    # strainer (throw-off) + butt plate
+    A = az(phi_s)
+    g.add("Chrome", rbox(0.022, 0.05, 0.032, center=(R + 0.011, -h + 0.04, 0)), A)
+    g.add("BlackMetal", rbox(0.007, 0.055, 0.009,
+                             center=(R + 0.025, -h + 0.045, 0)), A)
+    g.add("Chrome", knurl_knob(0.0085, 0.016), chain(A, T(R + 0.014, -h + 0.065,
+                                                         0)))
+    B = az(phi_s + math.pi)
+    g.add("Chrome", rbox(0.018, 0.034, 0.026, center=(R + 0.009, -h + 0.03, 0)),
+          B)
+    g.add("Chrome", key_bolt(0.0035, 0.006), chain(B, T(R + 0.018, -h + 0.03, 0),
+                                                  Rz(-math.pi / 2)))
+    # snare wires under the bottom head
+    wy = -an["yt"] - 0.0018
+    nw = 18 if MICRO else 8
+    for k in range(nw):
+        zz = -0.036 + k * (0.072 / (nw - 1))
+        g.add("Chrome", tube_between((-0.15, wy, zz), (0.15, wy, zz), 0.0007, 3,
+                                     caps=False), A)
+    for xx in (-0.158, 0.158):
+        g.add("Chrome", rbox(0.016, 0.0018, 0.082, center=(xx, wy, 0)), A)
+    for xx, tx in ((-0.166, -(R + 0.008)), (0.166, R + 0.008)):
+        p0 = np.array([xx, wy, 0])
+        p1 = np.array([tx, -an["yt"] + 0.004, 0])
+        d = unit(p1 - p0)
+        L = np.linalg.norm(p1 - p0)
+        g.add("Rubber", rbox(0.0012, L, 0.012, bevel=0.0004),
+              chain(A, frame((p0 + p1) / 2, d, (0, 0, 1))))
+
+
+def rug(kit, x0, z0, x1, z1):
+    poly = round_poly(Polygon([(x0, z0), (x1, z0), (x1, z1), (x0, z1)]), 0.05)
+    kit.add("Rug", "Rug", extrude(poly, 0.008, z0=-0.008), P_XZ)
+
+
+# ---------------------------------------------------------------------------
 # layout
 # ---------------------------------------------------------------------------
 DRUMMER = np.array([0.0, 1.25, -0.62])
@@ -966,21 +1096,7 @@ def build_kit(detail=1.0):
         g, an = build_drum(kit, comp, kD, kH, M, 10, "kick", reso="HeadLogo",
                            lug_phase=0.0, badge_phi=math.radians(18 + 36 * 2),
                            port=port)
-        # spurs
-        for phi in (math.radians(198), math.radians(342)):
-            yloc = -kH / 2 + 0.10
-            shell_bracket(g, kR, phi, yloc, (0.03, 0.06, 0.034))
-            p0 = g.world(np.array([(kR + 0.026) * math.cos(phi), yloc,
-                                   (kR + 0.026) * math.sin(phi)]))
-            out = np.sign(math.cos(phi))
-            p1 = p0 + np.array([out * 0.05, -0.02, 0.02])
-            foot = np.array([kx + out * (kR + 0.12), 0.03, c[2] + kH / 2 + 0.06])
-            path = fillet_path([p0, p1, foot], 0.05, 8)
-            kit.add(comp, "Chrome", sweep(path, 0.0068, S(14)))
-            fd = unit(foot - p1)
-            kit.add(comp, "Rubber",
-                    rubber_foot(0.0105, 0.04).transformed(frame(foot + fd * 0.004,
-                                                                -fd)))
+        kick_spurs(kit, comp, g, kx, c, kR, kH)
         build_pedal(kit, "Pedal_" + comp[-1], kx, 1 if kx > 0 else -1)
 
     # --- rack -----------------------------------------------------------
@@ -993,23 +1109,11 @@ def build_kit(detail=1.0):
     for comp, D, H, c, n in toms:
         ax = tom_axis(c, 18)
         M = frame(c, ax, (1, 0, 0))
-        # find the azimuth that faces the rack (+Z world)
-        Minv = np.linalg.inv(M)
-        dz = apply_dir(Minv, (0, 0, 1))
-        phi_m = math.atan2(dz[2], dz[0])
+        phi_m = tom_mount_azimuth(M)
         g, an = build_drum(kit, comp, D, H, M, n, "tom",
                            lug_phase=phi_m + math.pi / n,
                            badge_phi=phi_m + math.pi)
-        R = D / 2
-        ym = -H * 0.18
-        shell_bracket(g, R, phi_m, ym, (0.028, 0.05, 0.036), bolt=False)
-        recv_l = np.array([(R + 0.045) * math.cos(phi_m), ym,
-                           (R + 0.045) * math.sin(phi_m)])
-        g.add("Chrome", rbox(0.034, 0.03, 0.03, center=(0, 0, 0)),
-              chain(az(phi_m), T(R + 0.04, ym, 0)))
-        g.add("Chrome", wing_nut(0.005, 0.01, 0.014),
-              chain(az(phi_m), T(R + 0.04, ym + 0.015, 0)))
-        recv = g.world(recv_l)
+        recv = rack_tom_mount(g, M, D, H, phi_m)
         rp, rt = arc_point(c[0])
         tom_arm(kit, "TomArm_" + comp[4:], rp, rt, recv,
                 unit(np.array([recv[0] - rp[0], 0, recv[2] - rp[2]])))
@@ -1023,19 +1127,7 @@ def build_kit(detail=1.0):
         g, an = build_drum(kit, comp, D, H, M, 8, "floor",
                            lug_phase=math.radians(22.5),
                            badge_phi=math.radians(270))
-        R = D / 2
-        for a in legs:
-            phi = math.radians(a)
-            yb = H / 2 - 0.085
-            shell_bracket(g, R, phi, yb, (0.028, 0.05, 0.03))
-            d = np.array([math.cos(phi), 0, math.sin(phi)])
-            top_p = g.world(np.array([0, H / 2 - 0.055, 0]) + d * (R + 0.032))
-            foot = np.array([c[0], 0.03, c[2]]) + apply_dir(M, d) * (R + 0.11)
-            kit.add(comp, "Chrome", tube_between(top_p, foot, 0.0055, S(12),
-                                                 bevel=0.001))
-            fd = unit(foot - top_p)
-            kit.add(comp, "Rubber", rubber_foot(0.011, 0.04).transformed(
-                frame(foot + fd * 0.006, -fd)))
+        floor_tom_legs(kit, comp, g, M, c, D, H, legs)
 
     # --- snare ------------------------------------------------------------
     sD, sH = 14 * IN, 6.5 * IN
@@ -1045,37 +1137,8 @@ def build_kit(detail=1.0):
     g, an = build_drum(kit, "Snare", sD, sH, Ms, 10, "snare",
                        reso="HeadClear", lug_phase=math.radians(18),
                        badge_phi=math.radians(90))
-    R = sD / 2
+    snare_hardware(g, an, sD, sH)
     h = sH / 2
-    phi_s = math.radians(180)
-    # strainer (throw-off) + butt plate
-    A = az(phi_s)
-    g.add("Chrome", rbox(0.022, 0.05, 0.032, center=(R + 0.011, -h + 0.04, 0)), A)
-    g.add("BlackMetal", rbox(0.007, 0.055, 0.009,
-                             center=(R + 0.025, -h + 0.045, 0)),
-          chain(A, T(0, 0, 0)))
-    g.add("Chrome", knurl_knob(0.0085, 0.016), chain(A, T(R + 0.014, -h + 0.065,
-                                                         0)))
-    B = az(phi_s + math.pi)
-    g.add("Chrome", rbox(0.018, 0.034, 0.026, center=(R + 0.009, -h + 0.03, 0)),
-          B)
-    g.add("Chrome", key_bolt(0.0035, 0.006), chain(B, T(R + 0.018, -h + 0.03, 0),
-                                                  Rz(-math.pi / 2)))
-    # snare wires under the bottom head
-    wy = -an["yt"] - 0.0018
-    for k in range(18):
-        zz = -0.036 + k * (0.072 / 17)
-        g.add("Chrome", tube_between((-0.15, wy, zz), (0.15, wy, zz), 0.0007, 3,
-                                     caps=False), A)
-    for xx in (-0.158, 0.158):
-        g.add("Chrome", rbox(0.016, 0.0018, 0.082, center=(xx, wy, 0)), A)
-    for xx, tx in ((-0.166, -(R + 0.008)), (0.166, R + 0.008)):
-        p0 = np.array([xx, wy, 0])
-        p1 = np.array([tx, -an["yt"] + 0.004, 0])
-        d = unit(p1 - p0)
-        L = np.linalg.norm(p1 - p0)
-        g.add("Rubber", rbox(0.0012, L, 0.012, bevel=0.0004),
-              chain(A, frame((p0 + p1) / 2, d, (0, 0, 1))))
     build_snare_stand(kit, sc[0], sc[2], sc[1] - h - 0.022, sax)
 
     # --- hi-hat -----------------------------------------------------------
@@ -1121,9 +1184,7 @@ def build_kit(detail=1.0):
                        ("Stack_Splash12", m2, i2, False, "Bronze")])
 
     # --- rug --------------------------------------------------------------
-    rug = round_poly(Polygon([(-1.45, -1.15), (1.55, -1.15), (1.55, 0.95),
-                              (-1.45, 0.95)]), 0.05)
-    kit.add("Rug", "Rug", extrude(rug, 0.008, z0=-0.008), P_XZ)
+    rug(kit, -1.45, -1.15, 1.55, 0.95)
     return kit
 
 
@@ -1154,12 +1215,42 @@ MATERIALS = {
 }
 
 
-def export_all(kit, out_dir, base="MetalDrumKit"):
+def export_pivots(kit, parts, stud):
+    """Animation pivots in Roblox studs, relative to each component's
+    reference MeshPart (whose Position is its bounding-box centre)."""
+    out = {}
+    by_comp = {}
+    for name, mat, m in parts:
+        comp = name[:-(len(mat) + 1)]
+        by_comp.setdefault(comp, (name, m))
+    for comp, pv in kit.meta["pivots"].items():
+        if comp not in by_comp:
+            continue
+        ref, m = by_comp[comp]
+        v = apply(EXPORT_ROT, m.v) * stud
+        lo, hi = v.min(0), v.max(0)
+        centre = (lo + hi) / 2
+        p = apply(EXPORT_ROT, np.asarray(pv["pos"], float)) * stud
+        mirror = np.array([1.0, 1.0, -1.0])
+        out[comp] = {
+            "part": ref,
+            "size": (hi - lo).round(4).tolist(),
+            "offset": (p - centre).round(4).tolist(),
+            "up": (np.asarray(pv["up"], float) * mirror).round(4).tolist(),
+            "face": (np.asarray(pv["face"], float) * mirror).round(4).tolist(),
+            "lane": pv.get("lane"),
+            "kind": pv["kind"],
+        }
+    return out
+
+
+def export_all(kit, out_dir, base="MetalDrumKit", scale=1.0):
+    """Write OBJ/MTL in studs.  scale enlarges the whole kit."""
     os.makedirs(out_dir, exist_ok=True)
     parts = kit.merged()
     obj = os.path.join(out_dir, base + ".obj")
     mtl = base + ".mtl"
-    stud = 1.0 / STUD
+    stud = scale / STUD
     write_obj(obj, mtl, parts, scale=stud, M=EXPORT_ROT)
     with open(os.path.join(out_dir, mtl), "w") as fh:
         for name, ((r, g_, b), desc) in MATERIALS.items():
@@ -1168,6 +1259,8 @@ def export_all(kit, out_dir, base="MetalDrumKit"):
             if name == "HeadLogo":
                 fh.write("map_Kd kick_logo.png\n")
             fh.write("\n")
+    if kit.meta.get("pivots"):
+        kit.meta["pivots_export"] = export_pivots(kit, parts, stud)
     stats = []
     tot = 0
     for name, mat, m in parts:

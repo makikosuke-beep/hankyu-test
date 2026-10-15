@@ -2,8 +2,7 @@
 	Metal Drum Kit "IRON STORM" - Roblox Studio セットアップスクリプト
 
 	使い方:
-	  1. 3D インポーター (ホーム > 3D をインポート) で MetalDrumKit.fbx
-	     (または MetalDrumKit.obj) を読み込む
+	  1. 3D インポーター (ホーム > 3D をインポート) で FBX (または OBJ) を読み込む
 	  2. エクスプローラーで読み込まれた Model を選択する
 	  3. このファイルの中身をすべてコマンドバー (表示 > コマンドバー) に貼り付けて Enter
 
@@ -12,6 +11,9 @@
 	  - Drums / Cymbals / Hardware / 各パーツごとの Model に整理
 	  - 全パーツを Anchored・当たり判定を軽量化
 	  - スローン (椅子) に座れる Seat を追加
+	  - Beat Drummer 用キット (*_Setup.lua) では、各パーツの Model に
+	    Lane 属性 (BD / SN / HH / HT / FT / CR / RD など) と PieceKind 属性を付け、
+	    叩いたときのアニメーション用に WorldPivot (回転の中心) を設定
 
 	何度実行しても大丈夫です。PALETTE を書き換えて再実行すれば色を変えられます。
 ]]
@@ -24,6 +26,8 @@ local CONFIG = {
 	GroupByCategory = true, -- Drums / Cymbals / Hardware にまとめる
 	CollideOnlyRug = true, -- 当たり判定はラグ (敷物) だけにする
 }
+
+local PIVOTS = {} -- (kit-specific data is filled in by kitspec.py)
 
 local function mat(name, fallback)
 	local ok, m = pcall(function()
@@ -58,6 +62,13 @@ local function category(comp)
 	end
 	if comp:find("Rug$") then
 		return nil
+	end
+	local info = PIVOTS[comp]
+	if info and info.kind ~= "beater" then
+		if info.kind == "cymbal" or info.kind == "hihat_top" or info.kind == "hihat_bottom" then
+			return "Cymbals"
+		end
+		return "Drums"
 	end
 	if has("Boom_") or has("TomArm_") or has("Stand") or has("Pedal_") or has("Rack") or has("Throne") then
 		return "Hardware"
@@ -147,6 +158,35 @@ local function findPart(suffix)
 	end
 end
 
+-- Lane 属性と回転の中心 (WorldPivot) を設定
+local laned = 0
+for comp, info in pairs(PIVOTS) do
+	local ref = findPart(info.part)
+	local model = ref and ref.Parent
+	if ref and model and model:IsA("Model") and model.Name == comp then
+		-- インポート後に拡大・縮小されていても合うように、パーツの大きさから倍率を求める
+		local k = 1
+		if info.size.Magnitude > 1e-4 then
+			k = ref.Size.Magnitude / info.size.Magnitude
+		end
+		local pos = ref.CFrame:PointToWorldSpace(info.offset * k)
+		local up = ref.CFrame:VectorToWorldSpace(info.up)
+		local face = ref.CFrame:VectorToWorldSpace(info.face)
+		if math.abs(face:Dot(up)) > 0.98 then
+			face = ref.CFrame.LookVector
+		end
+		model.WorldPivot = CFrame.lookAt(pos, pos + face, up)
+		if info.lane then
+			model:SetAttribute("Lane", info.lane)
+		end
+		model:SetAttribute("PieceKind", info.kind)
+		laned += 1
+	end
+end
+if next(PIVOTS) ~= nil and root:IsA("Model") then
+	root:SetAttribute("DrumKit", true)
+end
+
 -- スローンに Seat を追加 (キャラクターはスネア側を向いて座る)
 if CONFIG.AddSeat then
 	local cushion = findPart("Throne_Leather")
@@ -175,4 +215,4 @@ if root:IsA("Model") then
 	root.PrimaryPart = findPart("Rug_Rug") or root.PrimaryPart
 end
 
-print(("[MetalDrumKit] %d パーツを設定しました (色・マテリアル適用 %d)"):format(#parts, styled))
+print(("[DrumKitSetup] %d パーツを設定 (色・マテリアル %d、Lane/回転中心 %d)"):format(#parts, styled, laned))

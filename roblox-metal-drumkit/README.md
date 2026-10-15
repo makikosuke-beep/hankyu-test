@@ -10,7 +10,20 @@
 | ![ドラマー視点](preview/drummer.jpg) | ![ペダル](preview/pedals.jpg) |
 | ![スネア](preview/snare.jpg) | ![スタック](preview/stack.jpg) |
 
-## 構成
+## Beat Drummer 用（7 レーン版）
+
+![Beat Drummer 用](preview/beatdrummer/bd_front.jpg)
+
+Beat Drummer の譜面のレーン（BD / SN / HH / HT / FT / CR / RD）に 1 対 1 で合わせた、購入用キット向けの版です。
+ツインペダル、ラック、ロゴ入りのフロントヘッドはそのままで、スマホ向けに軽くしています（58,368 ポリゴン / MeshPart 74 個）。
+
+- モデル: `export/beatdrummer/BeatDrummer_IronStorm.fbx`（OBJ もあり）
+- セットアップ: `export/beatdrummer/BeatDrummer_IronStorm_Setup.lua`（Lane 属性と回転の中心も設定）
+- 叩いたときの動き: `roblox/DrumKitFX.lua`
+- 構成の設定: `generator/specs/beatdrummer_spec.json`（パーツを増減して `kitspec.py` で作り直せます）
+- ゲームへの組み込み手順（PC の Claude Code 向け）: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md)
+
+## 構成（ショーケース版）
 
 | 区分 | 内容 |
 | --- | --- |

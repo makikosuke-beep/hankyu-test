@@ -1,0 +1,113 @@
+{
+ "name": "BeatDrummer_IronStorm",
+ "_comment": "Roblox studs, kit-local frame: +X = drummer's right, +Y = up, drummer faces -Z. Sizes in inches. lane = Beat Drummer chart lane code.",
+ "scale": 1.0,
+ "detail": 0.5,
+ "pedal": "double",
+ "rack": true,
+ "rug": true,
+ "throne": {
+  "pos": [
+   0.0,
+   2.018,
+   2.357
+  ]
+ },
+ "pieces": [
+  {
+   "lane": "BD",
+   "type": "kick",
+   "diameter": 22,
+   "depth": 18,
+   "pos": [
+    0.0,
+    0.0,
+    -1.352
+   ],
+   "logo": true,
+   "port": true
+  },
+  {
+   "lane": "SN",
+   "type": "snare",
+   "diameter": 14,
+   "depth": 6.5,
+   "pos": [
+    -0.464,
+    2.025,
+    0.607
+   ],
+   "tilt": 5,
+   "legs": [
+    0,
+    150,
+    210
+   ]
+  },
+  {
+   "lane": "HH",
+   "type": "hihat",
+   "diameter": 14,
+   "pos": [
+    -2.357,
+    3.518,
+    0.464
+   ],
+   "legs": [
+    90,
+    210,
+    330
+   ]
+  },
+  {
+   "lane": "HT",
+   "type": "tom",
+   "diameter": 12,
+   "depth": 9,
+   "pos": [
+    -0.357,
+    3.321,
+    -0.786
+   ],
+   "tilt": 18
+  },
+  {
+   "lane": "FT",
+   "type": "floortom",
+   "diameter": 16,
+   "depth": 16,
+   "pos": [
+    1.786,
+    1.506,
+    0.643
+   ],
+   "legs": [
+    0,
+    120,
+    240
+   ]
+  },
+  {
+   "lane": "CR",
+   "type": "crash",
+   "diameter": 18,
+   "pos": [
+    -1.714,
+    5.0,
+    -1.286
+   ],
+   "tilt": 20
+  },
+  {
+   "lane": "RD",
+   "type": "ride",
+   "diameter": 22,
+   "pos": [
+    2.286,
+    4.143,
+    -0.714
+   ],
+   "tilt": 12
+  }
+ ]
+}
