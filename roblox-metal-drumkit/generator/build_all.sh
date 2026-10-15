@@ -20,8 +20,16 @@ $PY drumkit.py --out "$OUT" --name MetalDrumKit_Lite --detail 0.5
 $BPY_PY blender_export.py --out "$OUT" --name MetalDrumKit
 $BPY_PY blender_export.py --out "$OUT" --name MetalDrumKit_Lite --detail 0.5
 
+# Beat Drummer 7-lane kit (lane-coded pieces + setup script with pivots)
+$PY kitspec.py specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
+cp "$OUT/kick_logo.png" "$OUT/beatdrummer/"
+$BPY_PY blender_export.py --spec specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
+
 # preview renders
 if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --renders "$PREV" --samples "$SAMPLES" \
     --views front,drummer,side,detail,pedals,snare,hihat,stack
+  $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json \
+    --renders "$PREV/beatdrummer" --samples "$SAMPLES" \
+    --views bd_front,bd_drummer,bd_pedals
 fi
