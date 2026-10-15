@@ -1,0 +1,178 @@
+--[[
+	Metal Drum Kit "IRON STORM" - Roblox Studio セットアップスクリプト
+
+	使い方:
+	  1. 3D インポーター (ホーム > 3D をインポート) で MetalDrumKit.fbx
+	     (または MetalDrumKit.obj) を読み込む
+	  2. エクスプローラーで読み込まれた Model を選択する
+	  3. このファイルの中身をすべてコマンドバー (表示 > コマンドバー) に貼り付けて Enter
+
+	やること:
+	  - パーツ名の末尾 (_Chrome, _Bronze など) から色・マテリアルを設定
+	  - Drums / Cymbals / Hardware / 各パーツごとの Model に整理
+	  - 全パーツを Anchored・当たり判定を軽量化
+	  - スローン (椅子) に座れる Seat を追加
+
+	何度実行しても大丈夫です。PALETTE を書き換えて再実行すれば色を変えられます。
+]]
+
+local CONFIG = {
+	Anchored = true,
+	AddSeat = true, -- スローンに座れる Seat を追加する
+	NeonAccents = false, -- true にすると赤いラインやインレイが発光 (ライブ演出向け)
+	LogoTextureId = "", -- バスドラ前面ロゴ画像の ID (例: "rbxassetid://123456")。空なら変更しない
+	GroupByCategory = true, -- Drums / Cymbals / Hardware にまとめる
+	CollideOnlyRug = true, -- 当たり判定はラグ (敷物) だけにする
+}
+
+local function mat(name, fallback)
+	local ok, m = pcall(function()
+		return Enum.Material[name]
+	end)
+	return ok and m or fallback
+end
+
+local SP = Enum.Material.SmoothPlastic
+
+-- パーツ名の末尾キー -> 見た目
+local PALETTE = {
+	Chrome = { Color = Color3.fromRGB(214, 216, 222), Material = SP, Reflectance = 0.4 },
+	Finish = { Color = Color3.fromRGB(18, 18, 22), Material = SP, Reflectance = 0.12 },
+	Accent = { Color = Color3.fromRGB(175, 12, 24), Material = SP, Reflectance = 0.05 },
+	HeadCoated = { Color = Color3.fromRGB(236, 234, 226), Material = SP },
+	HeadBlack = { Color = Color3.fromRGB(16, 16, 18), Material = SP, Reflectance = 0.05 },
+	HeadClear = { Color = Color3.fromRGB(205, 205, 200), Material = SP },
+	HeadLogo = { Color = Color3.fromRGB(16, 16, 18), Material = SP },
+	Bronze = { Color = Color3.fromRGB(214, 160, 80), Material = mat("Metal", SP), Reflectance = 0.1 },
+	BronzeDark = { Color = Color3.fromRGB(150, 100, 48), Material = mat("Metal", SP) },
+	BlackMetal = { Color = Color3.fromRGB(30, 30, 34), Material = mat("Metal", SP) },
+	Rubber = { Color = Color3.fromRGB(24, 24, 24), Material = mat("Rubber", SP) },
+	Felt = { Color = Color3.fromRGB(150, 16, 26), Material = mat("Fabric", SP) },
+	Leather = { Color = Color3.fromRGB(20, 20, 22), Material = mat("Leather", SP) },
+	Rug = { Color = Color3.fromRGB(34, 34, 38), Material = mat("Carpet", mat("Fabric", SP)) },
+}
+
+local function category(comp)
+	local function has(s)
+		return comp:find(s, 1, true) ~= nil
+	end
+	if comp:find("Rug$") then
+		return nil
+	end
+	if has("Boom_") or has("TomArm_") or has("Stand") or has("Pedal_") or has("Rack") or has("Throne") then
+		return "Hardware"
+	end
+	if has("Kick_") or has("Snare") or has("Tom_") then
+		return "Drums"
+	end
+	if has("Crash_") or has("Ride_") or has("China_") or has("Splash_") or has("Stack_") or has("HiHat_") then
+		return "Cymbals"
+	end
+	return "Hardware"
+end
+
+local Selection = game:GetService("Selection")
+local root = Selection:Get()[1] or workspace:FindFirstChild("MetalDrumKit")
+assert(root, "インポートしたドラムセットの Model を選択してから実行してください")
+if root:IsA("BasePart") then
+	root = root:FindFirstAncestorWhichIsA("Model") or root
+end
+
+local function getModel(parent, name)
+	local m = parent:FindFirstChild(name)
+	if not (m and m:IsA("Model")) then
+		m = Instance.new("Model")
+		m.Name = name
+		m.Parent = parent
+	end
+	return m
+end
+
+local parts = {}
+for _, d in ipairs(root:GetDescendants()) do
+	if d:IsA("BasePart") and d.Name ~= "DrummerSeat" then
+		table.insert(parts, d)
+	end
+end
+
+local styled = 0
+for _, p in ipairs(parts) do
+	local comp, key = p.Name:match("^(.+)_(%w+)$")
+	local style = key and PALETTE[key]
+	if style then
+		local textured = (p:IsA("MeshPart") and p.TextureID ~= "") or p:FindFirstChildOfClass("SurfaceAppearance") ~= nil
+		if key == "HeadLogo" and CONFIG.LogoTextureId ~= "" and p:IsA("MeshPart") then
+			p.TextureID = CONFIG.LogoTextureId
+			textured = true
+		end
+		if not (key == "HeadLogo" and textured) then
+			p.Color = style.Color
+			p.Material = style.Material
+			p.Reflectance = style.Reflectance or 0
+		end
+		if key == "Accent" and CONFIG.NeonAccents then
+			p.Material = Enum.Material.Neon
+		end
+		styled += 1
+	end
+	p.Anchored = CONFIG.Anchored
+	p.CanCollide = (not CONFIG.CollideOnlyRug) or key == "Rug"
+	p.CanTouch = false
+	pcall(function()
+		p.CollisionFidelity = Enum.CollisionFidelity.Box
+	end)
+	pcall(function()
+		p.RenderFidelity = Enum.RenderFidelity.Automatic
+	end)
+	if comp and CONFIG.GroupByCategory then
+		comp = comp:gsub("^MetalDrumKit_", "")
+		local cat = category(comp)
+		local parent = cat and getModel(root, cat) or root
+		p.Parent = getModel(parent, comp)
+	end
+end
+
+-- 空になった古いフォルダ / Model を掃除
+for _, d in ipairs(root:GetDescendants()) do
+	if (d:IsA("Model") or d:IsA("Folder")) and #d:GetDescendants() == 0 then
+		d:Destroy()
+	end
+end
+
+local function findPart(suffix)
+	for _, d in ipairs(root:GetDescendants()) do
+		if d:IsA("BasePart") and d.Name:sub(-#suffix) == suffix then
+			return d
+		end
+	end
+end
+
+-- スローンに Seat を追加 (キャラクターはスネア側を向いて座る)
+if CONFIG.AddSeat then
+	local cushion = findPart("Throne_Leather")
+	local snare = findPart("Snare_Finish")
+	local old = root:FindFirstChild("DrummerSeat", true)
+	if old then
+		old:Destroy()
+	end
+	if cushion then
+		local top = cushion.Position + Vector3.new(0, cushion.Size.Y / 2 - 0.15, 0)
+		local dir = snare and (snare.Position - cushion.Position) or Vector3.new(0, 0, -1)
+		dir = Vector3.new(dir.X, 0, dir.Z)
+		dir = dir.Magnitude > 1e-3 and dir.Unit or Vector3.new(0, 0, -1)
+		local seat = Instance.new("Seat")
+		seat.Name = "DrummerSeat"
+		seat.Size = Vector3.new(1.2, 0.2, 1.2)
+		seat.Transparency = 1
+		seat.Anchored = true
+		seat.CanCollide = false
+		seat.CFrame = CFrame.lookAt(top, top + dir)
+		seat.Parent = cushion.Parent
+	end
+end
+
+if root:IsA("Model") then
+	root.PrimaryPart = findPart("Rug_Rug") or root.PrimaryPart
+end
+
+print(("[MetalDrumKit] %d パーツを設定しました (色・マテリアル適用 %d)"):format(#parts, styled))
