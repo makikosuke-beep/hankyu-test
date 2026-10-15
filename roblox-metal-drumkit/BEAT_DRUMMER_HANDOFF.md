@@ -10,7 +10,7 @@ IRON STORM は、ゲーム内のお金または Robux で買うと、今のド�
 2. ノーツを叩いたときに、キットが動くようにする（シンバルの揺れ、ビーター、ハイハットの開閉、ヘッドの発光）
 3. **音は今のキットと変える**（IRON STORM 専用のサウンドセット）
 4. ゲーム内のお金と Robux のどちらかで買えるようにし、持っている人だけが装備を切り替えられるようにする
-5. スマホでも重くならないこと（今のモデルは 58,368 ポリゴン、MeshPart 74 個）
+5. スマホでも重くならないこと（今のモデルは 63,456 ポリゴン、MeshPart 82 個）
 
 ## 素材の場所
 
@@ -30,21 +30,26 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
 | `generator/specs/beatdrummer_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
 | `generator/kitspec.py` | 設定ファイルからモデルを作るスクリプト |
 
-### 今のモデルの構成（仮）
+### 今のモデルの構成
 
-譜面で使われているレーン記号に合わせて、1 レーン 1 パーツで作ってあります。
+今のキットと同じ、タム 3 つ（HT・LT・FT）の構成です。画面のキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）に合わせています。
+並びも今のキットと同じで、ドラマーから見て左にハイハットとクラッシュ、バスドラムの上にハイタムとロータム、右にフロアタムとライドがあります。
 
-| レーン | パーツ（Model 名） | 種類 | 大きさ |
-| --- | --- | --- | --- |
-| BD | `BD_Kick` ＋ ビーター 2 本（`Pedal_Main_BeaterR` / `Pedal_Main_BeaterL`） | バスドラム（ツインペダル） | 22" × 18" |
-| SN | `SN_Snare` | スネア | 14" × 6.5" |
-| HH | `HH_Top` / `HH_Bottom` | ハイハット | 14" |
-| HT | `HT_Tom` | タム | 12" × 9" |
-| FT | `FT_FloorTom` | フロアタム | 16" × 16" |
-| CR | `CR_Crash` | クラッシュ | 18" |
-| RD | `RD_Ride` | ライド | 22" |
+| 画面のキー | Lane 属性（譜面の記号） | パーツ（Model 名） | 種類 | 大きさ |
+| --- | --- | --- | --- | --- |
+| HH | HH | `HH_Top` / `HH_Bottom` | ハイハット | 14" |
+| CY | CR | `CR_Crash` | クラッシュ | 18" |
+| SL / SR | SN | `SN_Snare` | スネア（左右の手で同じスネア） | 14" × 6.5" |
+| BD | BD | `BD_Kick` ＋ ビーター 2 本（`Pedal_Main_BeaterR` / `Pedal_Main_BeaterL`） | バスドラム（ツインペダル） | 22" × 18" |
+| HT | HT | `HT_Tom` | ハイタム | 10" × 8" |
+| LT | LT | `LT_Tom` | ロータム | 12" × 9" |
+| FT | FT | `FT_FloorTom` | フロアタム | 16" × 16" |
+| RD | RD | `RD_Ride` | ライド | 22" |
 
-ラック、スタンド、スローン、ラグは演奏しない飾り（Hardware）です。
+- Lane 属性には、譜面データで使われている記号（CR・SN）を入れています。
+  ゲームの中でクラッシュを `CY`、スネアを `SL` / `SR` と呼んでいる場合も、DrumKitFX はどちらの名前でも動きます
+- ゲーム側のコードが別の記号を使っている場合は、`specs/beatdrummer_spec.json` の `lane` を直して作り直すか、DrumKitFX の `ALIASES` に対応を足してください
+- ラック、スタンド、スローン、ラグは演奏しない飾り（Hardware）です
 
 ## 手順
 
@@ -69,7 +74,7 @@ Studio MCP で、次のことを調べてユーザーに報告してください
   今のキットのパーツの位置に合わせてください
 - 太鼓の `pos` は胴の中心、シンバルの `pos` は中心の穴の位置です。ハイハットの `pos` の Y は、ボトムのシンバルの高さです
 - 今のキットが現実より大きい（または小さい）ときは、`scale` で全体の大きさを変えられます
-- 細かさは `detail` で決まります。0.5 で約 5.8 万ポリゴン、0.35 で約 4.9 万ポリゴンです
+- 細かさは `detail` で決まります。今は 0.5（約 6.3 万ポリゴン）です。下げると軽くなります
 
 作り直すコマンドです（作成時は Linux の Python 3.13 で確認済み。Windows では未確認です）。
 FBX を作るには Blender が別に必要ですが、Roblox への読み込みは OBJ で十分です。
@@ -122,7 +127,7 @@ local DrumKitFX = require(ReplicatedStorage.BeatDrummer.DrumKitFX)
 local fx = DrumKitFX.new(currentKitModel)        -- キットを入れ替えたら fx:destroy() して作り直す
 
 -- ノーツを叩いたとき（判定が出たとき、オートプレイも含む）
-fx:hit(lane, strength)                           -- lane = "BD" など、strength = 0〜1
+fx:hit(lane, strength)                           -- lane = "BD" など（"CY" "SL" "SR" も可）、strength = 0〜1
 fx:hit("HH", 0.8, { open = true })               -- 譜面の HH の "o"（オープン）
 fx:hit("HH", 0.8, { open = false })              -- クローズ
 fx:setHiHatOpen(false)                           -- ペダルで閉じる
@@ -139,7 +144,7 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 
   ```lua
   KitSounds.IronStorm = { BD = "rbxassetid://...", SN = "...", HH = { closed = "...", open = "..." },
-                          HT = "...", FT = "...", CR = "...", RD = "..." }
+                          HT = "...", LT = "...", FT = "...", CR = "...", RD = "..." }
   ```
 - 音そのものは、**ユーザーと一緒に選んでください**（Creator Store の音源、またはユーザーが用意した音を Roblox にアップロード）。
   メタル向けの方向性の例: アタックの強いクリック感のあるキック、高めにチューニングしたスネア、
@@ -157,7 +162,7 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 
 ### 9. 確認
 
-- プレイテストで、7 レーンすべてが動くこと（オートプレイで全曲を通す）
+- プレイテストで、9 つのキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）すべてで、対応するパーツが動くこと（オートプレイで全曲を通す）
 - スマホのエミュレーター（デバイス設定）で、フレームレートが下がらないこと
 - キットを入れ替えても、カメラ・ノーツ表示・バンドのメンバーの位置がずれないこと
 - 買っていないプレイヤーは装備できないこと、買った後は再入場しても持っていること

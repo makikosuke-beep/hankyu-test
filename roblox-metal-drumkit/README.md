@@ -10,12 +10,13 @@
 | ![ドラマー視点](preview/drummer.jpg) | ![ペダル](preview/pedals.jpg) |
 | ![スネア](preview/snare.jpg) | ![スタック](preview/stack.jpg) |
 
-## Beat Drummer 用（7 レーン版）
+## Beat Drummer 用（タム 3 つの版）
 
 ![Beat Drummer 用](preview/beatdrummer/bd_front.jpg)
 
-Beat Drummer の譜面のレーン（BD / SN / HH / HT / FT / CR / RD）に 1 対 1 で合わせた、購入用キット向けの版です。
-ツインペダル、ラック、ロゴ入りのフロントヘッドはそのままで、スマホ向けに軽くしています（58,368 ポリゴン / MeshPart 74 個）。
+Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構成に合わせた、購入用キット向けの版です。
+画面のキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）に 1 対 1 で対応します（SL / SR は同じスネア）。
+ツインペダル、ラック、ロゴ入りのフロントヘッドはそのままで、スマホ向けに軽くしています（63,456 ポリゴン / MeshPart 82 個）。
 
 - モデル: `export/beatdrummer/BeatDrummer_IronStorm.fbx`（OBJ もあり）
 - セットアップ: `export/beatdrummer/BeatDrummer_IronStorm_Setup.lua`（Lane 属性と回転の中心も設定）

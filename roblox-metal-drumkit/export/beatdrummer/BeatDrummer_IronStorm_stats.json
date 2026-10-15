@@ -1,7 +1,7 @@
 {
  "summary": {
-  "parts": 74,
-  "triangles": 58368,
+  "parts": 82,
+  "triangles": 63456,
   "max_part_triangles": 4876,
   "size_studs": [
    7.08,
@@ -133,27 +133,27 @@
   {
    "name": "HT_Tom_Finish",
    "material": "Finish",
-   "tris": 336
+   "tris": 288
   },
   {
    "name": "HT_Tom_Accent",
    "material": "Accent",
-   "tris": 460
+   "tris": 412
   },
   {
    "name": "HT_Tom_HeadCoated",
    "material": "HeadCoated",
-   "tris": 392
+   "tris": 336
   },
   {
    "name": "HT_Tom_HeadBlack",
    "material": "HeadBlack",
-   "tris": 392
+   "tris": 336
   },
   {
    "name": "HT_Tom_Chrome",
    "material": "Chrome",
-   "tris": 3312
+   "tris": 3120
   },
   {
    "name": "HT_Tom_Rubber",
@@ -167,6 +167,46 @@
   },
   {
    "name": "TomArm_HT_Chrome",
+   "material": "Chrome",
+   "tris": 324
+  },
+  {
+   "name": "LT_Tom_Finish",
+   "material": "Finish",
+   "tris": 336
+  },
+  {
+   "name": "LT_Tom_Accent",
+   "material": "Accent",
+   "tris": 460
+  },
+  {
+   "name": "LT_Tom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 392
+  },
+  {
+   "name": "LT_Tom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 392
+  },
+  {
+   "name": "LT_Tom_Chrome",
+   "material": "Chrome",
+   "tris": 3312
+  },
+  {
+   "name": "LT_Tom_Rubber",
+   "material": "Rubber",
+   "tris": 104
+  },
+  {
+   "name": "TomArm_LT_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 168
+  },
+  {
+   "name": "TomArm_LT_Chrome",
    "material": "Chrome",
    "tris": 324
   },

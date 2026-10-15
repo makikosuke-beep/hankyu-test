@@ -1,7 +1,7 @@
 """Build a drum kit from a JSON spec (piece list + lane codes).
 
 Used for Beat Drummer: every playable piece carries the game's lane code
-(BD, SN, HH, HT, FT, CR, RD, ...) in its component name, e.g. "SN_Snare",
+(BD, SN, HH, HT, LT, FT, CR, RD, ...) in its component name, e.g. "SN_Snare",
 so the kit can replace an existing one piece-for-piece.
 
 Spec coordinates are Roblox studs in the kit's own frame:

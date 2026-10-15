@@ -7,7 +7,7 @@
 	使い方 (LocalScript から):
 		local DrumKitFX = require(path.to.DrumKitFX)
 		local fx = DrumKitFX.new(workspace.Stage.DrumKit)
-		fx:hit("SN", 1.0)                 -- レーン名, 強さ 0〜1
+		fx:hit("SN", 1.0)                 -- レーン名, 強さ 0〜1 ("SL" / "SR" / "CY" でも可)
 		fx:hit("HH", 0.8, { open = true }) -- オープンハイハット
 		fx:setHiHatOpen(false)            -- ハイハットを閉じる (ペダルを踏む)
 		fx:destroy()                      -- キットを入れ替えるとき
@@ -50,6 +50,14 @@ local DRUM_TIME = 0.12
 local BEATER_SWING = math.rad(38)
 local BEATER_TIME = 0.16
 local HIHAT_OPEN = 0.13 -- トップが上がる量 (studs)
+
+-- 画面のキー名と譜面のレーン記号の対応 (どちらで呼んでも同じパーツが動く)
+--   CY = クラッシュ (譜面では CR) / SL・SR = スネアを左右の手で叩くキー (譜面では SN)
+local ALIASES: { [string]: string } = { CY = "CR", SL = "SN", SR = "SN", CR = "CY", SN = "SN" }
+
+local function lookup(lanes: { [string]: { Piece } }, lane: string): { Piece }?
+	return lanes[lane] or lanes[ALIASES[lane] or ""]
+end
 
 local function findHead(model: Model): BasePart?
 	for _, d in ipairs(model:GetDescendants()) do
@@ -95,7 +103,7 @@ end
 
 -- レーンに属するパーツ一覧 (デバッグ用)
 function DrumKitFX:pieces(lane: string): { Piece }
-	return self.lanes[lane] or {}
+	return lookup(self.lanes, lane) or {}
 end
 
 function DrumKitFX:_flash(piece: Piece, strength: number)
@@ -115,7 +123,7 @@ function DrumKitFX:_flash(piece: Piece, strength: number)
 end
 
 function DrumKitFX:hit(lane: string, strength: number?, opts: { open: boolean? }?)
-	local list = self.lanes[lane]
+	local list = lookup(self.lanes, lane)
 	if not list then
 		return
 	end
@@ -159,7 +167,7 @@ function DrumKitFX:hit(lane: string, strength: number?, opts: { open: boolean? }
 end
 
 function DrumKitFX:setHiHatOpen(open: boolean, lane: string?)
-	for _, p in ipairs(self.lanes[lane or "HH"] or {}) do
+	for _, p in ipairs(lookup(self.lanes, lane or "HH") or {}) do
 		if p.kind == "hihat_top" then
 			p.open = open and 1 or 0
 			self.active[p] = true

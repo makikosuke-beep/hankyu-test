@@ -1,6 +1,6 @@
 {
  "name": "BeatDrummer_IronStorm",
- "_comment": "Roblox studs, kit-local frame: +X = drummer's right, +Y = up, drummer faces -Z. Sizes in inches. lane = Beat Drummer chart lane code.",
+ "_comment": "Roblox studs, kit-local frame: +X = drummer's right, +Y = up, drummer faces -Z. Sizes in inches. lane = Beat Drummer chart lane code. On-screen keys: CY = crash (CR), SL/SR = both hands on the snare (SN).",
  "scale": 1.0,
  "detail": 0.5,
  "pedal": "double",
@@ -62,12 +62,24 @@
   {
    "lane": "HT",
    "type": "tom",
+   "diameter": 10,
+   "depth": 8,
+   "pos": [
+    -0.607,
+    3.268,
+    -0.75
+   ],
+   "tilt": 18
+  },
+  {
+   "lane": "LT",
+   "type": "tom",
    "diameter": 12,
    "depth": 9,
    "pos": [
-    -0.357,
+    0.643,
     3.321,
-    -0.786
+    -0.839
    ],
    "tilt": 18
   },

@@ -20,7 +20,7 @@ $PY drumkit.py --out "$OUT" --name MetalDrumKit_Lite --detail 0.5
 $BPY_PY blender_export.py --out "$OUT" --name MetalDrumKit
 $BPY_PY blender_export.py --out "$OUT" --name MetalDrumKit_Lite --detail 0.5
 
-# Beat Drummer 7-lane kit (lane-coded pieces + setup script with pivots)
+# Beat Drummer kit: same pieces as the in-game kit (HT/LT/FT toms), lane-coded
 $PY kitspec.py specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
 cp "$OUT/kick_logo.png" "$OUT/beatdrummer/"
 $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
