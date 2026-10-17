@@ -161,99 +161,99 @@ Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Neck
+newmtl Sunforge_Neck
 Kd 0.471 0.204 0.118
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Board
+newmtl Sunforge_Board
 Kd 0.243 0.141 0.102
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Frets
+newmtl Sunforge_Frets
 Kd 0.816 0.808 0.776
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Inlay
+newmtl Sunforge_Inlay
 Kd 0.941 0.925 0.886
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Nut
+newmtl Sunforge_Nut
 Kd 0.933 0.902 0.824
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Hardware
+newmtl Sunforge_Hardware
 Kd 0.871 0.855 0.808
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Strings
+newmtl Sunforge_Strings
 Kd 0.808 0.808 0.792
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Pickup
+newmtl Sunforge_Pickup
 Kd 0.094 0.094 0.102
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Knob
+newmtl Sunforge_Knob
 Kd 0.839 0.627 0.235
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Head
+newmtl Sunforge_Head
 Kd 0.063 0.055 0.055
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Body
+newmtl Sunforge_Body
 Kd 0.376 0.063 0.047
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Top
+newmtl Sunforge_Top
 Kd 0.769 0.275 0.118
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-map_Kd textures/Heritage_Top.png
-newmtl Heritage_Binding
+map_Kd textures/Sunforge_Top.png
+newmtl Sunforge_Binding
 Kd 0.933 0.886 0.769
 Ka 0 0 0
 Ks 0.5 0.5 0.5
 Ns 200
 d 1
 illum 2
-newmtl Heritage_Guard
+newmtl Sunforge_Guard
 Kd 0.933 0.886 0.769
 Ka 0 0 0
 Ks 0.5 0.5 0.5

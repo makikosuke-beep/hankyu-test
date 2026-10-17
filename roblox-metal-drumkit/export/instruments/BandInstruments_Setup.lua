@@ -25,7 +25,7 @@
 
 local INSTRUMENTS = {
 	Skyline = {
-		kind = "Guitar", name = "スカイライン", nameEn = "SKYLINE", style = "ST タイプ",
+		kind = "Guitar", name = "スカイライン", nameEn = "SKYLINE", style = "ダブルカッタウェイ",
 		primary = "Skyline_Body",
 		wear = Vector3.new(0.00624, 0.00125, -0.08036),
 		neck = Vector3.new(0.01041, 1.22537, 0.11964),
@@ -46,7 +46,7 @@ local INSTRUMENTS = {
 		},
 	},
 	Prairie = {
-		kind = "Guitar", name = "プレーリー", nameEn = "PRAIRIE", style = "TL タイプ",
+		kind = "Guitar", name = "プレーリー", nameEn = "PRAIRIE", style = "スラブ・シングルカット",
 		primary = "Prairie_Body",
 		wear = Vector3.new(0.00045, 0.00001, -0.08036),
 		neck = Vector3.new(0.00074, 1.31460, 0.11964),
@@ -65,9 +65,9 @@ local INSTRUMENTS = {
 			Guard = { Color = Color3.fromRGB(20, 20, 22), Material = "SmoothPlastic", Reflectance = 0.10 },
 		},
 	},
-	Heritage = {
-		kind = "Guitar", name = "ヘリテージ", nameEn = "HERITAGE", style = "LP タイプ",
-		primary = "Heritage_Body",
+	Sunforge = {
+		kind = "Guitar", name = "サンフォージ", nameEn = "SUNFORGE", style = "カーブドトップ・シングルカット",
+		primary = "Sunforge_Body",
 		wear = Vector3.new(0.00002, 0.00023, -0.07679),
 		neck = Vector3.new(0.00000, 1.35833, 0.16250),
 		strum = Vector3.new(0.00000, 0.11141, 0.16250),
@@ -89,11 +89,11 @@ local INSTRUMENTS = {
 		},
 	},
 	CrimsonHorn = {
-		kind = "Guitar", name = "クリムゾンホーン", nameEn = "CRIMSON HORN", style = "SG タイプ",
+		kind = "Guitar", name = "クリムゾンホーン", nameEn = "CRIMSON HORN", style = "フレアホーン",
 		primary = "CrimsonHorn_Body",
-		wear = Vector3.new(-0.00562, 0.00018, -0.06071),
-		neck = Vector3.new(-0.00932, 1.45411, 0.10357),
-		strum = Vector3.new(-0.00932, 0.20718, 0.10357),
+		wear = Vector3.new(-0.00510, 0.00147, -0.06071),
+		neck = Vector3.new(-0.00874, 1.43460, 0.10357),
+		strum = Vector3.new(-0.00874, 0.18767, 0.10357),
 		palette = {
 			Neck = { Color = Color3.fromRGB(118, 26, 20), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -110,11 +110,11 @@ local INSTRUMENTS = {
 		},
 	},
 	Valkyrie = {
-		kind = "Guitar", name = "ヴァルキリー", nameEn = "VALKYRIE", style = "V タイプ",
+		kind = "Guitar", name = "ヴァルキリー", nameEn = "VALKYRIE", style = "V シェイプ",
 		primary = "Valkyrie_Body",
-		wear = Vector3.new(-0.00093, 0.00039, -0.06250),
-		neck = Vector3.new(-0.00093, 1.66914, 0.10536),
-		strum = Vector3.new(-0.00093, 0.42221, 0.10536),
+		wear = Vector3.new(0.00092, 0.00002, -0.06250),
+		neck = Vector3.new(0.00092, 1.68627, 0.10536),
+		strum = Vector3.new(0.00092, 0.43935, 0.10536),
 		palette = {
 			Neck = { Color = Color3.fromRGB(30, 28, 28), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -131,7 +131,7 @@ local INSTRUMENTS = {
 		},
 	},
 	Velvet = {
-		kind = "Bass", name = "ヴェルヴェット", nameEn = "VELVET", style = "JB タイプ",
+		kind = "Bass", name = "ヴェルヴェット", nameEn = "VELVET", style = "オフセット・ベース",
 		primary = "Velvet_Body",
 		wear = Vector3.new(-0.00538, 0.00043, -0.08036),
 		neck = Vector3.new(-0.00906, 1.40285, 0.12679),
@@ -151,7 +151,7 @@ local INSTRUMENTS = {
 		},
 	},
 	Foundation = {
-		kind = "Bass", name = "ファウンデーション", nameEn = "FOUNDATION", style = "PB タイプ",
+		kind = "Bass", name = "ファウンデーション", nameEn = "FOUNDATION", style = "スプリットコイル・ベース",
 		primary = "Foundation_Body",
 		wear = Vector3.new(0.00877, 0.00004, -0.08036),
 		neck = Vector3.new(0.01449, 1.36106, 0.12679),
@@ -171,7 +171,7 @@ local INSTRUMENTS = {
 		},
 	},
 	Manta = {
-		kind = "Bass", name = "マンタ", nameEn = "MANTA", style = "SR タイプ",
+		kind = "Bass", name = "マンタ", nameEn = "MANTA", style = "ハムバッカー・ベース",
 		primary = "Manta_Body",
 		wear = Vector3.new(-0.00028, 0.00429, -0.08036),
 		neck = Vector3.new(-0.00091, 1.33538, 0.12679),
@@ -191,7 +191,7 @@ local INSTRUMENTS = {
 		},
 	},
 	Tempest = {
-		kind = "Bass", name = "テンペスト", nameEn = "TEMPEST", style = "TB タイプ",
+		kind = "Bass", name = "テンペスト", nameEn = "TEMPEST", style = "リバースボディ・ベース",
 		primary = "Tempest_Body",
 		wear = Vector3.new(0.01454, 0.00074, -0.07143),
 		neck = Vector3.new(0.02447, 1.54726, 0.11429),
@@ -212,11 +212,11 @@ local INSTRUMENTS = {
 		},
 	},
 	Crestwave = {
-		kind = "Bass", name = "クレストウェーブ", nameEn = "CRESTWAVE", style = "RK タイプ",
+		kind = "Bass", name = "クレストウェーブ", nameEn = "CRESTWAVE", style = "スウェプトホーン・ベース",
 		primary = "Crestwave_Body",
-		wear = Vector3.new(0.00239, 0.00293, -0.06429),
-		neck = Vector3.new(0.00434, 1.44198, 0.10357),
-		strum = Vector3.new(0.00434, -0.32220, 0.10357),
+		wear = Vector3.new(-0.00161, 0.00082, -0.06429),
+		neck = Vector3.new(-0.00259, 1.48377, 0.10357),
+		strum = Vector3.new(-0.00259, -0.28041, 0.10357),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },

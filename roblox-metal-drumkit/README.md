@@ -88,23 +88,23 @@ Beat Drummer で演奏するキャラクターに持たせるスティックで�
 
 Beat Drummer のバンドのメンバーが構えるギター 5 本とベース 5 本です。代表的なモデルの形に合わせていますが、
 ブランド名やロゴは入れていません（ヘッドの形も一般的な形）。
-輪郭は実物の寸法の比率に合わせ、ST タイプと JB・PB・SR タイプには腕とお腹が当たる部分を削ったコンター（アームコンター・ボディ裏のカット）も付けています。
+輪郭は実物の寸法の比率に合わせ、スカイライン・ヴェルヴェット・ファウンデーション・マンタには腕とお腹が当たる部分を削ったコンター（アームコンター・ボディ裏のカット）も付けています。
 
-| 名前 | タイプ | 名前 | タイプ |
+| 名前 | ボディ | 名前 | ボディ |
 | --- | --- | --- | --- |
-| SKYLINE | ST タイプ（ギター） | VELVET | JB タイプ（ベース） |
-| PRAIRIE | TL タイプ（ギター） | FOUNDATION | PB タイプ（ベース） |
-| HERITAGE | LP タイプ（ギター） | MANTA | SR タイプ（ベース） |
-| CRIMSON HORN | SG タイプ（ギター） | TEMPEST | TB タイプ（ベース） |
-| VALKYRIE | V タイプ（ギター） | CRESTWAVE | RK タイプ（ベース） |
+| SKYLINE | ダブルカッタウェイ（ギター） | VELVET | オフセット・ベース |
+| PRAIRIE | スラブ・シングルカット（ギター） | FOUNDATION | スプリットコイル・ベース |
+| SUNFORGE | カーブドトップ・シングルカット（ギター） | MANTA | ハムバッカー・ベース |
+| CRIMSON HORN | フレアホーン（ギター） | TEMPEST | リバースボディ・ベース |
+| VALKYRIE | V シェイプ（ギター） | CRESTWAVE | スウェプトホーン・ベース |
 
 ![ボディ](preview/instruments/instruments_guitar_bodies.jpg)
 
-- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 6,156〜9,276 ポリゴン）
+- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 6,162〜9,276 ポリゴン）
 - セットアップ: `export/instruments/BandInstruments_Setup.lua`（色・溶接・構える位置の Attachment）
 - キャラクターに構えさせる・ノーツに合わせて揺らす: `roblox/BandInstruments.lua`
 - 生成: `generator/instruments.py`（形）、`instrument_textures.py`（サンバーストや木目）、`instruments_blender.py`（FBX とレンダリング）
-- ボディ・ヘッド・ピックガードの形は実物の写真から輪郭を取り、スケール長とフレット位置で寸法を合わせています（`OUTLINES_IN`）
+- ボディとピックガードは実物の写真から輪郭を取り、スケール長とフレット位置で寸法を合わせています（`OUTLINES_IN`）。ヘッドはすべてオリジナルの形です。形の商標が強い V シェイプ・フレアホーン・スウェプトホーン・ベースは、翼やホーンの形を変えてアレンジしています
 - 組み込み手順: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md) の「11. ギターとベース」
 
 ## 構成（ショーケース版）
