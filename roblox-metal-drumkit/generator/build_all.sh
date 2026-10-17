@@ -40,6 +40,11 @@ $PY stick_logos.py "$OUT/sticks/logos"
 $PY sticks.py --out "$OUT/sticks"
 $BPY_PY sticks_blender.py --out "$OUT/sticks"
 
+# Guitars and basses for the band (also writes roblox/BandInstruments.lua)
+$PY instrument_textures.py "$OUT/instruments/textures"
+$PY instruments.py --out "$OUT/instruments"
+$BPY_PY instruments_blender.py --out "$OUT/instruments"
+
 # preview renders
 if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --renders "$PREV" --samples "$SAMPLES" \
@@ -57,4 +62,5 @@ if [[ "${RENDER:-1}" == "1" ]]; then
     --renders "$PREV/sovereign" --lineup "$PREV/sovereign/styles_lineup.jpg" \
     --views bd_front --samples 24 --res 800x500
   $BPY_PY sticks_blender.py --renders "$PREV/sticks" --samples "$SAMPLES"
+  $BPY_PY instruments_blender.py --renders "$PREV/instruments" --samples "$SAMPLES"
 fi

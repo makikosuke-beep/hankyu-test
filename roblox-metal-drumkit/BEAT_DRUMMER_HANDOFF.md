@@ -12,7 +12,8 @@
 2 つとも同じ仕組み（同じレーン、同じセットアップ、同じ DrumKitFX / DrumKitStyles）で動きます。
 先に IRON STORM で一通り組み込み、その後 SOVEREIGN を同じ手順で足すと楽です。
 
-あわせて、キットとは別に選べる**スティック 6 種**（`DrumSticks`）も入れます（手順 10）。
+あわせて、キットとは別に選べる**スティック 6 種**（`DrumSticks`、手順 10）と、
+バンドのメンバーが構える**ギター 5 本・ベース 5 本**（`BandInstruments`、手順 11）も入れます。
 
 ## ゴール
 
@@ -23,6 +24,7 @@
 5. スマホでも重くならないこと（IRON STORM は 63,456 ポリゴン / MeshPart 83 個、SOVEREIGN は 70,464 ポリゴン / MeshPart 69 個）
 6. **色と模様を選べるようにする**（キットごとにシェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッドも選べる。おすすめの組み合わせ 8 種）
 7. **スティックを選べるようにする**（6 種。キットとは別に買って装備し、演奏するキャラクターの両手に持たせる。叩くと飾りや芯が光る）
+8. **バンドのギターとベースを入れる**（ギター 5 本・ベース 5 本。代表的なモデルの形。メンバーに構えさせ、ノーツに合わせて揺らす）
 
 ## 素材の場所
 
@@ -50,6 +52,7 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
 | `generator/specs/beatdrummer_spec.json` / `sovereign_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
 | `generator/styles_catalog.json` | 色・模様の選択肢の元データ（`make_styles_lua.py` で `DrumKitStyles.lua` を作り直す） |
 | `export/sticks/` と `roblox/DrumSticks.lua` | スティック 6 種（手順 10） |
+| `export/instruments/` と `roblox/BandInstruments.lua` | ギター 5 本・ベース 5 本（手順 11） |
 | `generator/kitspec.py` | 設定ファイルからモデルを作るスクリプト |
 
 ### 今のモデルの構成
@@ -308,7 +311,71 @@ Styles.apply(kitModel, Styles.preset("sovereign", "Sovereign"))   -- プリセ�
    装備中のスティックの ID（`"Yozakura"` など）を DataStore に保存し、次に入ったときに持たせます。ショップの一覧には `DrumSticks.List`（`name` / `nameEn` / `theme` / `desc`）を使えます
 9. スティックの音は変えません（叩いた音はキットの音のまま）
 
-### 11. 確認
+### 11. ギターとベース（BandInstruments）
+
+バンドのメンバー（または他の楽器を担当するプレイヤー）が構える楽器です。代表的なモデルの形にしてありますが、
+**ブランド名やロゴは入れていません**。ヘッドの形も一般的な形です。ゲーム内でも元のブランド名・モデル名は使わず、下の名前（またはタイプ名）で表示してください。
+
+| ID | 名前 | タイプ | 仕上げ | ポリゴン |
+| --- | --- | --- | --- | --- |
+| `Skyline` | スカイライン | ST タイプ（ギター） | 3 トーンサンバースト、白いピックガード、シングルコイル 3 基、トレモロ | 7,826 |
+| `Prairie` | プレーリー | TL タイプ（ギター） | バタースコッチのアッシュ、黒いピックガード、メイプル指板 | 7,031 |
+| `Heritage` | ヘリテージ | LP タイプ（ギター） | チェリーサンバーストのトラ杢トップ、クリームのバインディング、ハムバッカー 2 基 | 9,993 |
+| `CrimsonHorn` | クリムゾンホーン | SG タイプ（ギター） | チェリーレッド、尖ったダブルカッタウェイ、大きな黒いピックガード | 8,354 |
+| `Valkyrie` | ヴァルキリー | V タイプ（ギター） | 黒い V シェイプ、白いピックガード、V 字テールピース | 7,542 |
+| `Velvet` | ヴェルヴェット | JB タイプ（ベース） | 3 トーンサンバースト、べっ甲柄ピックガード、シングルコイル 2 基 | 7,027 |
+| `Foundation` | ファウンデーション | PB タイプ（ベース） | オリンピックホワイト、べっ甲柄ピックガード、スプリットコイル | 6,541 |
+| `Manta` | マンタ | SR タイプ（ベース） | ナチュラルアッシュ、黒いピックガード、大きなハムバッカー、3+1 ヘッド、丸いコントロールプレート | 6,876 |
+| `Tempest` | テンペスト | TB タイプ（ベース） | タバコサンバーストのリバースボディ、ハムバッカー 2 基 | 5,680 |
+| `Crestwave` | クレストウェーブ | RK タイプ（ベース） | ファイアーグロー、波頭形のホーン、白いピックガード、三角インレイ | 6,517 |
+
+**素材**
+
+| ファイル | 内容 |
+| --- | --- |
+| `export/instruments/BandInstruments.fbx` | 10 本が 2 列に並んだモデル（studs 単位、ボディやピックガードの柄の画像を埋め込み済み）。OBJ 版もあり |
+| `export/instruments/BandInstruments_Setup.lua` | 読み込み後に 1 回実行するセットアップ |
+| `roblox/BandInstruments.lua` | キャラクターに構えさせる・ノーツに合わせて揺らす ModuleScript（一覧 `BandInstruments.List` もここ） |
+| `export/instruments/textures/` | 柄の画像（FBX に入っているので通常はアップロード不要） |
+| `preview/instruments/` | ギター・ベースを並べた画像とボディのアップ |
+
+**手順**
+
+1. **今のバンドを調べる（変更はしない）**。バンドのメンバーが誰か（NPC かプレイヤーか、R15 か R6 か）、楽器を持っているか、
+   持っているならどのパーツで体に付いているか、腕や体の動き（`BandMotion` など）をどこで動かしているか。結果をユーザーに報告する
+2. **読み込む（ユーザーの手作業）**。3D インポーターで `BandInstruments.fbx` を読み込む。
+   全長がギター約 **3.4〜3.9 studs**、ベース約 **4.1〜4.4 studs**（実物の大きさ）になっているか確認する
+3. **セットアップ**。`BandInstruments_Setup.lua` を `execute_luau` で実行する（MCP からは `local root = ...` の行を読み込んだ Model を直接指すように書き換える）。
+   Folder `BandInstruments` の中に Model `Guitar_<ID>` / `Bass_<ID>` ができ、ボディ（PrimaryPart）に Attachment `Wear`（体に当てる位置）、
+   `Neck`（左手の位置）、`Strum`（右手で弾く位置）が付く。Folder を ReplicatedStorage に移す
+4. `roblox/BandInstruments.lua` を ModuleScript として ReplicatedStorage の BeatDrummer の下などに入れる
+5. **構えさせる（サーバー）**。今の楽器があれば、先に消すか非表示にする
+
+   ```lua
+   local BandInstruments = require(ReplicatedStorage.BeatDrummer.BandInstruments)
+   local template = BandInstruments.template(ReplicatedStorage.BandInstruments, "Heritage")
+   BandInstruments.attach(guitarist, template)                                  -- 体の正面に構える
+   BandInstruments.attach(bassist, BandInstruments.template(ReplicatedStorage.BandInstruments, "Manta"),
+       { tilt = 22, offset = Vector3.new(0.3, -0.1, 0), scale = 0.9 })           -- 角度・位置・大きさを調整
+   BandInstruments.detach(guitarist)
+   ```
+
+   - R15 は LowerTorso の `WaistFrontAttachment`、R6 は Torso の `BodyFrontAttachment` を基準に、ネックがキャラクターの左へ伸びる向きで付けます
+   - 向きや位置が合わないときは `tilt`（ネックを上げる角度、度）、`offset`（studs）、`scale` で調整し、ユーザーにプレイテストで見てもらって決めてください。
+     決まった値は `BandInstruments.Defaults` に書きます
+   - 実物の大きさなので、キャラクターに対して大きく見えるときは `scale` を 0.8〜0.9 にします
+   - 腕を楽器に合わせたいときは、楽器の Attachment `Neck`（左手）と `Strum`（右手）を IK やアニメーションの目標に使えます
+6. **ノーツに合わせて（クライアント）**。ギターやベースのパートのノーツ、またはドラムのノーツに合わせて呼ぶ
+
+   ```lua
+   BandInstruments.strum(guitarist, strength)   -- 楽器が少し揺れて、弦が一瞬光る
+   ```
+
+7. **購入と装備**を付ける場合は、キットやスティックと同じ考え方です（`BandInstruments.List` の `name` / `nameEn` / `style` / `desc` をショップに並べられます）。
+   バンドの見た目を変えるだけなら、メンバーごとに使う ID を決めて構えさせるだけで構いません
+8. ギターとベースの音は付けていません（Beat Drummer の曲の音のまま）
+
+### 12. 確認
 
 - プレイテストで、9 つのキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）すべてで、対応するパーツが動くこと（オートプレイで全曲を通す）
 - プリセット 8 種を順に適用して、模様・ロゴ・金物・シンバルの色が変わること。再入場しても選んだ見た目が残ること
@@ -318,5 +385,6 @@ Styles.apply(kitModel, Styles.preset("sovereign", "Sovereign"))   -- プリセ�
 - 買っていないプレイヤーは装備できないこと、買った後は再入場しても持っていること
 - スティック 6 種を順に持たせて、両手で正しく握っていること（向き・位置・大きさ）、叩いたときに光ること。他のプレイヤーからも見えること
 - スティックとキットを別々に切り替えても、互いに影響しないこと
+- ギター 5 本・ベース 5 本を順に構えさせて、向き・位置・大きさが自然なこと、`strum` で揺れて弦が光ること。他のプレイヤーからも見えること
 
 最後に、ユーザーに「保存と公開」をお願いしてください。

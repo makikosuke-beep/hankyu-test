@@ -81,6 +81,30 @@ Beat Drummer で演奏するキャラクターに持たせるスティックで�
 - 生成: `generator/sticks.py`（形と色）、`stick_logos.py`（ロゴ）、`sticks_blender.py`（FBX とレンダリング）
 - 組み込み手順: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md) の「10. スティック」
 
+## ギターとベース（各 5 本）
+
+![ギター](preview/instruments/instruments_guitars.jpg)
+![ベース](preview/instruments/instruments_basses.jpg)
+
+Beat Drummer のバンドのメンバーが構えるギター 5 本とベース 5 本です。代表的なモデルの形に合わせていますが、
+ブランド名やロゴは入れていません（ヘッドの形も一般的な形）。
+
+| 名前 | タイプ | 名前 | タイプ |
+| --- | --- | --- | --- |
+| SKYLINE | ST タイプ（ギター） | VELVET | JB タイプ（ベース） |
+| PRAIRIE | TL タイプ（ギター） | FOUNDATION | PB タイプ（ベース） |
+| HERITAGE | LP タイプ（ギター） | MANTA | SR タイプ（ベース） |
+| CRIMSON HORN | SG タイプ（ギター） | TEMPEST | TB タイプ（ベース） |
+| VALKYRIE | V タイプ（ギター） | CRESTWAVE | RK タイプ（ベース） |
+
+![ボディ](preview/instruments/instruments_guitar_bodies.jpg)
+
+- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 5,680〜9,993 ポリゴン）
+- セットアップ: `export/instruments/BandInstruments_Setup.lua`（色・溶接・構える位置の Attachment）
+- キャラクターに構えさせる・ノーツに合わせて揺らす: `roblox/BandInstruments.lua`
+- 生成: `generator/instruments.py`（形）、`instrument_textures.py`（サンバーストや木目）、`instruments_blender.py`（FBX とレンダリング）
+- 組み込み手順: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md) の「11. ギターとベース」
+
 ## 構成（ショーケース版）
 
 | 区分 | 内容 |
@@ -147,7 +171,7 @@ Beat Drummer で演奏するキャラクターに持たせるスティックで�
 cd generator
 pip install numpy scipy shapely trimesh mapbox_earcut pillow   # OBJ とロゴ
 pip install bpy                                                # FBX / GLB / レンダリング用（Blender モジュール）
-./build_all.sh            # すべて書き出し（3 キットとスティック。RENDER=0 でレンダリングを省略）
+./build_all.sh            # すべて書き出し（3 キット、スティック、ギターとベース。RENDER=0 でレンダリングを省略）
 python drumkit.py --detail 0.7 --name MyKit --out ../export    # 細かさを変えた OBJ を作る
 ```
 

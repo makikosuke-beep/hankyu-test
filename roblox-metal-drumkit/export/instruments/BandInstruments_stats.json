@@ -1,0 +1,678 @@
+{
+ "parts": [
+  {
+   "name": "Skyline_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Skyline_Neck",
+   "triangles": 908
+  },
+  {
+   "name": "Skyline_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Skyline_Frets",
+   "triangles": 252
+  },
+  {
+   "name": "Skyline_Inlay",
+   "triangles": 480
+  },
+  {
+   "name": "Skyline_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Skyline_Hardware",
+   "triangles": 2650
+  },
+  {
+   "name": "Skyline_Strings",
+   "triangles": 120
+  },
+  {
+   "name": "Skyline_Guard",
+   "triangles": 655
+  },
+  {
+   "name": "Skyline_Cover",
+   "triangles": 417
+  },
+  {
+   "name": "Skyline_Knob",
+   "triangles": 564
+  },
+  {
+   "name": "Prairie_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Prairie_Neck",
+   "triangles": 860
+  },
+  {
+   "name": "Prairie_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Prairie_Frets",
+   "triangles": 252
+  },
+  {
+   "name": "Prairie_Inlay",
+   "triangles": 480
+  },
+  {
+   "name": "Prairie_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Prairie_Hardware",
+   "triangles": 2706
+  },
+  {
+   "name": "Prairie_Strings",
+   "triangles": 120
+  },
+  {
+   "name": "Prairie_Guard",
+   "triangles": 648
+  },
+  {
+   "name": "Prairie_Pickup",
+   "triangles": 137
+  },
+  {
+   "name": "Prairie_Knob",
+   "triangles": 48
+  },
+  {
+   "name": "Heritage_Body",
+   "triangles": 891
+  },
+  {
+   "name": "Heritage_Binding",
+   "triangles": 1024
+  },
+  {
+   "name": "Heritage_Top",
+   "triangles": 2438
+  },
+  {
+   "name": "Heritage_Neck",
+   "triangles": 492
+  },
+  {
+   "name": "Heritage_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Heritage_Frets",
+   "triangles": 264
+  },
+  {
+   "name": "Heritage_Inlay",
+   "triangles": 252
+  },
+  {
+   "name": "Heritage_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Heritage_Head",
+   "triangles": 422
+  },
+  {
+   "name": "Heritage_Hardware",
+   "triangles": 2892
+  },
+  {
+   "name": "Heritage_Strings",
+   "triangles": 120
+  },
+  {
+   "name": "Heritage_Guard",
+   "triangles": 290
+  },
+  {
+   "name": "Heritage_Knob",
+   "triangles": 660
+  },
+  {
+   "name": "CrimsonHorn_Body",
+   "triangles": 1788
+  },
+  {
+   "name": "CrimsonHorn_Neck",
+   "triangles": 492
+  },
+  {
+   "name": "CrimsonHorn_Board",
+   "triangles": 236
+  },
+  {
+   "name": "CrimsonHorn_Frets",
+   "triangles": 264
+  },
+  {
+   "name": "CrimsonHorn_Inlay",
+   "triangles": 252
+  },
+  {
+   "name": "CrimsonHorn_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "CrimsonHorn_Head",
+   "triangles": 422
+  },
+  {
+   "name": "CrimsonHorn_Hardware",
+   "triangles": 2892
+  },
+  {
+   "name": "CrimsonHorn_Strings",
+   "triangles": 120
+  },
+  {
+   "name": "CrimsonHorn_Guard",
+   "triangles": 656
+  },
+  {
+   "name": "CrimsonHorn_Pickup",
+   "triangles": 560
+  },
+  {
+   "name": "CrimsonHorn_Knob",
+   "triangles": 660
+  },
+  {
+   "name": "Valkyrie_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Valkyrie_Neck",
+   "triangles": 492
+  },
+  {
+   "name": "Valkyrie_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Valkyrie_Frets",
+   "triangles": 264
+  },
+  {
+   "name": "Valkyrie_Inlay",
+   "triangles": 480
+  },
+  {
+   "name": "Valkyrie_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Valkyrie_Head",
+   "triangles": 398
+  },
+  {
+   "name": "Valkyrie_Hardware",
+   "triangles": 2832
+  },
+  {
+   "name": "Valkyrie_Strings",
+   "triangles": 120
+  },
+  {
+   "name": "Valkyrie_Guard",
+   "triangles": 656
+  },
+  {
+   "name": "Valkyrie_Knob",
+   "triangles": 520
+  },
+  {
+   "name": "Velvet_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Velvet_Neck",
+   "triangles": 950
+  },
+  {
+   "name": "Velvet_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Velvet_Frets",
+   "triangles": 240
+  },
+  {
+   "name": "Velvet_Inlay",
+   "triangles": 432
+  },
+  {
+   "name": "Velvet_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Velvet_Hardware",
+   "triangles": 2146
+  },
+  {
+   "name": "Velvet_Knob",
+   "triangles": 400
+  },
+  {
+   "name": "Velvet_Strings",
+   "triangles": 80
+  },
+  {
+   "name": "Velvet_Guard",
+   "triangles": 647
+  },
+  {
+   "name": "Velvet_Pickup",
+   "triangles": 352
+  },
+  {
+   "name": "Foundation_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Foundation_Neck",
+   "triangles": 956
+  },
+  {
+   "name": "Foundation_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Foundation_Frets",
+   "triangles": 240
+  },
+  {
+   "name": "Foundation_Inlay",
+   "triangles": 432
+  },
+  {
+   "name": "Foundation_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Foundation_Hardware",
+   "triangles": 1728
+  },
+  {
+   "name": "Foundation_Knob",
+   "triangles": 400
+  },
+  {
+   "name": "Foundation_Strings",
+   "triangles": 80
+  },
+  {
+   "name": "Foundation_Guard",
+   "triangles": 645
+  },
+  {
+   "name": "Foundation_Pickup",
+   "triangles": 280
+  },
+  {
+   "name": "Manta_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Manta_Neck",
+   "triangles": 902
+  },
+  {
+   "name": "Manta_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Manta_Frets",
+   "triangles": 252
+  },
+  {
+   "name": "Manta_Inlay",
+   "triangles": 480
+  },
+  {
+   "name": "Manta_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Manta_Hardware",
+   "triangles": 2006
+  },
+  {
+   "name": "Manta_Knob",
+   "triangles": 496
+  },
+  {
+   "name": "Manta_Strings",
+   "triangles": 80
+  },
+  {
+   "name": "Manta_Guard",
+   "triangles": 656
+  },
+  {
+   "name": "Manta_Pickup",
+   "triangles": 224
+  },
+  {
+   "name": "Tempest_Body",
+   "triangles": 1532
+  },
+  {
+   "name": "Tempest_Neck",
+   "triangles": 492
+  },
+  {
+   "name": "Tempest_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Tempest_Frets",
+   "triangles": 240
+  },
+  {
+   "name": "Tempest_Inlay",
+   "triangles": 432
+  },
+  {
+   "name": "Tempest_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Tempest_Head",
+   "triangles": 500
+  },
+  {
+   "name": "Tempest_Hardware",
+   "triangles": 1336
+  },
+  {
+   "name": "Tempest_Knob",
+   "triangles": 820
+  },
+  {
+   "name": "Tempest_Strings",
+   "triangles": 80
+  },
+  {
+   "name": "Crestwave_Body",
+   "triangles": 1020
+  },
+  {
+   "name": "Crestwave_Binding",
+   "triangles": 566
+  },
+  {
+   "name": "Crestwave_Neck",
+   "triangles": 968
+  },
+  {
+   "name": "Crestwave_Board",
+   "triangles": 236
+  },
+  {
+   "name": "Crestwave_Frets",
+   "triangles": 240
+  },
+  {
+   "name": "Crestwave_Inlay",
+   "triangles": 152
+  },
+  {
+   "name": "Crestwave_Nut",
+   "triangles": 12
+  },
+  {
+   "name": "Crestwave_Hardware",
+   "triangles": 1374
+  },
+  {
+   "name": "Crestwave_Knob",
+   "triangles": 1060
+  },
+  {
+   "name": "Crestwave_Strings",
+   "triangles": 80
+  },
+  {
+   "name": "Crestwave_Guard",
+   "triangles": 639
+  },
+  {
+   "name": "Crestwave_Pickup",
+   "triangles": 170
+  }
+ ],
+ "instruments": {
+  "Skyline": {
+   "primary": "Skyline_Body",
+   "wear": [
+    -0.0026,
+    0.00011,
+    -0.08036
+   ],
+   "neck": [
+    -0.00433,
+    1.16616,
+    0.11964
+   ],
+   "strum": [
+    -0.00433,
+    -0.12844,
+    0.11964
+   ],
+   "length_studs": 3.465,
+   "kind": "Guitar",
+   "triangles": 7826,
+   "parts": 11
+  },
+  "Prairie": {
+   "primary": "Prairie_Body",
+   "wear": [
+    -3e-05,
+    0.00011,
+    -0.08036
+   ],
+   "neck": [
+    -4e-05,
+    1.27328,
+    0.11964
+   ],
+   "strum": [
+    -4e-05,
+    -0.02132,
+    0.11964
+   ],
+   "length_studs": 3.364,
+   "kind": "Guitar",
+   "triangles": 7031,
+   "parts": 11
+  },
+  "Heritage": {
+   "primary": "Heritage_Body",
+   "wear": [
+    -0.00077,
+    0.0,
+    -0.07679
+   ],
+   "neck": [
+    -0.00137,
+    1.29699,
+    0.1625
+   ],
+   "strum": [
+    -0.00137,
+    0.05006,
+    0.1625
+   ],
+   "length_studs": 3.443,
+   "kind": "Guitar",
+   "triangles": 9993,
+   "parts": 13
+  },
+  "CrimsonHorn": {
+   "primary": "CrimsonHorn_Body",
+   "wear": [
+    0.00034,
+    0.00229,
+    -0.06071
+   ],
+   "neck": [
+    0.00055,
+    1.31709,
+    0.10357
+   ],
+   "strum": [
+    0.00055,
+    0.07017,
+    0.10357
+   ],
+   "length_studs": 3.521,
+   "kind": "Guitar",
+   "triangles": 8354,
+   "parts": 12
+  },
+  "Valkyrie": {
+   "primary": "Valkyrie_Body",
+   "wear": [
+    -0.00059,
+    0.00046,
+    -0.0625
+   ],
+   "neck": [
+    -0.00059,
+    1.61642,
+    0.10536
+   ],
+   "strum": [
+    -0.00059,
+    0.36949,
+    0.10536
+   ],
+   "length_studs": 3.902,
+   "kind": "Guitar",
+   "triangles": 7542,
+   "parts": 11
+  },
+  "Velvet": {
+   "primary": "Velvet_Body",
+   "wear": [
+    -0.00592,
+    0.00204,
+    -0.08036
+   ],
+   "neck": [
+    -0.00986,
+    1.49729,
+    0.12679
+   ],
+   "strum": [
+    -0.00986,
+    -0.31217,
+    0.12679
+   ],
+   "length_studs": 4.268,
+   "kind": "Bass",
+   "triangles": 7027,
+   "parts": 11
+  },
+  "Foundation": {
+   "primary": "Foundation_Body",
+   "wear": [
+    -0.00014,
+    1e-05,
+    -0.08036
+   ],
+   "neck": [
+    -0.0001,
+    1.50495,
+    0.12679
+   ],
+   "strum": [
+    -0.0001,
+    -0.30451,
+    0.12679
+   ],
+   "length_studs": 4.254,
+   "kind": "Bass",
+   "triangles": 6541,
+   "parts": 11
+  },
+  "Manta": {
+   "primary": "Manta_Body",
+   "wear": [
+    4e-05,
+    0.00136,
+    -0.08036
+   ],
+   "neck": [
+    8e-05,
+    1.57511,
+    0.12679
+   ],
+   "strum": [
+    8e-05,
+    -0.23436,
+    0.12679
+   ],
+   "length_studs": 4.125,
+   "kind": "Bass",
+   "triangles": 6876,
+   "parts": 11
+  },
+  "Tempest": {
+   "primary": "Tempest_Body",
+   "wear": [
+    0.00764,
+    1e-05,
+    -0.07143
+   ],
+   "neck": [
+    0.01274,
+    1.52799,
+    0.11429
+   ],
+   "strum": [
+    0.01274,
+    -0.28148,
+    0.11429
+   ],
+   "length_studs": 4.395,
+   "kind": "Bass",
+   "triangles": 5680,
+   "parts": 10
+  },
+  "Crestwave": {
+   "primary": "Crestwave_Body",
+   "wear": [
+    0.00661,
+    0.00129,
+    -0.06429
+   ],
+   "neck": [
+    0.01104,
+    1.44293,
+    0.10357
+   ],
+   "strum": [
+    0.01104,
+    -0.32125,
+    0.10357
+   ],
+   "length_studs": 4.125,
+   "kind": "Bass",
+   "triangles": 6517,
+   "parts": 12
+  }
+ }
+}

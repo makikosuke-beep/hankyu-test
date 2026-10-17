@@ -1,0 +1,828 @@
+newmtl Skyline_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Knob
+Kd 0.941 0.933 0.894
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Body
+Kd 0.839 0.471 0.149
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Skyline_Body.png
+newmtl Skyline_Guard
+Kd 0.949 0.941 0.910
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Skyline_Cover
+Kd 0.941 0.933 0.894
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Board
+Kd 0.894 0.745 0.518
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Inlay
+Kd 0.118 0.102 0.094
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Knob
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Prairie_Body
+Kd 0.886 0.659 0.314
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Prairie_Body.png
+newmtl Prairie_Guard
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Neck
+Kd 0.471 0.204 0.118
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Hardware
+Kd 0.871 0.855 0.808
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Knob
+Kd 0.839 0.627 0.235
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Head
+Kd 0.063 0.055 0.055
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Body
+Kd 0.376 0.063 0.047
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Top
+Kd 0.769 0.275 0.118
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Heritage_Top.png
+newmtl Heritage_Binding
+Kd 0.933 0.886 0.769
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Heritage_Guard
+Kd 0.933 0.886 0.769
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Neck
+Kd 0.463 0.102 0.078
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Knob
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Head
+Kd 0.063 0.055 0.055
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Body
+Kd 0.408 0.055 0.047
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl CrimsonHorn_Guard
+Kd 0.063 0.063 0.071
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Neck
+Kd 0.118 0.110 0.110
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Knob
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Head
+Kd 0.063 0.055 0.055
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Body
+Kd 0.055 0.055 0.063
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Valkyrie_Guard
+Kd 0.949 0.941 0.910
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Knob
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Velvet_Body
+Kd 0.824 0.439 0.141
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Velvet_Body.png
+newmtl Velvet_Guard
+Kd 0.471 0.196 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Velvet_Guard.png
+newmtl Foundation_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Knob
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Body
+Kd 0.925 0.918 0.863
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Foundation_Guard
+Kd 0.471 0.196 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Foundation_Guard.png
+newmtl Manta_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Board
+Kd 0.894 0.745 0.518
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Inlay
+Kd 0.118 0.102 0.094
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Knob
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Manta_Body
+Kd 0.839 0.690 0.471
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Manta_Body.png
+newmtl Manta_Guard
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Neck
+Kd 0.471 0.259 0.133
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Inlay
+Kd 0.941 0.925 0.886
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Knob
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Head
+Kd 0.063 0.055 0.055
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Tempest_Body
+Kd 0.690 0.408 0.157
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Tempest_Body.png
+newmtl Crestwave_Neck
+Kd 0.910 0.769 0.549
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Board
+Kd 0.243 0.141 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Frets
+Kd 0.816 0.808 0.776
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Inlay
+Kd 0.925 0.910 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Nut
+Kd 0.933 0.902 0.824
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Hardware
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Strings
+Kd 0.808 0.808 0.792
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Pickup
+Kd 0.094 0.094 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Knob
+Kd 0.078 0.078 0.086
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Body
+Kd 0.769 0.125 0.094
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd textures/Crestwave_Body.png
+newmtl Crestwave_Binding
+Kd 0.933 0.910 0.839
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Crestwave_Guard
+Kd 0.957 0.949 0.925
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
