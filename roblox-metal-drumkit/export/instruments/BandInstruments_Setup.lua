@@ -27,9 +27,9 @@ local INSTRUMENTS = {
 	Skyline = {
 		kind = "Guitar", name = "スカイライン", nameEn = "SKYLINE", style = "ST タイプ",
 		primary = "Skyline_Body",
-		wear = Vector3.new(0.00137, 0.00153, -0.08036),
-		neck = Vector3.new(0.00233, 1.15104, 0.11964),
-		strum = Vector3.new(0.00233, -0.14356, 0.11964),
+		wear = Vector3.new(0.00624, 0.00125, -0.08036),
+		neck = Vector3.new(0.01041, 1.22537, 0.11964),
+		strum = Vector3.new(0.01041, -0.06923, 0.11964),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -48,9 +48,9 @@ local INSTRUMENTS = {
 	Prairie = {
 		kind = "Guitar", name = "プレーリー", nameEn = "PRAIRIE", style = "TL タイプ",
 		primary = "Prairie_Body",
-		wear = Vector3.new(-0.00001, 0.00000, -0.08036),
-		neck = Vector3.new(-0.00004, 1.27368, 0.11964),
-		strum = Vector3.new(-0.00004, -0.02092, 0.11964),
+		wear = Vector3.new(0.00045, 0.00001, -0.08036),
+		neck = Vector3.new(0.00074, 1.31460, 0.11964),
+		strum = Vector3.new(0.00074, 0.02000, 0.11964),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(228, 190, 132), Material = "Wood", Reflectance = 0.00 },
@@ -68,9 +68,9 @@ local INSTRUMENTS = {
 	Heritage = {
 		kind = "Guitar", name = "ヘリテージ", nameEn = "HERITAGE", style = "LP タイプ",
 		primary = "Heritage_Body",
-		wear = Vector3.new(-0.00003, 0.00031, -0.07679),
-		neck = Vector3.new(0.00003, 1.29254, 0.16250),
-		strum = Vector3.new(0.00003, 0.04561, 0.16250),
+		wear = Vector3.new(0.00002, 0.00023, -0.07679),
+		neck = Vector3.new(0.00000, 1.35833, 0.16250),
+		strum = Vector3.new(0.00000, 0.11141, 0.16250),
 		palette = {
 			Neck = { Color = Color3.fromRGB(120, 52, 30), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -91,9 +91,9 @@ local INSTRUMENTS = {
 	CrimsonHorn = {
 		kind = "Guitar", name = "クリムゾンホーン", nameEn = "CRIMSON HORN", style = "SG タイプ",
 		primary = "CrimsonHorn_Body",
-		wear = Vector3.new(0.00097, 0.00006, -0.06071),
-		neck = Vector3.new(0.00151, 1.31377, 0.10357),
-		strum = Vector3.new(0.00151, 0.06684, 0.10357),
+		wear = Vector3.new(-0.00562, 0.00018, -0.06071),
+		neck = Vector3.new(-0.00932, 1.45411, 0.10357),
+		strum = Vector3.new(-0.00932, 0.20718, 0.10357),
 		palette = {
 			Neck = { Color = Color3.fromRGB(118, 26, 20), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -112,9 +112,9 @@ local INSTRUMENTS = {
 	Valkyrie = {
 		kind = "Guitar", name = "ヴァルキリー", nameEn = "VALKYRIE", style = "V タイプ",
 		primary = "Valkyrie_Body",
-		wear = Vector3.new(0.00004, 0.00146, -0.06250),
-		neck = Vector3.new(0.00004, 1.61792, 0.10536),
-		strum = Vector3.new(0.00004, 0.37099, 0.10536),
+		wear = Vector3.new(-0.00093, 0.00039, -0.06250),
+		neck = Vector3.new(-0.00093, 1.66914, 0.10536),
+		strum = Vector3.new(-0.00093, 0.42221, 0.10536),
 		palette = {
 			Neck = { Color = Color3.fromRGB(30, 28, 28), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -153,9 +153,9 @@ local INSTRUMENTS = {
 	Foundation = {
 		kind = "Bass", name = "ファウンデーション", nameEn = "FOUNDATION", style = "PB タイプ",
 		primary = "Foundation_Body",
-		wear = Vector3.new(-0.00011, 0.00136, -0.08036),
-		neck = Vector3.new(-0.00016, 1.42343, 0.12679),
-		strum = Vector3.new(-0.00016, -0.38604, 0.12679),
+		wear = Vector3.new(0.00877, 0.00004, -0.08036),
+		neck = Vector3.new(0.01449, 1.36106, 0.12679),
+		strum = Vector3.new(0.01449, -0.44841, 0.12679),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -173,9 +173,9 @@ local INSTRUMENTS = {
 	Manta = {
 		kind = "Bass", name = "マンタ", nameEn = "MANTA", style = "SR タイプ",
 		primary = "Manta_Body",
-		wear = Vector3.new(0.00022, 0.00004, -0.08036),
-		neck = Vector3.new(0.00029, 1.57200, 0.12679),
-		strum = Vector3.new(0.00029, -0.23747, 0.12679),
+		wear = Vector3.new(-0.00028, 0.00429, -0.08036),
+		neck = Vector3.new(-0.00091, 1.33538, 0.12679),
+		strum = Vector3.new(-0.00091, -0.47408, 0.12679),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(228, 190, 132), Material = "Wood", Reflectance = 0.00 },
@@ -193,9 +193,9 @@ local INSTRUMENTS = {
 	Tempest = {
 		kind = "Bass", name = "テンペスト", nameEn = "TEMPEST", style = "TB タイプ",
 		primary = "Tempest_Body",
-		wear = Vector3.new(0.01388, 0.00074, -0.07143),
-		neck = Vector3.new(0.02311, 1.52534, 0.11429),
-		strum = Vector3.new(0.02311, -0.28412, 0.11429),
+		wear = Vector3.new(0.01454, 0.00074, -0.07143),
+		neck = Vector3.new(0.02447, 1.54726, 0.11429),
+		strum = Vector3.new(0.02447, -0.26220, 0.11429),
 		palette = {
 			Neck = { Color = Color3.fromRGB(120, 66, 34), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -208,14 +208,15 @@ local INSTRUMENTS = {
 			Knob = { Color = Color3.fromRGB(20, 20, 22), Material = "SmoothPlastic", Reflectance = 0.12 },
 			Head = { Color = Color3.fromRGB(16, 14, 14), Material = "SmoothPlastic", Reflectance = 0.12 },
 			Body = { Color = Color3.fromRGB(176, 104, 40), Material = "SmoothPlastic", Reflectance = 0.12, Textured = true },
+			Guard = { Color = Color3.fromRGB(236, 228, 208), Material = "SmoothPlastic", Reflectance = 0.06 },
 		},
 	},
 	Crestwave = {
 		kind = "Bass", name = "クレストウェーブ", nameEn = "CRESTWAVE", style = "RK タイプ",
 		primary = "Crestwave_Body",
-		wear = Vector3.new(0.00878, 0.00070, -0.06429),
-		neck = Vector3.new(0.01457, 1.44054, 0.10357),
-		strum = Vector3.new(0.01457, -0.32364, 0.10357),
+		wear = Vector3.new(0.00239, 0.00293, -0.06429),
+		neck = Vector3.new(0.00434, 1.44198, 0.10357),
+		strum = Vector3.new(0.00434, -0.32220, 0.10357),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },

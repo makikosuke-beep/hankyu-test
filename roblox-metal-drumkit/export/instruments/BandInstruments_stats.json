@@ -2,11 +2,11 @@
  "parts": [
   {
    "name": "Skyline_Body",
-   "triangles": 2174
+   "triangles": 2084
   },
   {
    "name": "Skyline_Neck",
-   "triangles": 914
+   "triangles": 890
   },
   {
    "name": "Skyline_Board",
@@ -34,11 +34,11 @@
   },
   {
    "name": "Skyline_Guard",
-   "triangles": 654
+   "triangles": 656
   },
   {
    "name": "Skyline_Cover",
-   "triangles": 414
+   "triangles": 419
   },
   {
    "name": "Skyline_Knob",
@@ -46,11 +46,11 @@
   },
   {
    "name": "Prairie_Body",
-   "triangles": 1526
+   "triangles": 1532
   },
   {
    "name": "Prairie_Neck",
-   "triangles": 860
+   "triangles": 848
   },
   {
    "name": "Prairie_Board",
@@ -70,7 +70,7 @@
   },
   {
    "name": "Prairie_Hardware",
-   "triangles": 2706
+   "triangles": 2730
   },
   {
    "name": "Prairie_Strings",
@@ -78,7 +78,7 @@
   },
   {
    "name": "Prairie_Guard",
-   "triangles": 635
+   "triangles": 656
   },
   {
    "name": "Prairie_Pickup",
@@ -90,7 +90,7 @@
   },
   {
    "name": "Heritage_Body",
-   "triangles": 893
+   "triangles": 894
   },
   {
    "name": "Heritage_Binding",
@@ -98,7 +98,7 @@
   },
   {
    "name": "Heritage_Top",
-   "triangles": 1676
+   "triangles": 1664
   },
   {
    "name": "Heritage_Neck",
@@ -134,7 +134,7 @@
   },
   {
    "name": "Heritage_Guard",
-   "triangles": 290
+   "triangles": 338
   },
   {
    "name": "Heritage_Knob",
@@ -278,7 +278,7 @@
   },
   {
    "name": "Foundation_Body",
-   "triangles": 2152
+   "triangles": 2052
   },
   {
    "name": "Foundation_Neck",
@@ -314,7 +314,7 @@
   },
   {
    "name": "Foundation_Guard",
-   "triangles": 655
+   "triangles": 644
   },
   {
    "name": "Foundation_Pickup",
@@ -322,7 +322,7 @@
   },
   {
    "name": "Manta_Body",
-   "triangles": 2146
+   "triangles": 1952
   },
   {
    "name": "Manta_Neck",
@@ -346,7 +346,7 @@
   },
   {
    "name": "Manta_Hardware",
-   "triangles": 2006
+   "triangles": 1934
   },
   {
    "name": "Manta_Knob",
@@ -358,7 +358,7 @@
   },
   {
    "name": "Manta_Guard",
-   "triangles": 654
+   "triangles": 548
   },
   {
    "name": "Manta_Pickup",
@@ -405,6 +405,10 @@
    "triangles": 80
   },
   {
+   "name": "Tempest_Guard",
+   "triangles": 476
+  },
+  {
    "name": "Crestwave_Body",
    "triangles": 1020
   },
@@ -446,7 +450,7 @@
   },
   {
    "name": "Crestwave_Guard",
-   "triangles": 637
+   "triangles": 646
   },
   {
    "name": "Crestwave_Pickup",
@@ -457,87 +461,87 @@
   "Skyline": {
    "primary": "Skyline_Body",
    "wear": [
-    0.00137,
-    0.00153,
+    0.00624,
+    0.00125,
     -0.08036
    ],
    "neck": [
-    0.00233,
-    1.15104,
+    0.01041,
+    1.22537,
     0.11964
    ],
    "strum": [
-    0.00233,
-    -0.14356,
+    0.01041,
+    -0.06923,
     0.11964
    ],
-   "length_studs": 3.455,
+   "length_studs": 3.437,
    "kind": "Guitar",
-   "triangles": 8470,
+   "triangles": 8363,
    "parts": 11
   },
   "Prairie": {
    "primary": "Prairie_Body",
    "wear": [
-    -1e-05,
-    0.0,
+    0.00045,
+    1e-05,
     -0.08036
    ],
    "neck": [
-    -4e-05,
-    1.27368,
+    0.00074,
+    1.3146,
     0.11964
    ],
    "strum": [
-    -4e-05,
-    -0.02092,
+    0.00074,
+    0.02,
     0.11964
    ],
-   "length_studs": 3.364,
+   "length_studs": 3.419,
    "kind": "Guitar",
-   "triangles": 7012,
+   "triangles": 7051,
    "parts": 11
   },
   "Heritage": {
    "primary": "Heritage_Body",
    "wear": [
-    -3e-05,
-    0.00031,
+    2e-05,
+    0.00023,
     -0.07679
    ],
    "neck": [
-    3e-05,
-    1.29254,
+    0.0,
+    1.35833,
     0.1625
    ],
    "strum": [
-    3e-05,
-    0.04561,
+    0.0,
+    0.11141,
     0.1625
    ],
-   "length_studs": 3.458,
+   "length_studs": 3.581,
    "kind": "Guitar",
-   "triangles": 9239,
+   "triangles": 9276,
    "parts": 13
   },
   "CrimsonHorn": {
    "primary": "CrimsonHorn_Body",
    "wear": [
-    0.00097,
-    6e-05,
+    -0.00562,
+    0.00018,
     -0.06071
    ],
    "neck": [
-    0.00151,
-    1.31377,
+    -0.00932,
+    1.45411,
     0.10357
    ],
    "strum": [
-    0.00151,
-    0.06684,
+    -0.00932,
+    0.20718,
     0.10357
    ],
-   "length_studs": 3.536,
+   "length_studs": 3.634,
    "kind": "Guitar",
    "triangles": 8357,
    "parts": 12
@@ -545,21 +549,21 @@
   "Valkyrie": {
    "primary": "Valkyrie_Body",
    "wear": [
-    4e-05,
-    0.00146,
+    -0.00093,
+    0.00039,
     -0.0625
    ],
    "neck": [
-    4e-05,
-    1.61792,
+    -0.00093,
+    1.66914,
     0.10536
    ],
    "strum": [
-    4e-05,
-    0.37099,
+    -0.00093,
+    0.42221,
     0.10536
    ],
-   "length_studs": 3.905,
+   "length_studs": 3.963,
    "kind": "Guitar",
    "triangles": 7542,
    "parts": 11
@@ -589,89 +593,89 @@
   "Foundation": {
    "primary": "Foundation_Body",
    "wear": [
-    -0.00011,
-    0.00136,
+    0.00877,
+    4e-05,
     -0.08036
    ],
    "neck": [
-    -0.00016,
-    1.42343,
+    0.01449,
+    1.36106,
     0.12679
    ],
    "strum": [
-    -0.00016,
-    -0.38604,
+    0.01449,
+    -0.44841,
     0.12679
    ],
-   "length_studs": 4.148,
+   "length_studs": 4.088,
    "kind": "Bass",
-   "triangles": 6941,
+   "triangles": 6830,
    "parts": 11
   },
   "Manta": {
    "primary": "Manta_Body",
    "wear": [
-    0.00022,
-    4e-05,
+    -0.00028,
+    0.00429,
     -0.08036
    ],
    "neck": [
-    0.00029,
-    1.572,
+    -0.00091,
+    1.33538,
     0.12679
    ],
    "strum": [
-    0.00029,
-    -0.23747,
+    -0.00091,
+    -0.47408,
     0.12679
    ],
-   "length_studs": 4.126,
+   "length_studs": 3.93,
    "kind": "Bass",
-   "triangles": 7488,
+   "triangles": 7116,
    "parts": 11
   },
   "Tempest": {
    "primary": "Tempest_Body",
    "wear": [
-    0.01388,
+    0.01454,
     0.00074,
     -0.07143
    ],
    "neck": [
-    0.02311,
-    1.52534,
+    0.02447,
+    1.54726,
     0.11429
    ],
    "strum": [
-    0.02311,
-    -0.28412,
+    0.02447,
+    -0.2622,
     0.11429
    ],
-   "length_studs": 4.395,
+   "length_studs": 4.338,
    "kind": "Bass",
-   "triangles": 5680,
-   "parts": 10
+   "triangles": 6156,
+   "parts": 11
   },
   "Crestwave": {
    "primary": "Crestwave_Body",
    "wear": [
-    0.00878,
-    0.0007,
+    0.00239,
+    0.00293,
     -0.06429
    ],
    "neck": [
-    0.01457,
-    1.44054,
+    0.00434,
+    1.44198,
     0.10357
    ],
    "strum": [
-    0.01457,
-    -0.32364,
+    0.00434,
+    -0.3222,
     0.10357
    ],
-   "length_studs": 4.112,
+   "length_studs": 4.076,
    "kind": "Bass",
-   "triangles": 6515,
+   "triangles": 6524,
    "parts": 12
   }
  }

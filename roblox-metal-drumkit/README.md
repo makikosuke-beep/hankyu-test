@@ -100,10 +100,11 @@ Beat Drummer のバンドのメンバーが構えるギター 5 本とベース 
 
 ![ボディ](preview/instruments/instruments_guitar_bodies.jpg)
 
-- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 5,680〜9,239 ポリゴン）
+- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 6,156〜9,276 ポリゴン）
 - セットアップ: `export/instruments/BandInstruments_Setup.lua`（色・溶接・構える位置の Attachment）
 - キャラクターに構えさせる・ノーツに合わせて揺らす: `roblox/BandInstruments.lua`
 - 生成: `generator/instruments.py`（形）、`instrument_textures.py`（サンバーストや木目）、`instruments_blender.py`（FBX とレンダリング）
+- ボディ・ヘッド・ピックガードの形は実物の写真から輪郭を取り、スケール長とフレット位置で寸法を合わせています（`OUTLINES_IN`）
 - 組み込み手順: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md) の「11. ギターとベース」
 
 ## 構成（ショーケース版）
