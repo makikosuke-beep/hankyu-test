@@ -56,6 +56,10 @@ def make_material(name, p, tex_path=None, for_export=False):
     if coat and not for_export:
         b.inputs["Coat Weight"].default_value = coat
         b.inputs["Coat Roughness"].default_value = 0.05
+    if name.endswith("_Guard") and not for_export:
+        # pickguards are satin plastic: keep the bright floor from washing them out
+        b.inputs["Specular IOR Level"].default_value = 0.18
+        b.inputs["Roughness"].default_value = max(rough, 0.45)
     return m
 
 
@@ -101,7 +105,7 @@ def stage(mats, kind, spacing):
         for n, mat, m in instruments.parts_of([(d, b, info)], place=False):
             ob = mesh_object(n, m, mats[mat])
             ob.location = (x, 0, 0.03)
-            ob.rotation_euler = (0, 0, math.radians(-8))
+            ob.rotation_euler = (0, 0, math.radians(-17))
         placed.append((d, x, info))
     me = bpy.data.meshes.new("Floor")
     k = 30
@@ -148,8 +152,8 @@ def label(img_path, out_path, placed, cam, strip=120):
 
 VIEWS = {
     # name: kind, spacing, camera, target, lens, res
-    "guitars": ("Guitar", 0.52, (0, -4.6, 0.62), (0, 0, 0.5), 60, (2400, 1400)),
-    "basses": ("Bass", 0.56, (0, -5.4, 0.72), (0, 0, 0.6), 60, (2400, 1400)),
+    "guitars": ("Guitar", 0.52, (0, -4.6, 0.42), (0, 0, 0.52), 60, (2400, 1400)),
+    "basses": ("Bass", 0.56, (0, -5.4, 0.48), (0, 0, 0.62), 60, (2400, 1400)),
     "guitar_bodies": ("Guitar", 0.52, (0.3, -4.3, 0.9), (0, 0, 0.25), 60, (2400, 820)),
     "bass_bodies": ("Bass", 0.56, (0.3, -4.5, 0.95), (0, 0, 0.27), 60, (2400, 820)),
 }

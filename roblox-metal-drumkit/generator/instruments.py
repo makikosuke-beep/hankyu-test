@@ -130,13 +130,44 @@ def planar_uv(mesh, uv):
     return mesh
 
 
+def grid_cap(ring, fz, dense=None, fine=10.0, coarse=40.0, up=True):
+    """Triangulate a cap with interior points so it can bend: fz(x, y) -> z.
+    Interior points are fine where dense(x, y) is true, coarse elsewhere."""
+    from scipy.spatial import Delaunay
+    from shapely import contains_xy
+    from shapely.geometry import Polygon
+    pg = Polygon(ring)
+    x0, y0, x1, y1 = pg.bounds
+    gx, gy = np.meshgrid(np.arange(x0, x1, fine), np.arange(y0, y1, fine))
+    cand = np.column_stack([gx.ravel(), gy.ravel()])
+    keep = contains_xy(pg.buffer(-fine * 0.35), cand[:, 0], cand[:, 1])
+    if dense is not None:
+        k = int(round(coarse / fine))
+        ix = np.round((cand[:, 0] - x0) / fine).astype(int)
+        iy = np.round((cand[:, 1] - y0) / fine).astype(int)
+        lattice = (ix % k == 0) & (iy % k == 0)
+        keep &= dense(cand[:, 0], cand[:, 1]) | lattice
+    pts = np.vstack([ring, cand[keep]])
+    tri = Delaunay(pts).simplices
+    cen = pts[tri].mean(1)
+    tri = tri[contains_xy(pg, cen[:, 0], cen[:, 1])]
+    P = np.column_stack([pts, fz(pts[:, 0], pts[:, 1])])
+    e = np.cross(P[tri[:, 1]] - P[tri[:, 0]], P[tri[:, 2]] - P[tri[:, 0]])
+    flip = (e[:, 2] < 0) if up else (e[:, 2] > 0)
+    tri[flip] = tri[flip][:, ::-1]
+    return P, tri
+
+
 def slab(poly, z0, z1, profile_bottom=(), profile_top=(), n=140, keys=None, carve=None,
-         ref=(0.0, -1e4), smooth=40.0, uv=None, cap_keys=("cap_bottom", "cap_top")):
+         ref=(0.0, -1e4), smooth=40.0, uv=None, cap_keys=("cap_bottom", "cap_top"),
+         contour_top=None, contour_bottom=None):
     """Extrude a shapely polygon (mm) between z0 and z1 (mm) with edge
     profiles.  profile_*: [(inset, dz)] from the side wall toward the cap;
     for the bottom dz is measured up from z0, for the top down from z1.
     keys(i, z_lo, z_hi) -> part key of side band i.  carve(x, y) -> extra
-    height (mm) of the top cap.  Returns {key: Mesh}."""
+    height (mm) of the top cap only; contour_top / contour_bottom(x, y) ->
+    height change of the whole top / bottom (cap and edge), for sculpted
+    arm and belly contours.  Returns {key: Mesh}."""
     prof = [(ins, z0 + dz) for ins, dz in reversed(list(profile_bottom))]
     if not prof or prof[-1][0] > 1e-9:
         prof.append((0.0, z0 if not prof else prof[-1][1]))
@@ -144,14 +175,18 @@ def slab(poly, z0, z1, profile_bottom=(), profile_top=(), n=140, keys=None, carv
     prof += [(ins, z1 - dz) for ins, dz in profile_top[1:]] if profile_top else []
     if profile_top and profile_top[-1][0] > 1e-9 and prof[-1] != (profile_top[-1][0], z1 - profile_top[-1][1]):
         prof.append((profile_top[-1][0], z1 - profile_top[-1][1]))
-    # rings
+    zmid = (z0 + z1) / 2
+    none = (lambda x, y: np.zeros_like(x))  # noqa: E731
+    ct = contour_top or none
+    cb = contour_bottom or none
     rings = []
     for ins, z in prof:
         g = poly if ins <= 1e-9 else largest(poly.buffer(-ins, quad_segs=6))
         rings.append((resample(g.exterior.coords, n, ref), z))
     V, F, K = [], [], []
-    for i, (r, z) in enumerate(rings):
-        V.append(np.column_stack([r, np.full(n, z)]))
+    for r, z in rings:
+        dz = ct(r[:, 0], r[:, 1]) if z > zmid else cb(r[:, 0], r[:, 1])
+        V.append(np.column_stack([r, z + dz]))
     V = np.vstack(V)
     for i in range(len(rings) - 1):
         a = i * n + np.arange(n)
@@ -163,44 +198,36 @@ def slab(poly, z0, z1, profile_bottom=(), profile_top=(), n=140, keys=None, carv
         k = keys(i, rings[i][1], rings[i + 1][1]) if keys else "side"
         K += [k] * len(f)
     out_v = [V]
-    nv = len(V)
-    # bottom cap (flat)
+
+    def attach_cap(ring_index, P, tri):
+        """Reuse the ring's own vertices for the cap boundary."""
+        nv = sum(len(v) for v in out_v)
+        m = len(P) - n
+        out_v.append(P[n:])
+        idx = np.concatenate([ring_index * n + np.arange(n), nv + np.arange(m)])
+        return idx[tri]
+
+    # bottom cap
     r0, z_b = rings[0]
-    verts, tri = triangulate(r0)
-    tri = tri[:, ::-1]  # face down
-    F.append(tri)
-    K += [cap_keys[0]] * len(tri)
+    if contour_bottom is None:
+        verts, tri = triangulate(r0)
+        F.append(tri[:, ::-1])
+    else:
+        P, tri = grid_cap(r0, lambda x, y: z_b + cb(x, y),
+                          dense=lambda x, y: np.abs(cb(x, y)) > 1e-3, up=False)
+        F.append(attach_cap(0, P, tri))
+    K += [cap_keys[0]] * len(F[-1])
     # top cap
     rt, z_t = rings[-1]
-    top_off = (len(rings) - 1) * n
-    if carve is None:
+    if carve is None and contour_top is None:
         verts, tri = triangulate(rt)
-        F.append(tri + top_off)
+        F.append(tri + (len(rings) - 1) * n)
     else:
-        from scipy.spatial import Delaunay
-        from shapely.geometry import Point, Polygon
-        pg = Polygon(rt)
-        x0, y0, x1, y1 = pg.bounds
-        gx, gy = np.meshgrid(np.arange(x0, x1, 9.0), np.arange(y0, y1, 9.0))
-        cand = np.column_stack([gx.ravel(), gy.ravel()])
-        inner = pg.buffer(-3.0)
-        keep = np.array([inner.contains(Point(p)) for p in cand])
-        grid = cand[keep]
-        pts = np.vstack([rt, grid])
-        tri = Delaunay(pts).simplices
-        cen = pts[tri].mean(1)
-        ok = np.array([pg.contains(Point(p)) for p in cen])
-        tri = tri[ok]
-        gz = z_t + carve(grid[:, 0], grid[:, 1])
-        out_v.append(np.column_stack([grid, gz]))
-        idx = np.concatenate([top_off + np.arange(n), nv + np.arange(len(grid))])
-        tri = idx[tri]
-        # orient up
-        P = np.vstack(out_v)
-        e = np.cross(P[tri[:, 1]] - P[tri[:, 0]], P[tri[:, 2]] - P[tri[:, 0]])
-        flip = e[:, 2] < 0
-        tri[flip] = tri[flip][:, ::-1]
-        F.append(tri)
+        cv = carve or none
+        P, tri = grid_cap(rt, lambda x, y: z_t + cv(x, y) + ct(x, y),
+                          dense=None if carve else (lambda x, y: np.abs(ct(x, y)) > 1e-3),
+                          fine=11.0 if carve else 10.0)
+        F.append(attach_cap(len(rings) - 1, P, tri))
     K += [cap_keys[1]] * len(F[-1])
     P = np.vstack(out_v) * MM
     F = np.concatenate(F)
@@ -216,6 +243,19 @@ def slab(poly, z0, z1, profile_bottom=(), profile_top=(), n=140, keys=None, carv
             planar_uv(m, uv)
         out[k] = m
     return out
+
+
+def bevel(origin, direction, depth, slope=0.34, soft=14.0, sign=-1.0):
+    """Planar contour cut: zero behind a line, then sloping down (or up for
+    the back) toward ``direction``, never deeper than ``depth`` (mm)."""
+    u = unit(np.asarray(direction, float))
+    o = np.asarray(origin, float)
+
+    def f(x, y):
+        s = (x - o[0]) * u[0] + (y - o[1]) * u[1]
+        ramp = np.where(s < soft, np.clip(s, 0, None) ** 2 / (2 * soft), s - soft / 2)
+        return sign * np.minimum(ramp * slope, depth)
+    return f
 
 
 def flat(poly, z0, z1, r_top=0.0, n=None, uv=None, smooth=35.0):
@@ -344,7 +384,7 @@ INSTRUMENTS = [
         "id": "Skyline", "kind": "Guitar", "type": "ST", "name": "スカイライン",
         "nameEn": "SKYLINE", "style": "ST タイプ",
         "desc": "3 トーンサンバーストに白いピックガード。シングルコイル 3 基とトレモロの、いちばん定番のシェイプ。",
-        "scale": 648, "frets": 21, "nut": 42.0, "saddle_y": 123, "notch_y": 380,
+        "scale": 648, "frets": 21, "nut": 42.0, "saddle_y": 119, "notch_y": 376,
         "thick": 45, "edge": 7.5, "fb_h": 11, "head": "six", "head_angle": 0,
         "outline": [(0, 0), (70, 3), (118, 16), (150, 42), (164, 82), (163, 125), (150, 165),
                     (128, 200), (118, 232), (122, 262), (134, 296), (136, 330), (124, 362),
@@ -504,7 +544,7 @@ INSTRUMENTS = [
         "palette": dict(common_palette(ROSEWOOD, knob=CHROME),
                         Body=finish([210, 112, 36], "burst_3ts"),
                         Guard={"color": [120, 50, 22], "material": "SmoothPlastic",
-                               "reflectance": 0.1, "pbr": [0.0, 0.3, 0.4],
+                               "reflectance": 0.08, "pbr": [0.0, 0.5, 0.0],
                                "texture": "tortoise"}),
     },
     {
@@ -531,7 +571,7 @@ INSTRUMENTS = [
         "palette": dict(common_palette(ROSEWOOD, knob=CHROME),
                         Body=finish([236, 234, 220]),
                         Guard={"color": [120, 50, 22], "material": "SmoothPlastic",
-                               "reflectance": 0.1, "pbr": [0.0, 0.3, 0.4],
+                               "reflectance": 0.08, "pbr": [0.0, 0.5, 0.0],
                                "texture": "tortoise"}),
     },
     {
@@ -549,9 +589,9 @@ INSTRUMENTS = [
                     (-144, 284), (-138, 258), (-146, 226), (-164, 192), (-178, 150), (-182, 104),
                     (-170, 58), (-140, 22), (-88, 5)],
         "corners": [19, 20],
-        "guard_poly": [(-31, 398), (-62, 392), (-92, 360), (-104, 306), (-98, 250),
-                       (-80, 206), (-50, 178), (0, 168), (46, 174), (74, 200), (88, 246),
-                       (90, 300), (80, 350), (60, 386), (31, 398)],
+        "guard_poly": [(-31, 398), (-80, 394), (-114, 368), (-128, 318), (-122, 262),
+                       (-98, 214), (-58, 184), (0, 174), (54, 182), (88, 210), (106, 256),
+                       (110, 310), (100, 356), (76, 388), (31, 398)],
         "pickups": [("mm", 105, 0, 0)], "pickup_color": "black", "bridge": "mm_bridge",
         "round_plate": {"c": (108, 92), "r": 50, "knobs": [(84, 128), (112, 104), (132, 72)]},
         "palette": dict(common_palette(MAPLE_BOARD, inlay=(30, 26, 24), knob=CHROME),
@@ -614,6 +654,128 @@ INSTRUMENTS = [
                                "reflectance": 0.06, "pbr": [0.0, 0.3, 0.3]}),
     },
 ]
+# ---------------------------------------------------------------------------
+# refined outlines (inches, traced to the classic proportions).  A third
+# element "c" keeps that point sharp (the neck pocket corners).
+# ---------------------------------------------------------------------------
+OUTLINES_IN = {
+    "Skyline": [
+        (0, 0), (2.5, 0.15), (4.2, 0.7), (5.4, 1.7), (6.1, 3.0), (6.3, 4.4), (6.1, 5.9),
+        (5.6, 7.1), (4.9, 8.1), (4.5, 9.0), (4.42, 9.8), (4.6, 10.6), (4.95, 11.4), (5.1, 12.1),
+        (5.0, 12.9), (4.7, 13.7), (4.25, 14.5), (3.75, 15.2), (3.25, 15.75), (2.8, 16.05),
+        (2.4, 16.1), (2.05, 15.9), (1.75, 15.45), (1.45, 15.0), (1.1, 14.8, "c"),
+        (-1.1, 14.8, "c"), (-1.35, 14.95), (-1.6, 15.3), (-1.85, 15.85), (-2.1, 16.5),
+        (-2.4, 17.15), (-2.75, 17.68), (-3.15, 18.0), (-3.55, 18.08), (-3.92, 17.9), (-4.2, 17.5),
+        (-4.45, 16.9), (-4.75, 16.05), (-5.1, 15.05), (-5.45, 14.0), (-5.65, 13.0), (-5.6, 12.1),
+        (-5.32, 11.2), (-4.98, 10.4), (-4.8, 9.7), (-4.95, 9.0), (-5.35, 8.1), (-5.9, 7.0),
+        (-6.25, 5.7), (-6.35, 4.4), (-6.15, 3.0), (-5.5, 1.7), (-4.3, 0.7), (-2.6, 0.15)],
+    "Prairie": [
+        (0, 0), (2.6, 0.12), (4.3, 0.6), (5.5, 1.5), (6.2, 2.8), (6.4, 4.3), (6.35, 5.8),
+        (6.15, 7.2), (5.95, 8.4), (5.9, 9.6), (5.98, 10.8), (6.0, 11.9), (5.85, 12.7),
+        (5.45, 13.35), (4.85, 13.8), (4.15, 13.95), (3.55, 13.75), (3.0, 13.3), (2.4, 12.65),
+        (1.85, 12.15), (1.45, 11.98), (1.1, 11.95, "c"), (-1.1, 11.95, "c"), (-1.1, 14.75, "c"),
+        (-1.6, 14.95), (-2.6, 15.2), (-3.7, 15.25), (-4.7, 15.0), (-5.5, 14.4), (-6.05, 13.4),
+        (-6.3, 12.2), (-6.3, 10.9), (-6.15, 9.7), (-6.1, 8.6), (-6.2, 7.3), (-6.35, 5.8),
+        (-6.4, 4.3), (-6.2, 2.8), (-5.5, 1.5), (-4.3, 0.6), (-2.6, 0.12)],
+    "Heritage": [
+        (0, 0), (2.6, 0.12), (4.4, 0.65), (5.65, 1.7), (6.35, 3.1), (6.5, 4.6), (6.3, 6.1),
+        (5.75, 7.35), (5.05, 8.3), (4.6, 9.1), (4.48, 9.9), (4.62, 10.8), (4.85, 11.7),
+        (4.92, 12.6), (4.78, 13.5), (4.42, 14.35), (3.88, 15.08), (3.3, 15.5), (2.78, 15.62),
+        (2.38, 15.42), (2.1, 14.95), (1.85, 14.2), (1.55, 13.48), (1.25, 13.08), (1.1, 13.0, "c"),
+        (-1.1, 13.0, "c"), (-1.1, 15.55, "c"), (-1.6, 15.76), (-2.5, 16.0), (-3.4, 15.95),
+        (-4.2, 15.55), (-4.85, 14.85), (-5.25, 13.9), (-5.4, 12.9), (-5.3, 11.8), (-4.95, 10.75),
+        (-4.7, 9.85), (-4.85, 8.95), (-5.4, 7.95), (-6.05, 6.7), (-6.45, 5.2), (-6.45, 3.7),
+        (-5.95, 2.25), (-4.95, 1.05), (-3.3, 0.3)],
+    "CrimsonHorn": [
+        (0, 0), (2.5, 0.12), (4.3, 0.65), (5.55, 1.65), (6.25, 3.05), (6.4, 4.5), (6.15, 5.9),
+        (5.5, 7.0), (4.85, 7.8), (4.5, 8.5), (4.45, 9.3), (4.6, 10.1), (4.75, 10.9), (4.65, 11.7),
+        (4.25, 12.5), (3.75, 13.35), (3.4, 14.2), (3.3, 15.05), (3.45, 15.75), (3.6, 16.25),
+        (3.45, 16.48), (3.14, 16.32), (2.8, 15.76), (2.4, 14.86), (1.96, 14.1), (1.5, 13.7),
+        (1.1, 13.6, "c"), (-1.1, 13.6, "c"), (-1.5, 13.76), (-1.96, 14.22), (-2.42, 15.02),
+        (-2.86, 15.96), (-3.3, 16.8), (-3.66, 17.26), (-3.88, 17.22), (-3.92, 16.86),
+        (-3.86, 16.1), (-3.92, 15.2), (-4.16, 14.2), (-4.55, 13.2), (-4.8, 12.2), (-4.75, 11.2),
+        (-4.55, 10.2), (-4.5, 9.4), (-4.7, 8.6), (-5.3, 7.6), (-6.05, 6.3), (-6.4, 4.8),
+        (-6.35, 3.3), (-5.75, 1.9), (-4.6, 0.8), (-2.7, 0.15)],
+    "Valkyrie": [
+        (1.1, 18.5, "c"), (1.75, 18.68), (2.4, 18.4), (2.82, 17.7), (7.95, 1.62), (8.28, 1.02),
+        (8.2, 0.44), (7.76, 0.12), (7.18, 0.24), (1.62, 6.62), (0.82, 7.24), (0, 7.48),
+        (-0.82, 7.24), (-1.62, 6.62), (-7.18, 0.24), (-7.76, 0.12), (-8.2, 0.44), (-8.28, 1.02),
+        (-7.95, 1.62), (-2.82, 17.7), (-2.4, 18.4), (-1.75, 18.68), (-1.1, 18.5, "c")],
+    "Velvet": [
+        (0, 0), (2.8, 0.15), (4.7, 0.7), (6.05, 1.8), (6.75, 3.4), (6.85, 5.0), (6.55, 6.5),
+        (5.9, 7.7), (5.15, 8.65), (4.72, 9.5), (4.65, 10.4), (4.85, 11.4), (5.12, 12.4),
+        (5.2, 13.4), (5.0, 14.4), (4.68, 15.35), (4.22, 16.3), (3.7, 17.1), (3.2, 17.68),
+        (2.75, 17.95), (2.35, 17.92), (2.02, 17.62), (1.72, 17.2), (1.42, 16.92), (1.2, 16.85, "c"),
+        (-1.2, 16.85, "c"), (-1.45, 17.0), (-1.72, 17.4), (-2.0, 18.05), (-2.3, 18.85),
+        (-2.62, 19.65), (-3.0, 20.3), (-3.42, 20.7), (-3.85, 20.82), (-4.25, 20.62), (-4.52, 20.15),
+        (-4.72, 19.45), (-4.95, 18.6), (-5.25, 17.5), (-5.55, 16.3), (-5.78, 15.1), (-5.82, 14.0),
+        (-5.62, 12.95), (-5.28, 11.95), (-4.92, 11.2), (-4.98, 10.3), (-5.5, 9.2), (-6.18, 8.0),
+        (-6.7, 6.5), (-6.85, 5.0), (-6.65, 3.4), (-5.95, 1.8), (-4.6, 0.7), (-2.7, 0.15)],
+    "Foundation": [
+        (0, 0), (2.8, 0.15), (4.65, 0.7), (6.0, 1.8), (6.7, 3.4), (6.85, 5.0), (6.6, 6.5),
+        (6.0, 7.75), (5.4, 8.8), (5.15, 9.7), (5.22, 10.6), (5.45, 11.6), (5.55, 12.7),
+        (5.42, 13.8), (5.12, 14.85), (4.66, 15.85), (4.12, 16.72), (3.56, 17.38), (3.02, 17.72),
+        (2.55, 17.74), (2.18, 17.48), (1.86, 17.06), (1.52, 16.78), (1.2, 16.7, "c"),
+        (-1.2, 16.7, "c"), (-1.45, 16.85), (-1.72, 17.25), (-2.0, 17.9), (-2.32, 18.65),
+        (-2.7, 19.35), (-3.15, 19.92), (-3.62, 20.25), (-4.08, 20.3), (-4.45, 20.08), (-4.7, 19.6),
+        (-4.9, 18.9), (-5.15, 17.95), (-5.45, 16.85), (-5.78, 15.6), (-6.0, 14.2), (-6.0, 12.8),
+        (-5.75, 11.6), (-5.4, 10.5), (-5.42, 9.4), (-5.88, 8.3), (-6.45, 7.0), (-6.8, 5.5),
+        (-6.85, 4.0), (-6.5, 2.6), (-5.7, 1.4), (-4.4, 0.55), (-2.6, 0.12)],
+    "Manta": [
+        (0, 0), (2.9, 0.2), (4.9, 0.85), (6.25, 2.0), (6.95, 3.6), (7.15, 5.2), (6.9, 6.7),
+        (6.3, 7.9), (5.65, 8.8), (5.35, 9.6), (5.42, 10.5), (5.65, 11.5), (5.72, 12.6),
+        (5.5, 13.7), (5.08, 14.62), (4.52, 15.45), (3.9, 16.08), (3.3, 16.42), (2.75, 16.45),
+        (2.3, 16.22), (1.9, 15.95), (1.52, 15.8), (1.22, 15.75, "c"), (-1.22, 15.75, "c"),
+        (-1.48, 15.85), (-1.75, 16.2), (-2.05, 16.8), (-2.42, 17.5), (-2.85, 18.12),
+        (-3.35, 18.55), (-3.88, 18.72), (-4.35, 18.6), (-4.72, 18.2), (-5.0, 17.55), (-5.3, 16.6),
+        (-5.65, 15.45), (-5.95, 14.25), (-6.02, 13.3), (-5.9, 12.3), (-5.66, 11.3), (-5.42, 10.3),
+        (-5.55, 9.3), (-6.12, 8.2), (-6.75, 6.9), (-7.1, 5.4), (-7.1, 3.8), (-6.6, 2.3),
+        (-5.6, 1.1), (-4.0, 0.35), (-2.2, 0.07)],
+    "Tempest": [
+        (-0.4, 0), (1.8, 0.15), (3.8, 0.75), (5.3, 1.85), (6.3, 3.4), (6.75, 5.1), (6.6, 6.8),
+        (6.05, 8.1), (5.6, 9.1), (5.45, 10.1), (5.6, 11.2), (5.95, 12.5), (6.2, 13.9),
+        (6.25, 15.3), (6.05, 16.7), (5.6, 18.0), (4.95, 19.15), (4.25, 20.05), (3.62, 20.55),
+        (3.16, 20.6), (2.86, 20.3), (2.6, 19.5), (2.3, 18.4), (1.9, 17.2), (1.5, 16.3),
+        (1.22, 15.85, "c"), (-1.22, 15.85, "c"), (-1.55, 15.7), (-2.05, 15.2), (-2.7, 14.55),
+        (-3.5, 14.05), (-4.35, 13.75), (-5.1, 13.45), (-5.65, 12.85), (-5.95, 12.0),
+        (-6.05, 10.9), (-6.15, 9.7), (-6.45, 8.4), (-6.95, 7.0), (-7.25, 5.5), (-7.2, 4.0),
+        (-6.75, 2.6), (-5.85, 1.35), (-4.4, 0.45), (-2.4, 0.05)],
+    "Crestwave": [
+        (0, 0), (2.9, 0.15), (4.8, 0.75), (6.0, 1.85), (6.65, 3.4), (6.8, 5.0), (6.55, 6.6),
+        (6.1, 7.9), (5.85, 9.0), (5.9, 10.2), (6.1, 11.4), (6.1, 12.6), (5.8, 13.65), (5.2, 14.6),
+        (4.45, 15.25), (3.7, 15.5), (3.15, 15.4), (2.75, 15.0), (2.35, 14.7), (1.85, 14.6),
+        (1.5, 14.58), (1.22, 14.57, "c"), (-1.22, 14.57, "c"), (-1.4, 15.0), (-1.6, 15.8),
+        (-1.95, 16.85), (-2.45, 17.95), (-3.1, 18.9), (-3.8, 19.55), (-4.45, 19.75),
+        (-4.95, 19.55), (-5.15, 19.05), (-5.05, 18.45), (-4.75, 17.95), (-4.7, 17.3),
+        (-4.95, 16.4), (-5.4, 15.3), (-5.95, 14.1), (-6.35, 12.8), (-6.4, 11.5), (-6.25, 10.2),
+        (-6.4, 8.9), (-6.85, 7.5), (-7.1, 6.0), (-7.05, 4.4), (-6.55, 2.8), (-5.6, 1.45),
+        (-4.2, 0.5), (-2.4, 0.1)],
+}
+
+# sculpted contours: (side, origin mm, direction toward the edge, depth mm)
+CONTOURS = {
+    "Skyline": [("top", (-95, 110), (-1, -0.25), 12), ("back", (-88, 250), (-0.92, 0.39), 10)],
+    "Velvet": [("top", (-108, 120), (-1, -0.25), 11), ("back", (-100, 290), (-0.92, 0.39), 9)],
+    "Foundation": [("top", (-108, 120), (-1, -0.25), 11), ("back", (-100, 290), (-0.92, 0.39), 9)],
+    "Manta": [("top", (-112, 112), (-1, -0.25), 10), ("back", (-104, 280), (-0.92, 0.39), 9)],
+}
+EDGES = {"Skyline": 6.0, "Velvet": 7.0, "Foundation": 7.0, "Manta": 8.0}
+
+
+def _apply_refinements():
+    for d in INSTRUMENTS:
+        pts = OUTLINES_IN.get(d["id"])
+        if pts:
+            d["outline"] = [(p[0] * 25.4, p[1] * 25.4) for p in pts]
+            d["corners"] = [i for i, p in enumerate(pts) if len(p) > 2]
+        if d["id"] in CONTOURS:
+            d["contours"] = CONTOURS[d["id"]]
+        if d["id"] in EDGES:
+            d["edge"] = EDGES[d["id"]]
+
+
+_apply_refinements()
+
 BY_ID = {d["id"]: d for d in INSTRUMENTS}
 
 
@@ -623,10 +785,11 @@ BY_ID = {d["id"]: d for d in INSTRUMENTS}
 def headstock(kind, nut_w):
     h = nut_w / 2
     if kind == "six":
-        pts = [(h, 0), (h + 4, 14), (h + 14, 30), (h + 20, 50), (h + 18, 72), (h + 12, 94),
-               (h + 9, 116), (h + 10, 138), (h + 14, 158), (h + 17, 176), (h + 14, 190),
-               (h + 4, 197), (-6, 198), (-18, 192), (-25, 176), (-29, 140), (-30, 100),
-               (-29, 56), (-26, 22), (-h, 0)]
+        pts = [(h, 0), (h + 2, 8), (h + 6, 20), (h + 14, 34), (h + 20, 50), (h + 21, 64),
+               (h + 17, 80), (h + 11, 96), (h + 8, 114), (h + 9, 132), (h + 14, 150), (h + 20, 166),
+               (h + 22, 178), (h + 19, 190), (h + 10, 197), (h - 4, 200), (-10, 199), (-20, 193),
+               (-25, 182), (-27, 160), (-28, 120), (-28, 80), (-27, 44), (-25, 20), (-22, 6),
+               (-h, 0)]
         posts = [(-17 + 2.1 * i, 40 + 26.5 * i, "L") for i in range(6)]
     elif kind == "six_small":
         pts = [(h, 0), (h + 3, 16), (h + 10, 40), (h + 13, 80), (h + 12, 120), (h + 10, 150),
@@ -634,11 +797,12 @@ def headstock(kind, nut_w):
                (-25, 26), (-h, 0)]
         posts = [(-16 + 1.8 * i, 34 + 25 * i, "L") for i in range(6)]
     elif kind == "gibson":
-        pts = [(h, 0), (h + 6, 18), (h + 18, 46), (h + 24, 86), (h + 26, 126), (h + 25, 164),
-               (h + 20, 180), (16, 186), (0, 190), (-16, 186), (-h - 20, 180), (-h - 25, 164),
-               (-h - 26, 126), (-h - 24, 86), (-h - 18, 46), (-h - 6, 18), (-h, 0)]
+        pts = [(h, 0), (h + 5, 14), (h + 14, 36), (h + 21, 70), (h + 25, 110), (h + 27, 150),
+               (h + 29, 176), (18, 186), (0, 194), (-18, 186), (-h - 29, 176), (-h - 27, 150),
+               (-h - 25, 110), (-h - 21, 70), (-h - 14, 36), (-h - 5, 14), (-h, 0)]
         posts = [(-29, 58, "L"), (-31, 100, "L"), (-32, 142, "L"),
                  (32, 142, "R"), (31, 100, "R"), (29, 58, "R")]
+        return polygon(pts, corners=(0, 6, 8, 10, len(pts) - 1), step=4.0), posts
     elif kind == "arrow":
         pts = [(h, 0), (h + 7, 20), (h + 18, 56), (h + 22, 100), (h + 18, 140), (h + 6, 172),
                (0, 196), (-h - 6, 172), (-h - 18, 140), (-h - 22, 100), (-h - 18, 56),
@@ -646,9 +810,10 @@ def headstock(kind, nut_w):
         posts = [(-28, 52, "L"), (-30, 92, "L"), (-26, 132, "L"),
                  (26, 132, "R"), (30, 92, "R"), (28, 52, "R")]
     elif kind == "bass4":
-        pts = [(h, 0), (h + 4, 20), (h + 16, 44), (h + 24, 76), (h + 22, 108), (h + 16, 140),
-               (h + 14, 170), (h + 18, 196), (h + 16, 214), (h + 6, 224), (-8, 226),
-               (-22, 220), (-30, 200), (-34, 150), (-34, 100), (-32, 50), (-27, 18), (-h, 0)]
+        pts = [(h, 0), (h + 3, 12), (h + 10, 28), (h + 20, 48), (h + 26, 70), (h + 25, 92),
+               (h + 19, 114), (h + 14, 138), (h + 13, 162), (h + 16, 186), (h + 20, 206),
+               (h + 19, 220), (h + 11, 229), (h - 4, 232), (-12, 231), (-24, 224), (-31, 208),
+               (-34, 170), (-34, 120), (-33, 70), (-30, 30), (-26, 10), (-h, 0)]
         posts = [(-18 + 3 * i, 46 + 52 * i, "L") for i in range(4)]
     elif kind == "three_one":
         pts = [(h, 0), (h + 8, 28), (h + 22, 76), (h + 26, 120), (h + 24, 154), (h + 14, 178),
@@ -661,10 +826,11 @@ def headstock(kind, nut_w):
                (-h, 0)]
         posts = [(14 - 1.5 * i, 56 + 54 * i, "R") for i in range(4)]
     else:  # two_two
-        pts = [(h, 0), (h + 8, 30), (h + 20, 72), (h + 30, 124), (h + 36, 172), (h + 34, 200),
-               (h + 18, 214), (8, 220), (-22, 214), (-44, 200), (-52, 170), (-50, 120),
-               (-42, 70), (-30, 28), (-h, 0)]
+        pts = [(h, 0), (h + 8, 30), (h + 20, 72), (h + 32, 124), (h + 40, 168), (h + 42, 196),
+               (h + 30, 208), (10, 216), (-20, 214), (-42, 204), (-52, 182), (-52, 140),
+               (-44, 86), (-32, 36), (-h, 0)]
         posts = [(-28, 74, "L"), (-31, 150, "L"), (32, 156, "R"), (30, 84, "R")]
+        return polygon(pts, corners=(0, 5, len(pts) - 1), step=4.0), posts
     return polygon(pts, corners=(0, len(pts) - 1), step=4.0), posts
 
 
@@ -744,15 +910,26 @@ def build(d):
         if binding and z_lo >= T_ - 3.2:
             return "Binding"
         return "Body"
+    ctop = cbot = None
+    for side, o, u, depth in d.get("contours", []):
+        f = bevel(o, u, depth, sign=-1.0 if side == "top" else 1.0)
+        if side == "top":
+            ctop = f if ctop is None else (lambda a, c, f1=ctop, f2=f: f1(a, c) + f2(a, c))
+        else:
+            cbot = f if cbot is None else (lambda a, c, f1=cbot, f2=f: f1(a, c) + f2(a, c))
     parts = slab(body, 0, T_, bottom, top, n=128, keys=keys, carve=carve, uv=uv,
-                 cap_keys=("Body", "Top" if carve_h else "Body"))
+                 cap_keys=("Body", "Top" if carve_h else "Body"),
+                 contour_top=ctop, contour_bottom=cbot)
     for k, m in parts.items():
         b.add(k, m)
 
     def surface(x, y):
-        if not carve_h:
-            return T_
-        return T_ + float(carve(np.array([x]), np.array([y]))[0])
+        z = T_
+        if carve_h:
+            z += float(carve(np.array([x]), np.array([y]))[0])
+        if ctop is not None:
+            z += float(ctop(np.array([float(x)]), np.array([float(y)]))[0])
+        return z
 
     # ---- neck: shaft, heel, fretboard, frets, inlays, nut
     notch = d["notch_y"]

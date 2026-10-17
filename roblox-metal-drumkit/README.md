@@ -88,6 +88,7 @@ Beat Drummer で演奏するキャラクターに持たせるスティックで�
 
 Beat Drummer のバンドのメンバーが構えるギター 5 本とベース 5 本です。代表的なモデルの形に合わせていますが、
 ブランド名やロゴは入れていません（ヘッドの形も一般的な形）。
+輪郭は実物の寸法の比率に合わせ、ST タイプと JB・PB・SR タイプには腕とお腹が当たる部分を削ったコンター（アームコンター・ボディ裏のカット）も付けています。
 
 | 名前 | タイプ | 名前 | タイプ |
 | --- | --- | --- | --- |
@@ -99,7 +100,7 @@ Beat Drummer のバンドのメンバーが構えるギター 5 本とベース 
 
 ![ボディ](preview/instruments/instruments_guitar_bodies.jpg)
 
-- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 5,680〜9,993 ポリゴン）
+- モデル: `export/instruments/BandInstruments.fbx`（10 本が 2 列。柄の画像を埋め込み済み。1 本 5,680〜9,239 ポリゴン）
 - セットアップ: `export/instruments/BandInstruments_Setup.lua`（色・溶接・構える位置の Attachment）
 - キャラクターに構えさせる・ノーツに合わせて揺らす: `roblox/BandInstruments.lua`
 - 生成: `generator/instruments.py`（形）、`instrument_textures.py`（サンバーストや木目）、`instruments_blender.py`（FBX とレンダリング）

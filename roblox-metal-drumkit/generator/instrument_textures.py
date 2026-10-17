@@ -72,14 +72,23 @@ def flame(X, Y, rng):
 
 
 def tortoise(rng, res=RES):
-    n1 = pnoise(rng, 3.3, (res, res))
-    n2 = pnoise(rng, 3.4, (res, res))
-    base = np.array([88.0, 28.0, 9.0])
-    dark = np.array([16.0, 6.0, 3.0])
-    light = np.array([150.0, 66.0, 22.0])
-    t = np.clip((n1 * 0.7 + n2 * 0.3 + 0.12) * 4.5, 0, 1)[..., None]
+    """Celluloid tortoiseshell: amber flecks in deep brown, streaked along one axis."""
+    from scipy.ndimage import gaussian_filter, zoom
+
+    def streaks(beta):
+        # band-pass: soft edges, patches only a few centimetres across
+        n = zoom(pnoise(rng, beta, (res, res // 2)), (1, 2), order=1)
+        n = gaussian_filter(n, 1.6, mode="wrap") - gaussian_filter(n, res / 14, mode="wrap")
+        return n / (n.std() * 3)
+
+    n1 = streaks(2.8)
+    n2 = streaks(2.6)
+    base = np.array([74.0, 20.0, 6.0])
+    dark = np.array([10.0, 4.0, 2.0])
+    light = np.array([168.0, 72.0, 18.0])
+    t = np.clip((n1 + 0.06) * 5.0, 0, 1)[..., None]
     rgb = base * (1 - t) + dark * t
-    lt = np.clip((-n2 - 0.35) * 4, 0, 1)[..., None]
+    lt = np.clip((-n2 - 0.24) * 5, 0, 1)[..., None] * (1 - t)
     return rgb * (1 - lt) + light * lt
 
 
