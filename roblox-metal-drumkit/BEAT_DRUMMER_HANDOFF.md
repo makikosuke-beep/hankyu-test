@@ -12,6 +12,8 @@
 2 つとも同じ仕組み（同じレーン、同じセットアップ、同じ DrumKitFX / DrumKitStyles）で動きます。
 先に IRON STORM で一通り組み込み、その後 SOVEREIGN を同じ手順で足すと楽です。
 
+あわせて、キットとは別に選べる**スティック 6 種**（`DrumSticks`）も入れます（手順 10）。
+
 ## ゴール
 
 1. 各キットを、**今のドラムセットと同じ構成**（同じレーン・同じ数のタムとシンバル）で、ステージ上の今のキットと差し替えられるようにする
@@ -20,6 +22,7 @@
 4. ゲーム内のお金と Robux のどちらかで買えるようにし、持っている人だけが装備を切り替えられるようにする
 5. スマホでも重くならないこと（IRON STORM は 63,456 ポリゴン / MeshPart 83 個、SOVEREIGN は 70,464 ポリゴン / MeshPart 69 個）
 6. **色と模様を選べるようにする**（キットごとにシェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッドも選べる。おすすめの組み合わせ 8 種）
+7. **スティックを選べるようにする**（6 種。キットとは別に買って装備し、演奏するキャラクターの両手に持たせる。叩くと飾りや芯が光る）
 
 ## 素材の場所
 
@@ -46,6 +49,7 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
 | `preview/beatdrummer/styles_lineup.jpg` / `preview/sovereign/styles_lineup.jpg` | 各キットのプリセット 8 種を並べた画像 |
 | `generator/specs/beatdrummer_spec.json` / `sovereign_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
 | `generator/styles_catalog.json` | 色・模様の選択肢の元データ（`make_styles_lua.py` で `DrumKitStyles.lua` を作り直す） |
+| `export/sticks/` と `roblox/DrumSticks.lua` | スティック 6 種（手順 10） |
 | `generator/kitspec.py` | 設定ファイルからモデルを作るスクリプト |
 
 ### 今のモデルの構成
@@ -245,7 +249,66 @@ Styles.apply(kitModel, Styles.preset("sovereign", "Sovereign"))   -- プリセ�
 - 模様ごとに販売する場合は、`Styles.catalog(kitId).Patterns` の `id` を商品として扱い、持っていない模様を選べないようにサーバーで確認します
 - 見た目のイメージは `preview/beatdrummer/styles_lineup.jpg`、`preview/sovereign/styles_lineup.jpg` と、ユーザーに渡した 3D プレビューで確認できます
 
-### 10. 確認
+### 10. スティック（DrumSticks）
+
+キットとは別の商品です。どのキットとも組み合わせられます。
+
+| ID | 名前 | テーマ | 特徴 | ポリゴン（1 本） |
+| --- | --- | --- | --- | --- |
+| `Sovereign` | ソブリン シグネチャー | スタンダードの高級品 | ヒッコリー 5A、ゴールドディップのエンド、金箔ロゴ、どんぐり型チップ | 1,720 |
+| `IronStorm` | アイアンストーム | メタル | ガンメタル合金、溝付きラバーグリップ、赤いライン、スパイク付きクロームエンド | 3,756 |
+| `SweetRibbon` | スウィートリボン | かわいい | パステルピンク、キャンディストライプ、ハート付きリボン、パールのボールチップ | 4,012 |
+| `Starlight` | スターライト | ゆめかわ | ラベンダー、金の星、エンドにカットした大きな星 | 2,576 |
+| `Yozakura` | 夜桜 | 和モダン | 黒漆、朱のエンド、金の輪、桜の花びら、縦書きの「夜桜」 | 4,116 |
+| `NeonPulse` | ネオンパルス | 光る | 透明なシャフトの芯が光る（色は 5 色から）、溝付きグリップ | 2,928 |
+
+**素材**
+
+| ファイル | 内容 |
+| --- | --- |
+| `export/sticks/DrumSticks.fbx` | 6 種が 1 列に並んだモデル（studs 単位、ロゴ画像を埋め込み済み）。OBJ 版もあり |
+| `export/sticks/DrumSticks_Setup.lua` | 読み込み後に 1 回実行するセットアップ |
+| `roblox/DrumSticks.lua` | 手に持たせる・叩いたときに光らせる ModuleScript（一覧 `DrumSticks.List` もここ） |
+| `export/sticks/logos/stick_*.png` | 各スティックのロゴ。FBX に入っているので通常はアップロード不要 |
+| `preview/sticks/` | 並べた画像、グリップエンドとチップ、ロゴのアップ |
+
+**手順**
+
+1. **今のスティックを調べる（変更はしない）**。演奏するキャラクターがスティックを持っているか、持っているならどのパーツ・どの Weld で手に付いているか。
+   叩くときの腕の動き（Animation や Motor6D の操作）をどこで再生しているか。キャラクターが R15 か R6 か。結果をユーザーに報告する
+2. **読み込む（ユーザーの手作業）**。3D インポーターで `DrumSticks.fbx` を読み込む。1 本の長さが約 **1.45 studs**（実物の 16 インチ）になっているか確認する
+3. **セットアップ**。`DrumSticks_Setup.lua` を `execute_luau` で実行する（MCP からは `local root = ...` の行を読み込んだ Model を直接指すように書き換える）。
+   Folder `DrumSticks` の中に Model `Stick_<ID>` が 6 個でき、各 Model の PrimaryPart に Attachment `Grip`（持つ位置）と `Tip`（先端）が付く。
+   Folder を ReplicatedStorage に移す
+4. `roblox/DrumSticks.lua` を ModuleScript として ReplicatedStorage の BeatDrummer の下などに入れる
+5. **持たせる（サーバー）**。演奏が始まるとき・スティックを装備したときに呼ぶ。今のスティックがあれば、先に消すか非表示にする
+
+   ```lua
+   local DrumSticks = require(ReplicatedStorage.BeatDrummer.DrumSticks)
+   local template = DrumSticks.template(ReplicatedStorage.DrumSticks, equippedStickId)  -- "SweetRibbon" など
+   DrumSticks.attach(character, template)                                 -- 両手に持たせる
+   DrumSticks.attach(character, template, { tilt = -10, inward = 15, scale = 1.2 })  -- 角度と大きさを調整
+   DrumSticks.detach(character)
+   ```
+
+   - スティックは手の `RightGripAttachment` / `LeftGripAttachment` の位置で握り、手の正面（−Z）へ伸びます。R6 は `Right Arm` / `Left Arm` に付きます
+   - 今のアニメーションで向きが合わないときは、`tilt`（上下の角度）と `inward`（内側への角度）を度で調整し、
+     ユーザーにプレイテストで見てもらって決めてください。決まった値は `DrumSticks.Defaults` に書きます
+   - キャラクターに対して細く見えるときは `scale` を 1.2〜1.5 にします（実物の太さは約 0.05 studs）
+6. **叩いたとき（クライアント）**。DrumKitFX の `fx:hit` と同じところで呼ぶ
+
+   ```lua
+   DrumSticks.hitLane(character, lane, strength)   -- レーンから叩く手を決めて、飾り・ライン・光る芯を一瞬光らせる
+   ```
+
+   レーンと手の対応は `DrumSticks.HandForLane`（SL は左、SR は右、HH は右など）。ゲームの持ち手に合わせて直してください
+7. **NEON PULSE の光の色**は `DrumSticks.setColor(character, DrumSticks.NeonColors.magenta)` で変えられます（cyan / magenta / lime / orange / white）。
+   色も選べるようにする場合は、選んだ色の名前も保存します
+8. **購入と装備**はキットと同じ考え方です（GamePass またはゲーム内のお金、持っているかはサーバーで確認）。
+   装備中のスティックの ID（`"Yozakura"` など）を DataStore に保存し、次に入ったときに持たせます。ショップの一覧には `DrumSticks.List`（`name` / `nameEn` / `theme` / `desc`）を使えます
+9. スティックの音は変えません（叩いた音はキットの音のまま）
+
+### 11. 確認
 
 - プレイテストで、9 つのキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）すべてで、対応するパーツが動くこと（オートプレイで全曲を通す）
 - プリセット 8 種を順に適用して、模様・ロゴ・金物・シンバルの色が変わること。再入場しても選んだ見た目が残ること
@@ -253,5 +316,7 @@ Styles.apply(kitModel, Styles.preset("sovereign", "Sovereign"))   -- プリセ�
 - スマホのエミュレーター（デバイス設定）で、フレームレートが下がらないこと
 - キットを入れ替えても、カメラ・ノーツ表示・バンドのメンバーの位置がずれないこと
 - 買っていないプレイヤーは装備できないこと、買った後は再入場しても持っていること
+- スティック 6 種を順に持たせて、両手で正しく握っていること（向き・位置・大きさ）、叩いたときに光ること。他のプレイヤーからも見えること
+- スティックとキットを別々に切り替えても、互いに影響しないこと
 
 最後に、ユーザーに「保存と公開」をお願いしてください。

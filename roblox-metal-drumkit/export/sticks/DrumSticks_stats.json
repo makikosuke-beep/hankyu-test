@@ -1,0 +1,198 @@
+{
+ "parts": [
+  {
+   "name": "Sovereign_Gold",
+   "triangles": 500
+  },
+  {
+   "name": "Sovereign_Wood",
+   "triangles": 1220
+  },
+  {
+   "name": "IronStorm_Chrome",
+   "triangles": 536
+  },
+  {
+   "name": "IronStorm_Accent",
+   "triangles": 320
+  },
+  {
+   "name": "IronStorm_Rubber",
+   "triangles": 2280
+  },
+  {
+   "name": "IronStorm_Gunmetal",
+   "triangles": 40
+  },
+  {
+   "name": "IronStorm_Nylon",
+   "triangles": 580
+  },
+  {
+   "name": "SweetRibbon_Lacquer",
+   "triangles": 980
+  },
+  {
+   "name": "SweetRibbon_Pearl",
+   "triangles": 420
+  },
+  {
+   "name": "SweetRibbon_Stripe",
+   "triangles": 1036
+  },
+  {
+   "name": "SweetRibbon_Ribbon",
+   "triangles": 1078
+  },
+  {
+   "name": "SweetRibbon_Heart",
+   "triangles": 498
+  },
+  {
+   "name": "Starlight_Gold",
+   "triangles": 1276
+  },
+  {
+   "name": "Starlight_Lacquer",
+   "triangles": 720
+  },
+  {
+   "name": "Starlight_Pearl",
+   "triangles": 540
+  },
+  {
+   "name": "Starlight_Star",
+   "triangles": 40
+  },
+  {
+   "name": "Yozakura_Vermilion",
+   "triangles": 300
+  },
+  {
+   "name": "Yozakura_Gold",
+   "triangles": 528
+  },
+  {
+   "name": "Yozakura_Lacquer",
+   "triangles": 1260
+  },
+  {
+   "name": "Yozakura_Petal",
+   "triangles": 2028
+  },
+  {
+   "name": "NeonPulse_Chrome",
+   "triangles": 380
+  },
+  {
+   "name": "NeonPulse_Neon",
+   "triangles": 328
+  },
+  {
+   "name": "NeonPulse_Rubber",
+   "triangles": 1000
+  },
+  {
+   "name": "NeonPulse_Glass",
+   "triangles": 1220
+  }
+ ],
+ "sticks": {
+  "Sovereign": {
+   "primary": "Sovereign_Wood",
+   "grip": [
+    0.0,
+    -0.28214,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.64643,
+    0.0
+   ],
+   "length_studs": 1.45,
+   "triangles": 1720,
+   "parts": 2
+  },
+  "IronStorm": {
+   "primary": "IronStorm_Gunmetal",
+   "grip": [
+    0.0,
+    -0.19464,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.73393,
+    0.0
+   ],
+   "length_studs": 1.45,
+   "triangles": 3756,
+   "parts": 5
+  },
+  "SweetRibbon": {
+   "primary": "SweetRibbon_Lacquer",
+   "grip": [
+    0.0,
+    -0.20241,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.69808,
+    0.0
+   ],
+   "length_studs": 1.4071,
+   "triangles": 4012,
+   "parts": 5
+  },
+  "Starlight": {
+   "primary": "Starlight_Lacquer",
+   "grip": [
+    0.0,
+    -0.21014,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.69036,
+    0.0
+   ],
+   "length_studs": 1.4071,
+   "triangles": 2576,
+   "parts": 4
+  },
+  "Yozakura": {
+   "primary": "Yozakura_Lacquer",
+   "grip": [
+    0.0,
+    -0.3075,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.62107,
+    0.0
+   ],
+   "length_studs": 1.45,
+   "triangles": 4116,
+   "parts": 4
+  },
+  "NeonPulse": {
+   "primary": "NeonPulse_Glass",
+   "grip": [
+    0.0,
+    -0.46786,
+    0.0
+   ],
+   "tip": [
+    0.0,
+    0.46071,
+    0.0
+   ],
+   "length_studs": 1.45,
+   "triangles": 2928,
+   "parts": 4
+  }
+ }
+}

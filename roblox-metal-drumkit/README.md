@@ -58,6 +58,29 @@ Beat Drummer 用の 2 台目のキットです。IRON STORM と同じ 9 キー�
 - 色と模様の切り替えは IRON STORM と同じ `roblox/DrumKitStyles.lua` で、Model の `KitId` 属性からキットを見分けます。
   選択肢は `generator/styles_catalog.json` にまとめてあり、`python make_styles_lua.py` で Lua を作り直せます
 
+## スティック（6 種）
+
+![スティック](preview/sticks/sticks_lineup.jpg)
+
+Beat Drummer で演奏するキャラクターに持たせるスティックです。キットとは別に選べます。
+
+| スティック | テーマ | 特徴 |
+| --- | --- | --- |
+| SOVEREIGN Signature（ソブリン シグネチャー） | スタンダードの高級品 | ヒッコリー 5A、ゴールドディップのエンド、金箔ロゴ、どんぐり型チップ |
+| IRON STORM（アイアンストーム） | メタル | ガンメタル合金、溝付きラバーグリップ、赤いライン、スパイク付きエンド |
+| SWEET RIBBON（スウィートリボン） | かわいい | パステルピンク、キャンディストライプ、ハート付きリボン |
+| STARLIGHT（スターライト） | ゆめかわ | ラベンダーに金の星、エンドに大きな星 |
+| YOZAKURA（夜桜） | 和モダン | 黒漆、朱のエンド、金の輪、桜 |
+| NEON PULSE（ネオンパルス） | 光る | 透明なシャフトの芯が光る（5 色） |
+
+![グリップエンド](preview/sticks/sticks_butts.jpg)
+
+- モデル: `export/sticks/DrumSticks.fbx`（6 種が 1 列。ロゴ画像を埋め込み済み。1 本 1,720〜4,116 ポリゴン）
+- セットアップ: `export/sticks/DrumSticks_Setup.lua`（色・溶接・持つ位置の Attachment）
+- 手に持たせる・叩いたときに光らせる: `roblox/DrumSticks.lua`
+- 生成: `generator/sticks.py`（形と色）、`stick_logos.py`（ロゴ）、`sticks_blender.py`（FBX とレンダリング）
+- 組み込み手順: [`BEAT_DRUMMER_HANDOFF.md`](BEAT_DRUMMER_HANDOFF.md) の「10. スティック」
+
 ## 構成（ショーケース版）
 
 | 区分 | 内容 |
@@ -124,7 +147,7 @@ Beat Drummer 用の 2 台目のキットです。IRON STORM と同じ 9 キー�
 cd generator
 pip install numpy scipy shapely trimesh mapbox_earcut pillow   # OBJ とロゴ
 pip install bpy                                                # FBX / GLB / レンダリング用（Blender モジュール）
-./build_all.sh            # すべて書き出し（3 キット分。RENDER=0 でレンダリングを省略）
+./build_all.sh            # すべて書き出し（3 キットとスティック。RENDER=0 でレンダリングを省略）
 python drumkit.py --detail 0.7 --name MyKit --out ../export    # 細かさを変えた OBJ を作る
 ```
 

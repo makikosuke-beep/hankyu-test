@@ -35,6 +35,11 @@ $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json --out "$OUT/beatdru
 $PY kitspec.py specs/sovereign_spec.json --out "$OUT/sovereign"
 $BPY_PY blender_export.py --spec specs/sovereign_spec.json --out "$OUT/sovereign"
 
+# Drum sticks: six designs (also writes roblox/DrumSticks.lua)
+$PY stick_logos.py "$OUT/sticks/logos"
+$PY sticks.py --out "$OUT/sticks"
+$BPY_PY sticks_blender.py --out "$OUT/sticks"
+
 # preview renders
 if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --renders "$PREV" --samples "$SAMPLES" \
@@ -51,4 +56,5 @@ if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --spec specs/sovereign_spec.json \
     --renders "$PREV/sovereign" --lineup "$PREV/sovereign/styles_lineup.jpg" \
     --views bd_front --samples 24 --res 800x500
+  $BPY_PY sticks_blender.py --renders "$PREV/sticks" --samples "$SAMPLES"
 fi

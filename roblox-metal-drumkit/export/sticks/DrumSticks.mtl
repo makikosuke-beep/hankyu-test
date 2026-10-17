@@ -1,0 +1,174 @@
+newmtl Sovereign_Wood
+Kd 0.745 0.533 0.290
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_Sovereign.png
+newmtl Sovereign_Gold
+Kd 0.839 0.667 0.282
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl IronStorm_Gunmetal
+Kd 0.361 0.376 0.416
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_IronStorm.png
+newmtl IronStorm_Rubber
+Kd 0.094 0.094 0.106
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl IronStorm_Accent
+Kd 0.804 0.071 0.125
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl IronStorm_Nylon
+Kd 0.071 0.071 0.078
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl IronStorm_Chrome
+Kd 0.839 0.847 0.871
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl SweetRibbon_Lacquer
+Kd 1.000 0.722 0.816
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_SweetRibbon.png
+newmtl SweetRibbon_Stripe
+Kd 1.000 0.980 0.988
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl SweetRibbon_Ribbon
+Kd 0.910 0.282 0.557
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl SweetRibbon_Heart
+Kd 0.925 0.627 0.588
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl SweetRibbon_Pearl
+Kd 0.988 0.965 0.957
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Starlight_Lacquer
+Kd 0.769 0.667 1.000
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_Starlight.png
+newmtl Starlight_Gold
+Kd 0.925 0.769 0.384
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Starlight_Star
+Kd 1.000 0.894 0.502
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Starlight_Pearl
+Kd 0.988 0.973 1.000
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Yozakura_Lacquer
+Kd 0.078 0.067 0.078
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_Yozakura.png
+newmtl Yozakura_Vermilion
+Kd 0.714 0.125 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Yozakura_Gold
+Kd 0.839 0.667 0.282
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl Yozakura_Petal
+Kd 1.000 0.722 0.800
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl NeonPulse_Glass
+Kd 0.839 0.941 1.000
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl NeonPulse_Neon
+Kd 0.000 0.894 1.000
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+newmtl NeonPulse_Rubber
+Kd 0.086 0.086 0.102
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd logos/stick_NeonPulse.png
+newmtl NeonPulse_Chrome
+Kd 0.808 0.824 0.863
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
