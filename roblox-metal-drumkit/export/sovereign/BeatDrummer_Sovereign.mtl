@@ -1,0 +1,136 @@
+# Chrome hardware
+newmtl Chrome
+Kd 0.800 0.810 0.840
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Gloss black lacquer shells (pattern UVs)
+newmtl Finish
+Kd 0.035 0.035 0.040
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Bass drum wood hoops
+newmtl Hoop
+Kd 0.035 0.035 0.040
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Blood-red pinstripes / inlays
+newmtl Accent
+Kd 0.620 0.020 0.040
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# White coated batter heads
+newmtl HeadCoated
+Kd 0.930 0.920 0.880
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Black resonant heads
+newmtl HeadBlack
+Kd 0.050 0.050 0.055
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Snare-side head
+newmtl HeadClear
+Kd 0.800 0.800 0.780
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Bass drum front heads (logo texture)
+newmtl HeadLogo
+Kd 1.000 1.000 1.000
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+map_Kd sovereign_logo.png
+
+# Brilliant cymbal bronze
+newmtl Bronze
+Kd 0.800 0.580 0.260
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Raw / dark china bronze
+newmtl BronzeDark
+Kd 0.550 0.380 0.170
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Black powder-coated castings
+newmtl BlackMetal
+Kd 0.070 0.070 0.075
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Rubber feet, caps, gaskets
+newmtl Rubber
+Kd 0.060 0.060 0.060
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Red cymbal felts
+newmtl Felt
+Kd 0.550 0.050 0.070
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Throne vinyl
+newmtl Leather
+Kd 0.050 0.050 0.050
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+
+# Drum rug
+newmtl Rug
+Kd 0.120 0.120 0.130
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+Ns 200
+d 1
+illum 2
+

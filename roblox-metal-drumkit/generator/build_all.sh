@@ -11,8 +11,12 @@ PREV=../preview
 mkdir -p "$OUT/styles"
 SAMPLES=${SAMPLES:-64}
 
+mkdir -p "$OUT/styles/sovereign" "$OUT/sovereign"
 $PY make_logo.py "$OUT/kick_logo.png" "$OUT/styles/logo_overlay.png"
+$PY make_logo.py "$OUT/sovereign/sovereign_logo.png" "$OUT/styles/sovereign/logo_overlay.png" sovereign
 $PY make_patterns.py "$OUT/styles"
+$PY make_patterns.py "$OUT/styles/sovereign" wood
+$PY make_styles_lua.py
 
 # OBJ (+MTL) in studs
 $PY drumkit.py --out "$OUT" --name MetalDrumKit
@@ -27,6 +31,10 @@ $PY kitspec.py specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
 cp "$OUT/kick_logo.png" "$OUT/beatdrummer/"
 $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json --out "$OUT/beatdrummer"
 
+# SOVEREIGN: same lanes and layout, wood veneers + gold hardware on stands
+$PY kitspec.py specs/sovereign_spec.json --out "$OUT/sovereign"
+$BPY_PY blender_export.py --spec specs/sovereign_spec.json --out "$OUT/sovereign"
+
 # preview renders
 if [[ "${RENDER:-1}" == "1" ]]; then
   $BPY_PY blender_export.py --renders "$PREV" --samples "$SAMPLES" \
@@ -36,5 +44,11 @@ if [[ "${RENDER:-1}" == "1" ]]; then
     --views bd_front,bd_drummer,bd_pedals
   $BPY_PY blender_export.py --spec specs/beatdrummer_spec.json \
     --renders "$PREV/beatdrummer" --lineup "$PREV/beatdrummer/styles_lineup.jpg" \
+    --views bd_front --samples 24 --res 800x500
+  $BPY_PY blender_export.py --spec specs/sovereign_spec.json \
+    --renders "$PREV/sovereign" --samples "$SAMPLES" \
+    --views bd_front,bd_drummer,bd_pedals,bd_holder
+  $BPY_PY blender_export.py --spec specs/sovereign_spec.json \
+    --renders "$PREV/sovereign" --lineup "$PREV/sovereign/styles_lineup.jpg" \
     --views bd_front --samples 24 --res 800x500
 fi

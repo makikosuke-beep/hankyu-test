@@ -1,0 +1,198 @@
+{
+ "name": "BeatDrummer_Sovereign",
+ "kit_id": "Sovereign",
+ "_comment": "Pinnacle 'standard' kit: same pieces/lanes as the in-game kit. Roblox studs, kit-local frame: +X = drummer's right, +Y = up, drummer faces -Z. Sizes in inches.",
+ "scale": 1.0,
+ "detail": 0.5,
+ "pedal": "single",
+ "mount": "stands",
+ "lug_style": "classic",
+ "hoop_style": "diecast",
+ "stripes": false,
+ "cymbal_finish": "hammered",
+ "logo_texture": "sovereign_logo.png",
+ "render_exposure": -1.2,
+ "tom_holder_height": 0.8,
+ "rug": true,
+ "throne": {
+  "pos": [
+   0.0,
+   2.018,
+   2.357
+  ]
+ },
+ "palette": {
+  "Finish": {
+   "color": [
+    178,
+    92,
+    26
+   ],
+   "reflectance": 0.15
+  },
+  "Hoop": {
+   "color": [
+    98,
+    51,
+    14
+   ],
+   "reflectance": 0.15
+  },
+  "Accent": {
+   "color": [
+    205,
+    165,
+    75
+   ],
+   "reflectance": 0.2
+  },
+  "Chrome": {
+   "color": [
+    214,
+    170,
+    72
+   ],
+   "reflectance": 0.3
+  },
+  "Bronze": {
+   "color": [
+    196,
+    146,
+    74
+   ],
+   "material": "Metal",
+   "reflectance": 0.06
+  },
+  "Felt": {
+   "color": [
+    38,
+    38,
+    40
+   ]
+  },
+  "HeadLogo": {
+   "color": [
+    16,
+    16,
+    18
+   ]
+  },
+  "Leather": {
+   "color": [
+    52,
+    34,
+    24
+   ],
+   "material": "Leather"
+  }
+ },
+ "pieces": [
+  {
+   "lane": "BD",
+   "type": "kick",
+   "diameter": 22,
+   "depth": 18,
+   "pos": [
+    0.0,
+    0.0,
+    -1.352
+   ],
+   "logo": true,
+   "port": false
+  },
+  {
+   "lane": "SN",
+   "type": "snare",
+   "diameter": 14,
+   "depth": 6.5,
+   "pos": [
+    -0.464,
+    2.025,
+    0.607
+   ],
+   "tilt": 5,
+   "legs": [
+    0,
+    150,
+    210
+   ]
+  },
+  {
+   "lane": "HH",
+   "type": "hihat",
+   "diameter": 14,
+   "pos": [
+    -2.357,
+    3.518,
+    0.464
+   ],
+   "legs": [
+    90,
+    210,
+    330
+   ]
+  },
+  {
+   "lane": "HT",
+   "type": "tom",
+   "diameter": 10,
+   "depth": 8,
+   "pos": [
+    -0.607,
+    3.268,
+    -0.75
+   ],
+   "tilt": 18
+  },
+  {
+   "lane": "LT",
+   "type": "tom",
+   "diameter": 12,
+   "depth": 9,
+   "pos": [
+    0.643,
+    3.321,
+    -0.839
+   ],
+   "tilt": 18
+  },
+  {
+   "lane": "FT",
+   "type": "floortom",
+   "diameter": 16,
+   "depth": 16,
+   "pos": [
+    1.786,
+    1.506,
+    0.643
+   ],
+   "legs": [
+    0,
+    120,
+    240
+   ]
+  },
+  {
+   "lane": "CR",
+   "type": "crash",
+   "diameter": 18,
+   "pos": [
+    -1.714,
+    5.0,
+    -1.286
+   ],
+   "tilt": 20
+  },
+  {
+   "lane": "RD",
+   "type": "ride",
+   "diameter": 22,
+   "pos": [
+    2.286,
+    4.143,
+    -0.714
+   ],
+   "tilt": 12
+  }
+ ]
+}

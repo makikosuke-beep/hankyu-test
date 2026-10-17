@@ -1,0 +1,369 @@
+{
+ "summary": {
+  "parts": 69,
+  "triangles": 70464,
+  "max_part_triangles": 8280,
+  "size_studs": [
+   9.34,
+   5.12,
+   7.15
+  ],
+  "size_m": [
+   2.616,
+   1.433,
+   2.003
+  ],
+  "seat_studs": [
+   0.0,
+   2.018,
+   2.357
+  ]
+ },
+ "parts": [
+  {
+   "name": "BD_Kick_Finish",
+   "material": "Finish",
+   "tris": 432
+  },
+  {
+   "name": "BD_Kick_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 504
+  },
+  {
+   "name": "BD_Kick_HeadLogo",
+   "material": "HeadLogo",
+   "tris": 572
+  },
+  {
+   "name": "BD_Kick_Hoop",
+   "material": "Hoop",
+   "tris": 1152
+  },
+  {
+   "name": "BD_Kick_Accent",
+   "material": "Accent",
+   "tris": 556
+  },
+  {
+   "name": "BD_Kick_Chrome",
+   "material": "Chrome",
+   "tris": 8280
+  },
+  {
+   "name": "BD_Kick_Rubber",
+   "material": "Rubber",
+   "tris": 320
+  },
+  {
+   "name": "Pedal_BD_Kick_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1440
+  },
+  {
+   "name": "Pedal_BD_Kick_Rubber",
+   "material": "Rubber",
+   "tris": 96
+  },
+  {
+   "name": "Pedal_BD_Kick_Chrome",
+   "material": "Chrome",
+   "tris": 2872
+  },
+  {
+   "name": "Pedal_BD_Kick_Accent",
+   "material": "Accent",
+   "tris": 44
+  },
+  {
+   "name": "Pedal_BD_Kick_Beater_Chrome",
+   "material": "Chrome",
+   "tris": 140
+  },
+  {
+   "name": "Pedal_BD_Kick_Beater_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 72
+  },
+  {
+   "name": "Pedal_BD_Kick_Beater_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 72
+  },
+  {
+   "name": "HT_Tom_Finish",
+   "material": "Finish",
+   "tris": 288
+  },
+  {
+   "name": "HT_Tom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 336
+  },
+  {
+   "name": "HT_Tom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 336
+  },
+  {
+   "name": "HT_Tom_Chrome",
+   "material": "Chrome",
+   "tris": 5784
+  },
+  {
+   "name": "HT_Tom_Accent",
+   "material": "Accent",
+   "tris": 124
+  },
+  {
+   "name": "HT_Tom_Rubber",
+   "material": "Rubber",
+   "tris": 104
+  },
+  {
+   "name": "LT_Tom_Finish",
+   "material": "Finish",
+   "tris": 336
+  },
+  {
+   "name": "LT_Tom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 392
+  },
+  {
+   "name": "LT_Tom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 392
+  },
+  {
+   "name": "LT_Tom_Chrome",
+   "material": "Chrome",
+   "tris": 5976
+  },
+  {
+   "name": "LT_Tom_Accent",
+   "material": "Accent",
+   "tris": 124
+  },
+  {
+   "name": "LT_Tom_Rubber",
+   "material": "Rubber",
+   "tris": 104
+  },
+  {
+   "name": "TomHolder_Chrome",
+   "material": "Chrome",
+   "tris": 976
+  },
+  {
+   "name": "TomHolder_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 256
+  },
+  {
+   "name": "FT_FloorTom_Finish",
+   "material": "Finish",
+   "tris": 384
+  },
+  {
+   "name": "FT_FloorTom_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 448
+  },
+  {
+   "name": "FT_FloorTom_HeadBlack",
+   "material": "HeadBlack",
+   "tris": 448
+  },
+  {
+   "name": "FT_FloorTom_Chrome",
+   "material": "Chrome",
+   "tris": 7752
+  },
+  {
+   "name": "FT_FloorTom_Accent",
+   "material": "Accent",
+   "tris": 124
+  },
+  {
+   "name": "FT_FloorTom_Rubber",
+   "material": "Rubber",
+   "tris": 384
+  },
+  {
+   "name": "SN_Snare_Finish",
+   "material": "Finish",
+   "tris": 336
+  },
+  {
+   "name": "SN_Snare_HeadCoated",
+   "material": "HeadCoated",
+   "tris": 392
+  },
+  {
+   "name": "SN_Snare_HeadClear",
+   "material": "HeadClear",
+   "tris": 392
+  },
+  {
+   "name": "SN_Snare_Chrome",
+   "material": "Chrome",
+   "tris": 6768
+  },
+  {
+   "name": "SN_Snare_Accent",
+   "material": "Accent",
+   "tris": 124
+  },
+  {
+   "name": "SN_Snare_Rubber",
+   "material": "Rubber",
+   "tris": 148
+  },
+  {
+   "name": "SN_Snare_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 44
+  },
+  {
+   "name": "SnareStand_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 720
+  },
+  {
+   "name": "SnareStand_Chrome",
+   "material": "Chrome",
+   "tris": 880
+  },
+  {
+   "name": "SnareStand_Rubber",
+   "material": "Rubber",
+   "tris": 336
+  },
+  {
+   "name": "HiHatStand_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1436
+  },
+  {
+   "name": "HiHatStand_Chrome",
+   "material": "Chrome",
+   "tris": 1032
+  },
+  {
+   "name": "HiHatStand_Rubber",
+   "material": "Rubber",
+   "tris": 236
+  },
+  {
+   "name": "HiHatStand_Accent",
+   "material": "Accent",
+   "tris": 44
+  },
+  {
+   "name": "HiHatStand_Felt",
+   "material": "Felt",
+   "tris": 80
+  },
+  {
+   "name": "HH_Bottom_Bronze",
+   "material": "Bronze",
+   "tris": 1344
+  },
+  {
+   "name": "HH_Top_Bronze",
+   "material": "Bronze",
+   "tris": 1344
+  },
+  {
+   "name": "HH_Top_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "HH_Top_Chrome",
+   "material": "Chrome",
+   "tris": 224
+  },
+  {
+   "name": "Boom_CR_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1028
+  },
+  {
+   "name": "Boom_CR_Chrome",
+   "material": "Chrome",
+   "tris": 1324
+  },
+  {
+   "name": "Boom_CR_Rubber",
+   "material": "Rubber",
+   "tris": 296
+  },
+  {
+   "name": "Boom_CR_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "CR_Crash_Bronze",
+   "material": "Bronze",
+   "tris": 2088
+  },
+  {
+   "name": "Boom_RD_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 1028
+  },
+  {
+   "name": "Boom_RD_Chrome",
+   "material": "Chrome",
+   "tris": 1324
+  },
+  {
+   "name": "Boom_RD_Rubber",
+   "material": "Rubber",
+   "tris": 296
+  },
+  {
+   "name": "Boom_RD_Felt",
+   "material": "Felt",
+   "tris": 160
+  },
+  {
+   "name": "RD_Ride_Bronze",
+   "material": "Bronze",
+   "tris": 2376
+  },
+  {
+   "name": "Throne_BlackMetal",
+   "material": "BlackMetal",
+   "tris": 728
+  },
+  {
+   "name": "Throne_Chrome",
+   "material": "Chrome",
+   "tris": 576
+  },
+  {
+   "name": "Throne_Rubber",
+   "material": "Rubber",
+   "tris": 192
+  },
+  {
+   "name": "Throne_Leather",
+   "material": "Leather",
+   "tris": 528
+  },
+  {
+   "name": "Throne_Accent",
+   "material": "Accent",
+   "tris": 576
+  },
+  {
+   "name": "Rug_Rug",
+   "material": "Rug",
+   "tris": 124
+  }
+ ]
+}

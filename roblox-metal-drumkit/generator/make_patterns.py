@@ -229,6 +229,133 @@ def lightning(rng):
     return rgba(rgb, alpha)
 
 
+# ---------------------------------------------------------------------------
+# wood figures for the SOVEREIGN kit (stain colour shows through)
+# ---------------------------------------------------------------------------
+DARK = np.array([28.0, 14.0, 6.0])     # grain lines / figure shadows
+LIGHT = np.array([255.0, 238.0, 205.0])  # chatoyant highlights
+
+
+def pnoise(rng, beta=2.0, shape=(H, W)):
+    """Periodic (tileable) 1/f noise in both directions, range ~[-1, 1]."""
+    h, w = shape
+    fy = np.fft.fftfreq(h)[:, None] * (h / w)
+    fx = np.fft.fftfreq(w)[None, :]
+    f = np.sqrt(fx * fx + fy * fy)
+    f[0, 0] = 1.0
+    spec = (rng.normal(size=shape) + 1j * rng.normal(size=shape)) / f ** (beta / 2)
+    spec[0, 0] = 0
+    n = np.real(np.fft.ifft2(spec))
+    return n / (np.abs(n).max() + 1e-9)
+
+
+def grain(rng, lines=46, warp=1.2, strength=0.22):
+    """Fine grain lines running around the shell (along u)."""
+    yy, xx = np.mgrid[0:H, 0:W] / np.array([H, W])[:, None, None]
+    n = pnoise(rng, 4.0)
+    t = yy * lines + n * warp * lines * 0.05 + pnoise(rng, 3.2) * 0.8
+    g = (0.5 + 0.5 * np.sin(t * 2 * math.pi)) ** 8
+    var = 0.6 + 0.4 * (pnoise(rng, 3.0) * 0.5 + 0.5)
+    return np.clip(g * strength * var, 0, 1)
+
+
+def wood_rgba(dark, light):
+    """dark / light: HxW 0..1 amounts -> RGBA overlay."""
+    a = np.clip(dark + light, 0, 1)
+    w = np.where(a > 1e-6, light / np.maximum(a, 1e-6), 0)[..., None]
+    rgb = DARK * (1 - w) + LIGHT * w
+    return rgba(rgb, a)
+
+
+def flame(rng, stripes=44):
+    """Flamed (curly) maple: shimmering bands across the grain."""
+    yy, xx = np.mgrid[0:H, 0:W] / np.array([H, W])[:, None, None]
+    warp = pnoise(rng, 4.5) * 1.6 + np.sin(yy * math.pi * 2) * 0.25
+    phase = xx * stripes + warp + yy * 1.6
+    band = np.sin(phase * 2 * math.pi)
+    amp = 0.45 + 0.55 * (pnoise(rng, 4.0) * 0.5 + 0.5)
+    dark = np.clip(band, 0, 1) ** 1.3 * 0.3 * amp
+    light = np.clip(-band, 0, 1) ** 1.8 * 0.1 * amp
+    return dark + grain(rng, strength=0.12), light
+
+
+def birdseye(rng):
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    eyes = np.zeros((H, W))
+    rings = np.zeros((H, W))
+    n = 1700
+    for x0, y0, r in zip(rng.uniform(0, W, n), rng.uniform(0, H, n),
+                         rng.uniform(1.0, 2.4, n)):
+        x0i, y0i = int(x0), int(y0)
+        rad = int(r * 3) + 2
+        ys = np.arange(y0i - rad, y0i + rad + 1)
+        xs = np.arange(x0i - rad, x0i + rad + 1) % W
+        ys = ys[(ys >= 0) & (ys < H)]
+        if not len(ys):
+            continue
+        dy = ys[:, None] - y0
+        dx = ((xs[None, :] - x0 + W / 2) % W) - W / 2
+        d = np.sqrt(dx * dx * 0.6 + dy * dy)
+        sub = np.ix_(ys, xs)
+        eyes[sub] = np.maximum(eyes[sub], np.exp(-(d / r) ** 2))
+        rings[sub] = np.maximum(rings[sub], np.exp(-((d - r * 2.2) / (r * 0.6)) ** 2))
+    dark = eyes * 0.6 + grain(rng, lines=60, strength=0.14)
+    light = rings * 0.1
+    return dark, light
+
+
+def burl(rng):
+    n1 = pnoise(rng, 4.2)
+    n2 = pnoise(rng, 3.6)
+    swirl = np.sin((n1 * 7 + n2 * 2.5) * math.pi * 2)
+    lines = np.clip(swirl, 0, 1) ** 6
+    blob = np.clip(pnoise(rng, 3.8) * 1.6, 0, 1)
+    eyes = (pnoise(rng, 2.2) * 0.5 + 0.5) ** 10 * 6
+    dark = np.clip(lines * 0.45 + blob * 0.3 + np.clip(eyes, 0, 0.8) * 0.7, 0, 0.95)
+    light = np.clip(-swirl, 0, 1) ** 4 * 0.08
+    return dark, light
+
+
+def quilt(rng):
+    yy, xx = np.mgrid[0:H, 0:W] / np.array([H, W])[:, None, None]
+    warp = pnoise(rng, 4.5) * 1.2
+    a = np.sin((xx * 22 + warp) * 2 * math.pi)
+    b = np.sin((yy * 5.5 + xx * 4 + warp * 0.7) * 2 * math.pi)
+    blister = a * b + 0.3 * np.sin((xx * 44 + yy * 11 + warp) * 2 * math.pi)
+    dark = np.clip(blister, 0, None) ** 1.4 * 0.36 + grain(rng, strength=0.1)
+    light = np.clip(-blister, 0, None) ** 1.8 * 0.1
+    return dark, light
+
+
+def stripe(rng):
+    """Macassar / zebrawood: bold dark streaks along the grain."""
+    yy, xx = np.mgrid[0:H, 0:W] / np.array([H, W])[:, None, None]
+    warp = pnoise(rng, 3.4) * 1.4
+    t = yy * 9 + warp + np.sin(xx * 2 * math.pi * 3) * 0.15
+    s_ = 0.5 + 0.5 * np.sin(t * 2 * math.pi)
+    width = 0.55 + 0.35 * pnoise(rng, 2.0)
+    streak = np.clip((s_ - width) / (1 - width + 1e-6), 0, 1) ** 0.7
+    dark = streak * 0.85 + grain(rng, lines=70, strength=0.2)
+    return dark, np.zeros_like(dark)
+
+
+def edge_burst(dark, light, inner=0.3):
+    v = np.abs(np.linspace(-1, 1, H))[:, None] * np.ones((1, W))
+    t = np.clip((v - inner) / (1 - inner), 0, 1)
+    b = t * t * (3 - 2 * t)
+    return np.clip(dark * (1 - b) + b * 0.97, 0, 1), light * (1 - b)
+
+
+WOOD = {
+    "flame": lambda rng: wood_rgba(*flame(rng)),
+    "birdseye": lambda rng: wood_rgba(*birdseye(rng)),
+    "burl": lambda rng: wood_rgba(*burl(rng)),
+    "quilt": lambda rng: wood_rgba(*quilt(rng)),
+    "stripe": lambda rng: wood_rgba(*stripe(rng)),
+    "flameburst": lambda rng: wood_rgba(*edge_burst(*flame(rng))),
+}
+
+
 PATTERNS = {"sparkle": sparkle, "flames": flames, "tiger": tiger,
             "carbon": carbon, "burst": burst, "lightning": lightning}
 
@@ -238,9 +365,10 @@ def check_tiling(img):
     return float(np.abs(a[:, 0] - a[:, -1]).mean())
 
 
-def main(out_dir):
+def main(out_dir, which="metal"):
     os.makedirs(out_dir, exist_ok=True)
-    for i, (name, fn) in enumerate(PATTERNS.items()):
+    table = WOOD if which == "wood" else PATTERNS
+    for i, (name, fn) in enumerate(table.items()):
         rng = np.random.default_rng(1234 + i)
         img = fn(rng)
         path = os.path.join(out_dir, "pattern_%s.png" % name)
@@ -249,4 +377,5 @@ def main(out_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "styles")
+    main(sys.argv[1] if len(sys.argv) > 1 else "styles",
+         sys.argv[2] if len(sys.argv) > 2 else "metal")

@@ -128,6 +128,8 @@ local PIVOTS = {
 		["kind"] = "cymbal",
 	},
 } -- generated: BeatDrummer_IronStorm
+local KIT_ID = "IronStorm"
+local PALETTE_OVERRIDES = {} -- (filled in by kitspec.py)
 
 local function mat(name, fallback)
 	local ok, m = pcall(function()
@@ -156,6 +158,15 @@ local PALETTE = {
 	Leather = { Color = Color3.fromRGB(20, 20, 22), Material = mat("Leather", SP) },
 	Rug = { Color = Color3.fromRGB(34, 34, 38), Material = mat("Carpet", mat("Fabric", SP)) },
 }
+-- キットごとの既定の色 (生成時に入る)
+for key, o in pairs(PALETTE_OVERRIDES) do
+	local base = PALETTE[key] or { Material = SP }
+	PALETTE[key] = {
+		Color = o.Color or base.Color,
+		Material = o.Material and mat(o.Material, SP) or base.Material,
+		Reflectance = o.Reflectance or base.Reflectance,
+	}
+end
 
 local function category(comp)
 	local function has(s)
@@ -286,6 +297,9 @@ for comp, info in pairs(PIVOTS) do
 end
 if next(PIVOTS) ~= nil and root:IsA("Model") then
 	root:SetAttribute("DrumKit", true)
+	if KIT_ID then
+		root:SetAttribute("KitId", KIT_ID)
+	end
 end
 
 -- スローンに Seat を追加 (キャラクターはスネア側を向いて座る)

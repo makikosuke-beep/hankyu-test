@@ -21,7 +21,7 @@ from shapely.geometry import Point, Polygon
 
 from mesh_lib import (TAU, Mesh, M4, T, Rx, Ry, Rz, Sc, az, apply, apply_dir,
                       chain, circle_poly, cyl_wrap, cylinder, extrude,
-                      fillet_path, frame, helix, lathe, rbox, rot_axis,
+                      fillet_path, frame, helix, hull, lathe, rbox, rot_axis,
                       round_poly, sphere, sweep, torus, tube_between, unit,
                       write_obj)
 
@@ -213,9 +213,86 @@ def badge(R, w=0.05, h=0.032):
     return [plate, ring], [acc], [vent]
 
 
+def beavertail(L, W, Tk):
+    """Classic one-piece lug body: centred at the origin, long axis +Y,
+    width along Z, sitting on the shell at x = 0 and bulging to x = Tk."""
+    pts = []
+    for t in np.linspace(-1, 1, S(14, 8) + 1):
+        w = W / 2 * max(0.0, 1 - abs(t) ** 2.4) ** 0.45
+        th = Tk * max(0.0, 1 - abs(t) ** 3.2) ** 0.4
+        y = t * L / 2
+        for a in np.linspace(0, math.pi, S(10, 6) + 1):
+            pts.append((max(th * math.sin(a), 0.0004), y, w * math.cos(a)))
+            pts.append((0.0, y, w * math.cos(a)))
+    m = hull(pts, smooth=55)
+    return m
+
+
+def classic_lugs(R, h, ends, Tk, W, u_rod):
+    """Lug bodies + swivel-nut receivers for one lug position (azimuth 0).
+    ends = list of (y0, y1) spans, one lug per span."""
+    chrome = []
+    for y0, y1 in ends:
+        L = y1 - y0
+        chrome.append(beavertail(L, W, Tk).transformed(T(R - 0.0005, (y0 + y1) / 2, 0)))
+        for ye, sgn in ((y0, -1), (y1, 1)):
+            chrome.append(cylinder(0.0042, 0.006, S(10), y0=-0.003, bevel=0.001)
+                          .transformed(T(R + u_rod, ye + sgn * 0.002, 0)))
+    return chrome
+
+
+def diecast_hoop_profile(R, yt):
+    """Die-cast hoop: thick wall with a rounded top and a flat flange."""
+    rin = R + 0.0045
+    wall = 0.0036
+    yb = yt - 0.017
+    ytop = yt + 0.012
+    fl = 0.0055
+    pts = [(rin, yb), (rin + 0.0155, yb), (rin + 0.0165, yb + fl * 0.5),
+           (rin + 0.0155, yb + fl), (rin + wall, yb + fl),
+           (rin + wall, ytop - 0.002)]
+    cx, cy = rin + wall / 2, ytop - 0.002
+    for a in np.radians(np.linspace(0, 180, 7))[1:-1]:
+        pts.append((cx + wall / 2 * math.cos(a), cy + 0.002 * math.sin(a)))
+    pts.append((rin, ytop - 0.002))
+    return pts, yb + fl
+
+
+def hammer_normals(mesh, R, rh, spacing=0.016, sigma=0.0042, slope=0.15, seed=7):
+    """Fake hand-hammered dimples by bending the normals (no extra geometry)."""
+    rng = np.random.default_rng(seed)
+    v = mesh.v
+    r = np.hypot(v[:, 0], v[:, 2])
+    n = max(20, int(math.pi * (R * R - rh * rh) / spacing ** 2))
+    rr = np.sqrt(rng.uniform(rh ** 2, R ** 2, n))
+    aa = rng.uniform(0, TAU, n)
+    cx, cz = rr * np.cos(aa), rr * np.sin(aa)
+    gx = np.zeros(len(v))
+    gz = np.zeros(len(v))
+    for x0, z0 in zip(cx, cz):
+        dx = v[:, 0] - x0
+        dz = v[:, 2] - z0
+        d2 = dx * dx + dz * dz
+        near = d2 < (3 * sigma) ** 2
+        if not near.any():
+            continue
+        e = np.exp(-d2[near] / (2 * sigma * sigma))
+        gx[near] += dx[near] / sigma * e
+        gz[near] += dz[near] / sigma * e
+    mask = (r > rh + 0.004) & (r < R - 0.004)
+    gx *= mask * slope
+    gz *= mask * slope
+    g = np.stack([gx, np.zeros_like(gx), gz], -1)[mesh.f]  # F,3,3
+    cn = mesh.cn
+    sign = np.sign(cn[..., 1:2])  # top and bottom faces dimple opposite ways
+    mesh.cn = unit(cn - g * sign)
+    return mesh
+
+
 def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
                reso="HeadBlack", lug_phase=0.0, badge_phi=None, port=None,
-               stripes=True):
+               stripes=True, lug_style="tube", hoop_style="triple",
+               logo=False):
     """Generic drum. Local frame: +Y = batter side, origin at drum centre."""
     R = D / 2
     h = H / 2
@@ -246,8 +323,19 @@ def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
     yt = yb + 0.0008
     top_head = lathe(head_profile(R, yb), seg, closed=True, smooth=35)
     g.add(batter, top_head)
-    if port is None:
+    if port is None and not logo:
         g.add(reso, top_head, MIR)
+    elif port is None:
+        # full resonant head with planar logo UVs (no port hole)
+        disk = circle_poly(0, 0, R - 0.003, seg)
+        memb = extrude(disk, 0.0008)
+        mv = memb.v[memb.f]
+        memb.cuv = np.stack([0.5 - mv[..., 0] / (2 * R),
+                             0.5 + mv[..., 1] / (2 * R)], -1)
+        Pm = np.array([[1, 0, 0, 0], [0, 0, 1, yb], [0, 1, 0, 0],
+                       [0, 0, 0, 1.0]])
+        collar = lathe(head_profile(R, yb)[1:-1], seg, smooth=35)
+        g.add(reso, [memb.transformed(Pm), collar], MIR)
     else:
         # resonant head with offset port hole + logo-ready planar UVs
         px, pz, pr = port
@@ -297,8 +385,14 @@ def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
         tparts.append(cylinder(0.0062, 0.0012, S(10)).transformed(
             T(R + u, yt - 0.026, 0)))
         kparts = [m.transformed(T(R + u, yt - 0.026, 0)) for m in key_bolt()]
-        lug_c, lug_r = tube_lug(R, u, -tube_end, tube_end, 0.0075,
-                                (-h * 0.62, h * 0.62))
+        if lug_style == "classic":
+            lug_c = classic_lugs(R, h, [(-tube_end, -tube_end + 0.07),
+                                         (tube_end - 0.07, tube_end)],
+                                 0.033, 0.03, u)
+            lug_r = []
+        else:
+            lug_c, lug_r = tube_lug(R, u, -tube_end, tube_end, 0.0075,
+                                    (-h * 0.62, h * 0.62))
         for phi in phis:
             A = az(phi)
             g.add("Chrome", lug_c, A)
@@ -308,19 +402,40 @@ def build_drum(kit, comp, D, H, M, nlug, kind, batter="HeadCoated",
                 g.add("Chrome", [claw_m, rod], Ms)
                 g.add("Chrome", tparts if side == 1 else kparts, Ms)
     else:
-        prof, y_ft = tf_hoop_profile(R, yt)
+        if hoop_style == "diecast":
+            prof, y_ft = diecast_hoop_profile(R, yt)
+            u = 0.0145
+        else:
+            prof, y_ft = tf_hoop_profile(R, yt)
+            u = 0.0115
         hoop = lathe(prof, seg, closed=True, smooth=35)
         g.add("Chrome", hoop)
         g.add("Chrome", hoop, MIR)
-        u = 0.0115
+        if hoop_style == "diecast":
+            # cast ears around each tension rod
+            ear = rbox(0.013, 0.0075, 0.024, bevel=0.0025,
+                       center=(R + u + 0.0005, y_ft - 0.0035, 0))
+            for phi in phis:
+                g.add("Chrome", ear, az(phi))
+                g.add("Chrome", ear, az(phi) @ MIR)
         tube_end = h - 0.032
         if tube_end < 0.03:
             tube_end = 0.03
+        if lug_style == "classic":
+            # separate lugs on deep drums, one centred lug on shallow ones
+            span = 2 * tube_end
+            if span > 0.13:
+                ends = [(-tube_end, -tube_end + 0.062), (tube_end - 0.062, tube_end)]
+            else:
+                ends = [(-tube_end, tube_end)]
+            lug_c = classic_lugs(R, h, ends, 0.02, 0.024, u)
+            lug_r = []
+        else:
+            py = min(h * 0.55, tube_end - 0.016)
+            lug_c, lug_r = tube_lug(R, u, -tube_end, tube_end, 0.0062, (-py, py))
         rod = tube_between((u + R, tube_end - 0.004, 0),
                            (u + R, y_ft + 0.002, 0), 0.0024, S(8))
         kb = [m.transformed(T(R + u, y_ft, 0)) for m in key_bolt()]
-        py = min(h * 0.55, tube_end - 0.016)
-        lug_c, lug_r = tube_lug(R, u, -tube_end, tube_end, 0.0062, (-py, py))
         for phi in phis:
             A = az(phi)
             g.add("Chrome", lug_c, A)
@@ -368,10 +483,12 @@ CYM = {
 }
 
 
-def cymbal_mesh(D, kind="crash"):
+def cymbal_mesh(D, kind="crash", finish="brilliant"):
     """Cymbal with bell up.  Origin = underside of the centre hole, +Y = axis.
     Returns (mesh, info)."""
     bd, hb, drop, tc, te, groove = CYM[kind]
+    if finish == "hammered":
+        groove *= 0.45
     drop *= D / (18 * IN)
     hb *= (D / (18 * IN)) ** 0.5
     R = D / 2
@@ -428,6 +545,8 @@ def cymbal_mesh(D, kind="crash"):
     prof = [(r, y - y0) for r, y in prof]
     m = lathe(prof, S(72 if D > 0.44 else 64 if D > 0.38 else 56), closed=True,
               smooth=38, tilt=tilt)
+    if finish == "hammered":
+        hammer_normals(m, R, rh, seed=int(D * 1000))
     rr = np.linspace(rh, R, 160)
     info = {"top": float(tc), "edge_top": float(ytop(R) - y0),
             "edge_bot": float(ytop(R) - te - y0), "R": R,
@@ -959,6 +1078,71 @@ def build_boom(kit, comp, rack, attach, cym_origin, cym_axis, post_h=None):
     return g
 
 
+def boom_stand(kit, comp, base_xz, cym_origin, cym_axis, legs=(0, 120, 240)):
+    """Double-braced cymbal boom stand standing on the floor."""
+    g = G(kit, comp)
+    bx, bz = base_xz
+    tube_r = 0.0128
+    tripod(g, bx, bz, 0.30, 0.30, 0.0105, legs, tube_r)
+    E = cym_origin - cym_axis * 0.075
+    Ty = float(np.clip(E[1] - 0.2, 0.78, 1.3))
+    g.add("Chrome", cylinder(tube_r, 0.64 - 0.16, S(18), y0=0.16, bevel=0.002),
+          T(bx, 0, bz))
+    height_clamp(g, (bx, 0.64, bz), 0.0098, tube_r)
+    memory_lock(g, (bx, 0.69, bz), 0.0098)
+    g.add("Chrome", cylinder(0.0098, Ty - 0.022 - 0.64, S(16), y0=0.64),
+          T(bx, 0, bz))
+    Tp = np.array([bx, Ty, bz])
+    bdir = unit(E - Tp)
+    pax = np.cross(bdir, [0, 1, 0])
+    pax = unit(pax) if np.linalg.norm(pax) > 1e-3 else np.array([1.0, 0, 0])
+    ratchet(g, Tp, pax)
+    g.add("Chrome", tube_between(Tp - bdir * 0.16, E, 0.0082, S(14)))
+    # counterweight on the back end of the boom
+    g.add("Chrome", cylinder(0.017, 0.07, S(20), bevel=0.004),
+          frame(Tp - bdir * 0.235, bdir))
+    g.add("Rubber", cylinder(0.0172, 0.006, S(20), bevel=0.002),
+          frame(Tp - bdir * 0.241, bdir))
+    ratchet(g, E, pax, 0.014, 0.009)
+    return g
+
+
+def kick_tom_holder(kit, comp, kick_g, kR, kH, head_pos, receivers):
+    """Double tom holder: base on top of the bass drum, a post, and an
+    L-arm with a ball clamp to each tom receiver."""
+    g = G(kit, comp)
+    phi = math.pi / 2          # top of the kick shell (local +Z = world up)
+    yloc = -kH * 0.05
+    kick_g.add("Chrome", rbox(0.03, 0.09, 0.05, bevel=0.006,
+                              center=(kR + 0.015, yloc, 0)), az(phi))
+    kick_g.add("Rubber", rbox(0.002, 0.1, 0.058, center=(kR + 0.0005, yloc, 0)),
+               az(phi))
+    base = kick_g.world(np.array([0.0, yloc, kR + 0.03]))
+    head = np.asarray(head_pos, float)
+    post_bot = np.array([head[0], base[1] - 0.01, head[2]])
+    g.add("Chrome", tube_between(post_bot, head - [0, 0.02, 0], 0.011, S(16)))
+    g.add("BlackMetal", rbox(0.036, 0.06, 0.036, bevel=0.006,
+                             center=tuple(post_bot + [0, 0.03, 0])))
+    g.add("Chrome", key_bolt(0.0036, 0.007),
+          chain(T(*(post_bot + [0, 0.04, 0])), Rz(-math.pi / 2), T(0, 0.018, 0)))
+    memory_lock(g, tuple(head - [0, 0.075, 0]), 0.011)
+    g.add("BlackMetal", rbox(0.09, 0.034, 0.04, bevel=0.007,
+                             center=tuple(head)))
+    for recv, recv_dir in receivers:
+        side = np.sign(recv[0] - head[0]) or 1.0
+        ball = head + np.array([side * 0.052, 0.006, 0])
+        g.add("Chrome", sphere(0.016, S(16), S(8, 6)).transformed(T(*ball)))
+        g.add("BlackMetal", rbox(0.03, 0.036, 0.036, bevel=0.006,
+                                 center=tuple(ball - [side * 0.012, 0, 0])))
+        g.add("Chrome", wing_nut(0.005, 0.01, 0.014),
+              chain(T(*(ball + [0, 0.016, 0]))))
+        mid = np.array([recv[0], ball[1] + (recv[1] - ball[1]) * 0.35, recv[2]])
+        mid = ball + (mid - ball) * np.array([0.75, 1, 0.75])
+        path = fillet_path([ball, mid, recv - recv_dir * 0.01], 0.05, 10)
+        g.add("Chrome", sweep(path, 0.0064, S(12)))
+    return g
+
+
 def tom_arm(kit, comp, rack_pt, tdir, recv, recv_dir):
     """L-arm from a rack clamp to a tom receiver."""
     g = G(kit, comp)
@@ -1249,7 +1433,8 @@ def export_pivots(kit, parts, stud):
     return out
 
 
-def export_all(kit, out_dir, base="MetalDrumKit", scale=1.0):
+def export_all(kit, out_dir, base="MetalDrumKit", scale=1.0,
+               logo="kick_logo.png"):
     """Write OBJ/MTL in studs.  scale enlarges the whole kit."""
     os.makedirs(out_dir, exist_ok=True)
     parts = kit.merged()
@@ -1262,7 +1447,7 @@ def export_all(kit, out_dir, base="MetalDrumKit", scale=1.0):
             fh.write(f"# {desc}\nnewmtl {name}\nKd {r:.3f} {g_:.3f} {b:.3f}\n"
                      f"Ka 0 0 0\nKs 0.5 0.5 0.5\nNs 200\nd 1\nillum 2\n")
             if name == "HeadLogo":
-                fh.write("map_Kd kick_logo.png\n")
+                fh.write("map_Kd %s\n" % logo)
             fh.write("\n")
     if kit.meta.get("pivots"):
         kit.meta["pivots_export"] = export_pivots(kit, parts, stud)

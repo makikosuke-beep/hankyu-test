@@ -19,7 +19,8 @@ import os
 import numpy as np
 
 import drumkit as dk
-from drumkit import (IN, G, Kit, S, T, build_boom, build_drive_shaft, build_drum,
+from drumkit import (IN, G, Kit, S, T, boom_stand, build_boom, build_drive_shaft,
+                     build_drum, kick_tom_holder,
                      build_hihat, build_pedal, build_snare_stand, build_throne,
                      cym_axis, cymbal_holder, cymbal_mesh, floor_tom_legs, frame,
                      kick_spurs, rack_tom_mount, rug, snare_hardware, tom_arm,
@@ -155,6 +156,30 @@ def comp_name(piece, default):
     return piece.get("name") or "%s_%s" % (piece["lane"], default)
 
 
+def place_stand(c, kick_c, floor, offset=0.3):
+    """Pick a floor spot and tripod rotation for a cymbal boom stand that
+    keeps its feet clear of everything already standing on the floor."""
+    out = np.array([c[0] - kick_c[0], c[2] - (kick_c[2] - 0.25)])
+    out = out / max(np.linalg.norm(out), 1e-6)
+    pts = np.array(floor) if floor else np.zeros((0, 2))
+    best = None
+    for k in np.linspace(0.8, 1.4, 4):
+        bx, bz = c[0] + out[0] * offset * k, c[2] + out[1] * offset * k
+        for rot in range(0, 120, 6):
+            legs = (rot, rot + 120, rot + 240)
+            fp = np.array([(bx + 0.30 * math.sin(math.radians(a)),
+                            bz + 0.30 * math.cos(math.radians(a))) for a in legs])
+            if len(pts):
+                d = np.min(np.linalg.norm(fp[:, None, :] - pts[None], axis=-1))
+                d = min(d, np.min(np.linalg.norm(pts - [bx, bz], axis=-1)) - 0.1)
+            else:
+                d = 1.0
+            score = d - 0.02 * abs(k - 1)
+            if best is None or score > best[0]:
+                best = (score, (bx, bz), legs)
+    return best[1], best[2]
+
+
 def build_from_spec(spec, detail=None):
     detail = spec.get("detail", 1.0) if detail is None else detail
     dk.DETAIL = detail
@@ -178,6 +203,17 @@ def build_from_spec(spec, detail=None):
             "lane": lane, "kind": kind}
     pieces = spec["pieces"]
     xs, zs = [], []
+    kit.meta["kit_id"] = spec.get("kit_id", "IronStorm")
+    opts = dict(lug_style=spec.get("lug_style", "tube"),
+                hoop_style=spec.get("hoop_style", "triple"),
+                stripes=spec.get("stripes", True))
+    cym_finish = spec.get("cymbal_finish", "brilliant")
+    stands = spec.get("mount", "rack") == "stands"
+    floor = []          # (x, z) points that tripod feet should stay away from
+
+    def feet(cx, cz, r, az_deg):
+        return [(cx + r * math.sin(math.radians(a)), cz + r * math.cos(math.radians(a)))
+                for a in az_deg]
 
     def note(comp, lane, kind):
         kit.meta["lanes"][comp] = {"lane": lane, "kind": kind}
@@ -194,10 +230,18 @@ def build_from_spec(spec, detail=None):
         comp = comp_name(kp, "Kick")
         M = frame(c, (0, 0, -1), (1, 0, 0))
         port = (0.12, -0.13, 0.06) if kp.get("port", True) else None
+        logo = kp.get("logo", True)
         g, an = build_drum(kit, comp, D, H, M, kp.get("lugs", 10), "kick",
-                           reso="HeadLogo" if kp.get("logo", True) else "HeadBlack",
-                           lug_phase=0.0, badge_phi=math.radians(90), port=port)
+                           reso="HeadLogo" if logo else "HeadBlack",
+                           lug_phase=0.0, badge_phi=math.radians(90), port=port,
+                           logo=logo, **opts)
         kick_spurs(kit, comp, g, c[0], c, R, H)
+        kick_info = (g, R, H, c)
+        for sx in (-1, 1):
+            floor.append((c[0] + sx * (R + 0.12), c[2] + H / 2 + 0.06))
+        for zz in np.linspace(c[2] - H / 2, c[2] + H / 2, 5):
+            for xx in (-0.6 * R, 0.0, 0.6 * R):
+                floor.append((c[0] + xx, zz))
         note(comp, kp["lane"], "kick")
         pivot(comp, kp["lane"], "kick", c, (0, 0, -1), (0, 1, 0))
         kick_out = max(kick_out, abs(c[0]) + R + 0.04)
@@ -213,6 +257,8 @@ def build_from_spec(spec, detail=None):
             sx = c[0] - 0.27
             slave = build_pedal(kit, "Pedal_Slave", sx, -1, beaters=(),
                                 hoop_clamp=False, chain_x=0.0, pz=pz - 0.04)
+            for zz in np.linspace(pz - 0.25, pz + 0.19, 5):
+                floor += [(c[0], zz), (sx, zz - 0.04)]
             build_drive_shaft(kit, "Pedal_DriveShaft",
                               slave + np.array([0.075, 0, 0]),
                               main + np.array([-0.075, 0, 0]))
@@ -224,13 +270,15 @@ def build_from_spec(spec, detail=None):
         else:
             side = 1 if c[0] >= 0 else -1
             ax_ = build_pedal(kit, "Pedal_" + comp, c[0], side, pz=pz)
+            for zz in np.linspace(pz - 0.25, pz + 0.19, 5):
+                floor.append((c[0], zz))
             note("Pedal_" + comp + "_Beater", kp["lane"], "beater")
             pivot("Pedal_" + comp + "_Beater", kp["lane"], "beater", ax_,
                   (0, 1, 0), (0, 0, 1))
 
     # ---- rack sized to clear the kick(s) --------------------------------
     rack = None
-    if spec.get("rack", True):
+    if spec.get("rack", True) and not stands:
         rack = Rack(kit, max(0.55, kick_out + 0.2),
                     front_z=spec.get("rack_front_z", 0.50))
         cyms = [p for p in pieces if p["type"] in CYMBAL_KIND or p["type"] == "stack"]
@@ -247,23 +295,40 @@ def build_from_spec(spec, detail=None):
                 rack.add_wing(side, (end[0] + d[0] * L, end[2] + d[1] * L))
 
     # ---- rack toms -------------------------------------------------------
+    tom_recvs = []
+    holder_head = None
     for tp in [p for p in pieces if p["type"] == "tom"]:
         D, H = tp.get("diameter", 12) * IN, tp.get("depth", 9) * IN
         c = sp.p(tp["pos"])
         comp = comp_name(tp, "Tom")
         ax = tom_axis(c, tp.get("tilt", 18))
         M = frame(c, ax, (1, 0, 0))
-        phi_m = tom_mount_azimuth(M)
+        if stands:
+            # mount faces the tom holder on top of the bass drum
+            kc = kick_info[3]
+            holder_head = np.array([kc[0], spec.get("tom_holder_height", 0.80), kc[2] - 0.03])
+            phi_m = tom_mount_azimuth(M, unit(holder_head - c))
+        else:
+            phi_m = tom_mount_azimuth(M)
         n = tp.get("lugs", 6 if D < 0.33 else 8)
         g, an = build_drum(kit, comp, D, H, M, n, "tom",
-                           lug_phase=phi_m + math.pi / n, badge_phi=phi_m + math.pi)
+                           lug_phase=phi_m + math.pi / n, badge_phi=phi_m + math.pi,
+                           **opts)
         note(comp, tp["lane"], "drum")
         pivot(comp, tp["lane"], "drum", c, ax)
+        if stands:
+            recv = rack_tom_mount(g, M, D, H, phi_m)
+            tom_recvs.append((recv, unit(np.array([recv[0] - holder_head[0], 0,
+                                                   recv[2] - holder_head[2]]))))
         if rack is not None:
             recv = rack_tom_mount(g, M, D, H, phi_m)
             rp, rt = rack.nearest((recv[0], recv[2] + 0.25))
             tom_arm(kit, "TomArm_" + tp["lane"], rp, rt, recv,
                     unit(np.array([recv[0] - rp[0], 0, recv[2] - rp[2]])))
+
+    if stands and tom_recvs:
+        kg, kR, kH, kc = kick_info
+        kick_tom_holder(kit, "TomHolder", kg, kR, kH, holder_head, tom_recvs)
 
     # ---- floor toms ------------------------------------------------------
     for fp in [p for p in pieces if p["type"] == "floortom"]:
@@ -272,8 +337,13 @@ def build_from_spec(spec, detail=None):
         comp = comp_name(fp, "FloorTom")
         M = frame(c, (0, 1, 0), (1, 0, 0))
         g, an = build_drum(kit, comp, D, H, M, fp.get("lugs", 8), "floor",
-                           lug_phase=math.radians(22.5), badge_phi=math.radians(270))
-        floor_tom_legs(kit, comp, g, M, c, D, H, fp.get("legs", (0, 120, 240)))
+                           lug_phase=math.radians(22.5), badge_phi=math.radians(270),
+                           **opts)
+        legs = fp.get("legs", (0, 120, 240))
+        floor_tom_legs(kit, comp, g, M, c, D, H, legs)
+        for a in legs:
+            floor.append((c[0] + (D / 2 + 0.11) * math.cos(math.radians(a)),
+                          c[2] + (D / 2 + 0.11) * math.sin(math.radians(a))))
         note(comp, fp["lane"], "drum")
         pivot(comp, fp["lane"], "drum", c, (0, 1, 0))
         xs += [c[0] - D / 2 - 0.15, c[0] + D / 2 + 0.15]
@@ -288,10 +358,11 @@ def build_from_spec(spec, detail=None):
         M = frame(c, ax, (1, 0, 0))
         g, an = build_drum(kit, comp, D, H, M, np_.get("lugs", 10), "snare",
                            reso="HeadClear", lug_phase=math.radians(18),
-                           badge_phi=math.radians(90))
+                           badge_phi=math.radians(90), **opts)
         snare_hardware(g, an, D, H)
-        build_snare_stand(kit, c[0], c[2], c[1] - H / 2 - 0.022, ax,
-                          legs=tuple(np_.get("legs", (0, 150, 210))))
+        legs = tuple(np_.get("legs", (0, 150, 210)))
+        build_snare_stand(kit, c[0], c[2], c[1] - H / 2 - 0.022, ax, legs=legs)
+        floor += feet(c[0], c[2], 0.23, legs)
         note(comp, np_["lane"], "drum")
         pivot(comp, np_["lane"], "drum", c, ax)
 
@@ -299,10 +370,12 @@ def build_from_spec(spec, detail=None):
     for hp in [p for p in pieces if p["type"] == "hihat"]:
         c = sp.p(hp["pos"])
         lane = hp["lane"]
+        hlegs = tuple(hp.get("legs", (90, 210, 330)))
         hh = build_hihat(kit, c[0], c[2], c[1],
-                    names=("HiHatStand", lane + "_Bottom", lane + "_Top"),
-                    size=hp.get("diameter", 14),
-                    legs=tuple(hp.get("legs", (90, 210, 330))))
+                         names=("HiHatStand", lane + "_Bottom", lane + "_Top"),
+                         size=hp.get("diameter", 14), legs=hlegs)
+        floor += feet(c[0], c[2], 0.27, hlegs)
+        floor += [(c[0], c[2] - zz) for zz in np.linspace(0.05, 0.4, 5)]
         note(lane + "_Top", lane, "hihat_top")
         note(lane + "_Bottom", lane, "hihat_bottom")
         pivot(lane + "_Top", lane, "hihat_top", (c[0], hh["top_seat"], c[2]),
@@ -312,6 +385,11 @@ def build_from_spec(spec, detail=None):
         xs += [c[0] - 0.35, c[0] + 0.35]
         zs += [c[2] - 0.45, c[2] + 0.3]
 
+    th_spec = spec.get("throne", {"pos": [0, 2.02, 2.36]})
+    if th_spec:
+        tcp = sp.p(th_spec["pos"])
+        floor += feet(tcp[0], tcp[2], 0.32, (60, 180, 300))
+
     # ---- cymbals ---------------------------------------------------------
     for cp in [p for p in pieces if p["type"] in CYMBAL_KIND or p["type"] == "stack"]:
         c = sp.p(cp["pos"])
@@ -319,7 +397,7 @@ def build_from_spec(spec, detail=None):
         if cp["type"] == "stack":
             parts = []
             for i, sub in enumerate(cp["cymbals"]):
-                m, inf = cymbal_mesh(sub["diameter"] * IN, sub["kind"])
+                m, inf = cymbal_mesh(sub["diameter"] * IN, sub["kind"], cym_finish)
                 sub_comp = "%s_%s%d" % (cp["lane"], sub["kind"].capitalize(),
                                         sub["diameter"])
                 parts.append((sub_comp, m, inf, sub.get("inverted", False),
@@ -328,7 +406,7 @@ def build_from_spec(spec, detail=None):
                 pivot(sub_comp, cp["lane"], "cymbal", c, ax)
         else:
             kind = CYMBAL_KIND[cp["type"]]
-            m, inf = cymbal_mesh(cp.get("diameter", 18) * IN, kind)
+            m, inf = cymbal_mesh(cp.get("diameter", 18) * IN, kind, cym_finish)
             comp = comp_name(cp, cp["type"].capitalize())
             parts = [(comp, m, inf, cp.get("inverted", kind == "china"),
                       "BronzeDark" if kind == "china" else "Bronze")]
@@ -337,6 +415,12 @@ def build_from_spec(spec, detail=None):
         boom = "Boom_" + cp["lane"]
         if rack is not None:
             build_boom(kit, boom, None, rack.nearest((c[0], c[2])), c, ax)
+        elif stands:
+            base, legs = place_stand(c, kick_info[3], floor, cp.get("stand_offset", 0.3))
+            boom_stand(kit, boom, base, c, ax, legs)
+            floor += feet(base[0], base[1], 0.30, legs)
+            xs += [base[0] - 0.35, base[0] + 0.35]
+            zs += [base[1] - 0.35, base[1] + 0.35]
         cymbal_holder(G(kit, boom, frame(c, ax, (1, 0, 0))), parts)
         xs += [c[0] - 0.3, c[0] + 0.3]
 
@@ -380,7 +464,7 @@ def lua_value(v, ind=""):
     return repr(v)
 
 
-def write_setup_script(path, name, pivots):
+def write_setup_script(path, name, pivots, kit_id=None, palette=None):
     here = os.path.dirname(os.path.abspath(__file__))
     tpl = open(os.path.join(here, "..", "roblox", "DrumKitSetup.lua"),
                encoding="utf-8").read()
@@ -389,6 +473,22 @@ def write_setup_script(path, name, pivots):
     assert marker in tpl
     tpl = tpl.replace('workspace:FindFirstChild("MetalDrumKit")',
                       'workspace:FindFirstChild(%s)' % json.dumps(name))
+    if kit_id:
+        tpl = tpl.replace("local KIT_ID = nil -- (filled in by kitspec.py)",
+                          "local KIT_ID = %s" % json.dumps(kit_id))
+    if palette:
+        rows = []
+        for key, o in palette.items():
+            f = []
+            if "color" in o:
+                f.append("Color = Color3.fromRGB(%d, %d, %d)" % tuple(o["color"]))
+            if "material" in o:
+                f.append("Material = %s" % json.dumps(o["material"]))
+            if "reflectance" in o:
+                f.append("Reflectance = %s" % o["reflectance"])
+            rows.append("\t%s = { %s }," % (key, ", ".join(f)))
+        tpl = tpl.replace("local PALETTE_OVERRIDES = {} -- (filled in by kitspec.py)",
+                          "local PALETTE_OVERRIDES = {\n%s\n}" % "\n".join(rows))
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(tpl.replace(marker, data))
 
@@ -403,11 +503,13 @@ def main():
     spec = json.load(open(a.spec, encoding="utf-8"))
     kit = build_from_spec(spec, a.detail)
     name = a.name or spec.get("name", "DrumKit")
-    parts, info = dk.export_all(kit, a.out, name, scale=spec.get("scale", 1.0))
+    parts, info = dk.export_all(kit, a.out, name, scale=spec.get("scale", 1.0),
+                                logo=spec.get("logo_texture", "kick_logo.png"))
     with open(os.path.join(a.out, name + "_lanes.json"), "w", encoding="utf-8") as fh:
         json.dump(lane_manifest(kit, spec), fh, indent=1, ensure_ascii=False)
     write_setup_script(os.path.join(a.out, name + "_Setup.lua"), name,
-                       kit.meta.get("pivots_export", {}))
+                       kit.meta.get("pivots_export", {}), spec.get("kit_id"),
+                       spec.get("palette"))
     print(json.dumps(info, indent=1))
 
 

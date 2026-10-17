@@ -203,41 +203,47 @@ def overlay_material(m, color, image_path, roughness=None, metallic=None):
     nt.links.new(out, bsdf.inputs["Base Color"])
 
 
-def apply_style(mats, style, data, styles_dir):
+def apply_style(mats, style, data, styles_dir=None):
     by = data["by_id"]
+    styles_dir = styles_dir or data["texturesPath"]
     col = by["Colors"][style["color"]]["color"]
     pat = by["Patterns"][style["pattern"]]
-    acc = by["Colors"][style["accent"]]["color"]
+    acc = by["Accents"][style["accent"]]["color"]
     hw = by["Hardware"][style["hardware"]]
     cym = by["Cymbals"][style["cymbals"]]
     head = by["Heads"][style["heads"]]
     tex = None if pat["id"] == "solid" else os.path.join(styles_dir,
                                                            "pattern_%s.png" % pat["id"])
-    rough = {"sparkle": 0.22, "carbon": 0.35}.get(pat["id"], 0.3)
+    rough = {"sparkle": 0.22, "carbon": 0.35}.get(pat["id"], 0.26)
     overlay_material(mats["Finish"], col, tex, roughness=rough, metallic=0.0)
-    hoop = (18, 18, 22) if pat.get("hoop") == "black" and tex else col
+    hoop = col
+    if pat.get("hoop") == "black" and tex:
+        hoop = (18, 18, 22)
+    elif pat.get("hoop") == "darker":
+        hoop = tuple(int(c * 0.55) for c in col)
     overlay_material(mats["Hoop"], hoop, None)
     overlay_material(mats["Accent"], acc, None)
-    overlay_material(mats["Felt"], tuple(int(c * 0.85) for c in acc), None)
+    felt = data.get("FeltColor") or [int(c * 0.85) for c in acc]
+    overlay_material(mats["Felt"], tuple(felt), None)
     overlay_material(mats["HeadLogo"], acc, os.path.join(styles_dir, "logo_overlay.png"))
-    hw_rough = {"chrome": 0.07, "black": 0.2, "gold": 0.12}[hw["id"]]
+    hw_rough = {"chrome": 0.07, "black": 0.2, "gold": 0.12}.get(hw["id"], 0.12)
     overlay_material(mats["Chrome"], hw["color"], None, roughness=hw_rough,
                      metallic=1.0)
-    cym_rough = {"brilliant": 0.18, "dark": 0.38, "black": 0.25}[cym["id"]]
+    cym_rough = {"brilliant": 0.18, "dark": 0.38, "black": 0.25,
+                 "traditional": 0.3}.get(cym["id"], 0.25)
     overlay_material(mats["Bronze"], cym["main"], None, roughness=cym_rough)
     overlay_material(mats["BronzeDark"], cym["dark"], None, roughness=cym_rough)
     overlay_material(mats["HeadCoated"], head["color"], None)
 
 
-def render_lineup(mats, out_path, view, res=(800, 500), samples=24):
+def render_lineup(mats, out_path, view, res=(800, 500), samples=24, kit_id=None):
     import tempfile
 
     from PIL import Image, ImageDraw, ImageFont
 
     import styles_data
-    data = styles_data.load()
-    here = os.path.dirname(os.path.abspath(__file__))
-    styles_dir = os.path.join(here, "..", "export", "styles")
+    data = styles_data.load(kit_id)
+    styles_dir = data["texturesPath"]
     tmp = tempfile.mkdtemp()
     tiles = []
     for p in data["Presets"]:
@@ -279,6 +285,8 @@ def main():
     ap.add_argument("--samples", type=int, default=64)
     ap.add_argument("--res", default="1600x1000")
     ap.add_argument("--name", default=None)
+    ap.add_argument("--viewer-glb", default=None,
+                    help="write a GLB for the web preview (keeps shell UVs)")
     ap.add_argument("--lineup", default=None,
                     help="render every style preset into one image")
     ap.add_argument("--spec", default=None,
@@ -290,22 +298,41 @@ def main():
         a.detail = 1.0
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scale = 1.0
+    logo_name = "kick_logo.png"
+    kit_id = None
     if a.spec:
         import json
         import kitspec
         spec = json.load(open(a.spec, encoding="utf-8"))
         kit = kitspec.build_from_spec(spec, a.detail if a.detail_set else None)
         scale = spec.get("scale", 1.0)
+        logo_name = spec.get("logo_texture", logo_name)
+        kit_id = spec.get("kit_id")
         a.name = a.name or spec.get("name", "DrumKit")
+        # the studio lights suit a black kit; lighter finishes need less
+        bpy.context.scene.view_settings.exposure = spec.get("render_exposure", 0.0)
     else:
         kit = drumkit.build_kit(a.detail)
         a.name = a.name or "MetalDrumKit"
     parts = kit.merged()
     here = os.path.dirname(os.path.abspath(__file__))
     tex = os.path.join(a.out or os.path.join(here, "..", "export"),
-                       "kick_logo.png")
+                       logo_name)
     mats = make_materials(tex)
     objs = build(parts, mats)
+
+    if a.viewer_glb:
+        # a plain white texture on the shells keeps their UVs through gltfpack
+        import tempfile
+        from PIL import Image
+        white = os.path.join(tempfile.mkdtemp(), "white.png")
+        Image.new("RGBA", (4, 4), (255, 255, 255, 255)).save(white)
+        overlay_material(mats["Finish"], (255, 255, 255), white)
+        bpy.ops.export_scene.gltf(filepath=a.viewer_glb, export_format="GLB",
+                                  export_yup=True, export_normals=True,
+                                  export_texcoords=True)
+        print("viewer glb", a.viewer_glb, flush=True)
+        return
 
     if a.renders:
         setup_world()
@@ -331,12 +358,17 @@ def main():
             "bd_drummer": ((0.0, -1.62, 1.72), (0.0, 0.3, 0.85), 26),
             "bd_pedals": ((-0.8, -0.95, 0.55), (-0.12, 0.0, 0.15), 32),
             "bd_top": ((0.0, -0.1, 5.2), (0.0, 0.0, 0.0), 30),
+            "bd_holder": ((0.75, 1.25, 1.2), (0.0, 0.3, 0.78), 45),
         }
         sel = list(views) if a.views == "all" else a.views.split(",")
         w, h = (int(x) for x in a.res.split("x"))
         if a.lineup:
-            render_lineup(mats, a.lineup, views[sel[0]], (w, h), a.samples)
+            render_lineup(mats, a.lineup, views[sel[0]], (w, h), a.samples, kit_id)
         else:
+            if kit_id:
+                import styles_data
+                data = styles_data.load(kit_id)
+                apply_style(mats, data["Default"], data)
             render_views(a.renders, [(k, *views[k]) for k in sel], (w, h),
                          a.samples)
 

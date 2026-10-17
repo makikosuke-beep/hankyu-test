@@ -1,17 +1,25 @@
 # Beat Drummer への組み込み手順（PC の Claude Code 向け）
 
 このドキュメントは、Roblox Studio MCP がつながった PC 側の Claude Code が読む前提で書いています。
-目的は、メタル仕様のドラムセット **「IRON STORM」** を Beat Drummer に入れることです。
-IRON STORM は、ゲーム内のお金または Robux で買うと、今のドラムセットと入れ替えられるキット（スキン）にします。
+目的は、次の 2 つのドラムセットを Beat Drummer に入れることです。どちらも、ゲーム内のお金または Robux で買うと、
+今のドラムセットと入れ替えられるキット（スキン）にします。
+
+| キット | KitId | イメージ |
+| --- | --- | --- |
+| **IRON STORM** | `IronStorm` | メタル仕様。ツインペダル、カーブラック、ブラック × 差し色、ブリリアントシンバル |
+| **SOVEREIGN** | `Sovereign` | スタンダードの最高峰。杢目の突板（トラ杢メイプルなど）、ゴールド金物、ビーバーテイルのラグ、ダイキャストフープ、スタンド配置、槌目シンバル |
+
+2 つとも同じ仕組み（同じレーン、同じセットアップ、同じ DrumKitFX / DrumKitStyles）で動きます。
+先に IRON STORM で一通り組み込み、その後 SOVEREIGN を同じ手順で足すと楽です。
 
 ## ゴール
 
-1. IRON STORM を、**今のドラムセットと同じ構成**（同じレーン・同じ数のタムとシンバル）で、ステージ上の今のキットと差し替えられるようにする
+1. 各キットを、**今のドラムセットと同じ構成**（同じレーン・同じ数のタムとシンバル）で、ステージ上の今のキットと差し替えられるようにする
 2. ノーツを叩いたときに、キットが動くようにする（シンバルの揺れ、ビーター、ハイハットの開閉、ヘッドの発光）
-3. **音は今のキットと変える**（IRON STORM 専用のサウンドセット）
+3. **音は今のキットと変える**（キットごとに専用のサウンドセット）
 4. ゲーム内のお金と Robux のどちらかで買えるようにし、持っている人だけが装備を切り替えられるようにする
-5. スマホでも重くならないこと（今のモデルは 63,456 ポリゴン、MeshPart 83 個）
-6. **色と模様を選べるようにする**（シェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッドも選べる。おすすめの組み合わせ 8 種）
+5. スマホでも重くならないこと（IRON STORM は 63,456 ポリゴン / MeshPart 83 個、SOVEREIGN は 70,464 ポリゴン / MeshPart 69 個）
+6. **色と模様を選べるようにする**（キットごとにシェルの色 10 種 × 模様 7 種、差し色・金物・シンバル・ヘッドも選べる。おすすめの組み合わせ 8 種）
 
 ## 素材の場所
 
@@ -27,11 +35,17 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
 | `export/beatdrummer/BeatDrummer_IronStorm.obj` + `.mtl` + `kick_logo.png` | 同じモデルの OBJ 版 |
 | `export/beatdrummer/BeatDrummer_IronStorm_Setup.lua` | 読み込み後に 1 回実行するセットアップ（色・整理・Lane 属性・回転の中心） |
 | `export/beatdrummer/BeatDrummer_IronStorm_lanes.json` | 各パーツのレーンと回転の中心のデータ |
-| `roblox/DrumKitFX.lua` | 叩いたときの動きを付ける ModuleScript（クライアント用） |
-| `roblox/DrumKitStyles.lua` | 色・模様を切り替える ModuleScript（選択肢とプリセットの一覧もここ） |
-| `export/styles/pattern_*.png`（6 枚）と `logo_overlay.png` | 模様とロゴの画像。Roblox にアップロードして使う |
-| `preview/beatdrummer/styles_lineup.jpg` | プリセット 8 種を並べた画像 |
-| `generator/specs/beatdrummer_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
+| `export/sovereign/BeatDrummer_Sovereign.fbx` | SOVEREIGN のモデル（studs 単位、ロゴ画像を埋め込み済み） |
+| `export/sovereign/BeatDrummer_Sovereign.obj` + `.mtl` + `sovereign_logo.png` | 同じモデルの OBJ 版 |
+| `export/sovereign/BeatDrummer_Sovereign_Setup.lua` | SOVEREIGN のセットアップ（色・整理・Lane 属性・回転の中心・KitId） |
+| `export/sovereign/BeatDrummer_Sovereign_lanes.json` | SOVEREIGN の各パーツのレーンと回転の中心のデータ |
+| `roblox/DrumKitFX.lua` | 叩いたときの動きを付ける ModuleScript（クライアント用。どのキットでも共通） |
+| `roblox/DrumKitStyles.lua` | 色・模様を切り替える ModuleScript（両キットの選択肢とプリセットの一覧もここ） |
+| `export/styles/pattern_*.png`（6 枚）と `logo_overlay.png` | IRON STORM の模様とロゴの画像。Roblox にアップロードして使う |
+| `export/styles/sovereign/pattern_*.png`（6 枚）と `logo_overlay.png` | SOVEREIGN の杢目とロゴの画像。同じくアップロードして使う |
+| `preview/beatdrummer/styles_lineup.jpg` / `preview/sovereign/styles_lineup.jpg` | 各キットのプリセット 8 種を並べた画像 |
+| `generator/specs/beatdrummer_spec.json` / `sovereign_spec.json` | キット構成の設定ファイル（ここを直して再生成できる） |
+| `generator/styles_catalog.json` | 色・模様の選択肢の元データ（`make_styles_lua.py` で `DrumKitStyles.lua` を作り直す） |
 | `generator/kitspec.py` | 設定ファイルからモデルを作るスクリプト |
 
 ### 今のモデルの構成
@@ -54,6 +68,11 @@ git clone -b claude/metal-drumkit https://github.com/makikosuke-beep/hankyu-test
   ゲームの中でクラッシュを `CY`、スネアを `SL` / `SR` と呼んでいる場合も、DrumKitFX はどちらの名前でも動きます
 - ゲーム側のコードが別の記号を使っている場合は、`specs/beatdrummer_spec.json` の `lane` を直して作り直すか、DrumKitFX の `ALIASES` に対応を足してください
 - ラック、スタンド、スローン、ラグは演奏しない飾り（Hardware）です
+- **SOVEREIGN** も同じ 9 キー・同じ Model 名・同じ位置です。違いは次のとおりです
+  - シングルペダルなので、BD のビーターは `Pedal_BD_Kick_Beater` の 1 本です（DrumKitFX は自動で対応します）
+  - ラックの代わりに、シンバルはブームスタンド、タムはバスドラム上のタムホルダーで支えています。
+    スタンドの脚が広がるぶん、全体は **幅 9.3 × 高さ 5.1 × 奥行き 7.2 studs** と IRON STORM より少し広くなります
+  - バスドラムの前面は穴なしのロゴヘッド（エンブレム）です
 
 ## 手順
 
@@ -90,6 +109,8 @@ python kitspec.py specs/beatdrummer_spec.json --out ../export/beatdrummer
 ```
 
 `BeatDrummer_IronStorm.obj` と `BeatDrummer_IronStorm_Setup.lua` が作り直されます。
+SOVEREIGN は `python kitspec.py specs/sovereign_spec.json --out ../export/sovereign` です。
+2 つのキットの位置をそろえたいときは、両方の spec の `pieces` の `pos` を同じように直してください。
 
 ### 3. Studio に読み込む（ユーザーの手作業）
 
@@ -99,11 +120,13 @@ python kitspec.py specs/beatdrummer_spec.json --out ../export/beatdrummer
 2. 大きさがおよそ **幅 7.1 × 高さ 5.1 × 奥行き 6.6 studs**（ラグ込み）になっているか確認する。
    違う場合は、インポート設定の File Dimensions を Studs にする
 3. 読み込んだ Model の名前を `BeatDrummer_IronStorm` にする
+4. SOVEREIGN も同じように `export/sovereign/BeatDrummer_Sovereign.fbx` を読み込み、名前を `BeatDrummer_Sovereign` にする
+   （大きさは **幅 9.3 × 高さ 5.1 × 奥行き 7.2 studs**）
 
 ### 4. セットアップを実行する
 
-`BeatDrummer_IronStorm_Setup.lua` の中身を `execute_luau` で実行します。
-このスクリプトは、選択中の Model か `workspace.BeatDrummer_IronStorm` を対象にします。
+`BeatDrummer_IronStorm_Setup.lua` の中身を `execute_luau` で実行します（SOVEREIGN は `BeatDrummer_Sovereign_Setup.lua`）。
+このスクリプトは、選択中の Model か `workspace.BeatDrummer_IronStorm`（SOVEREIGN は `workspace.BeatDrummer_Sovereign`）を対象にします。
 MCP から実行するときは、先頭近くの `local root = ...` の行を、対象の Model を直接指すように書き換えてください。
 
 実行すると、次のように設定されます。
@@ -112,6 +135,7 @@ MCP から実行するときは、先頭近くの `local root = ...` の行を�
 - 各パーツの Model の `WorldPivot` が、回転の中心に設定される（シンバルは中心の穴、ビーターは軸、ハイハットのトップはクラッチ）
 - 色・マテリアルの設定。すべて Anchored にし、当たり判定はラグだけにする
 - スローンに `DrummerSeat` を追加する。ゲーム側で不要なら消してください
+- キットの Model に `DrumKit = true` と `KitId`（`IronStorm` / `Sovereign`）の属性が付く。DrumKitStyles はこの KitId でキットを見分けます
 
 最後に、テンプレートとして ServerStorage（または ReplicatedStorage）の `DrumKits` フォルダなどにしまいます。
 
@@ -120,7 +144,8 @@ MCP から実行するときは、先頭近くの `local root = ...` の行を�
 - 今のキットもテンプレート化して（例 `DrumKits.Standard`）、**装備中のキットを複製してステージの決まった CFrame に置く**仕組みにします
 - 位置合わせ: 新しいキットはドラマーが −Z を向く向きで作ってあります。今のキットの「スローン位置」と「スネア位置」がそろうように、`PivotTo` で置いてください
 - ゲームのコードがパーツを名前で探している箇所は、`Lane` 属性で探すように変えると、どのキットでも同じコードで動きます
-- 最初は今のキットを既定のままにして、IRON STORM が問題なく動くことを確かめてから切り替えの UI を出してください
+- 最初は今のキットを既定のままにして、IRON STORM と SOVEREIGN が問題なく動くことを確かめてから切り替えの UI を出してください
+- 2 つのキットはスネアとスローンの位置が同じなので、同じ CFrame に置けば入れ替えても叩く位置はずれません
 
 ### 6. 叩いたときの動き（DrumKitFX）
 
@@ -138,21 +163,25 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 ```
 
 - 動きは見た目だけで、各パーツの Model を `PivotTo` で動かします。サーバーには関係しません
-- ツインペダルは、BD を叩くたびに左右のビーターが交互に動きます
+- ツインペダル（IRON STORM）は、BD を叩くたびに左右のビーターが交互に動きます。シングルペダル（SOVEREIGN）は 1 本が毎回動きます
 - 太鼓は叩くと一瞬光ります（PointLight）。重い場合は `DrumKitFX.new(kit, { flash = false })` にしてください
 - 他のプレイヤーのキットも動かす場合は、そのプレイヤーのクライアントから届く演奏イベントで同じ `fx:hit` を呼びます
 
-### 7. 音を IRON STORM 専用にする
+### 7. 音をキット専用にする
 
-- キットごとのサウンドセットの表を作り、装備中のキットの表を使って鳴らします
+- キットごとのサウンドセットの表を作り、装備中のキットの `KitId` 属性で表を選んで鳴らします
 
   ```lua
   KitSounds.IronStorm = { BD = "rbxassetid://...", SN = "...", HH = { closed = "...", open = "..." },
                           HT = "...", LT = "...", FT = "...", CR = "...", RD = "..." }
+  KitSounds.Sovereign = { ... }   -- 同じ形
+  local sounds = KitSounds[kitModel:GetAttribute("KitId")] or KitSounds.Standard
   ```
 - 音そのものは、**ユーザーと一緒に選んでください**（Creator Store の音源、またはユーザーが用意した音を Roblox にアップロード）。
-  メタル向けの方向性の例: アタックの強いクリック感のあるキック、高めにチューニングしたスネア、
-  派手で少し汚れたクラッシュ、ベルの鳴りが目立つライド
+  - IRON STORM（メタル）の方向性の例: アタックの強いクリック感のあるキック、高めにチューニングしたスネア、
+    派手で少し汚れたクラッシュ、ベルの鳴りが目立つライド
+  - SOVEREIGN（スタンダードの最高峰）の方向性の例: 胴鳴りが豊かで丸いキック、太くて芯のあるウッドスネア、
+    よく伸びる温かいタム、ダークで上品な響きのクラッシュとライド（ジャズ〜ポップス〜ロックまで合う、録音スタジオの生ドラムの音）
 - 推測した SoundId は入れないでください。実際に Studio で鳴ることを確かめてから入れてください
 
 ### 8. 購入と装備
@@ -170,18 +199,27 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 
 **仕組み**
 
+- 1 つのモジュールに両キットの選択肢が入っています。`Styles.apply` はキットの Model の `KitId` 属性を見て、そのキットの選択肢を使います
+- 選択肢の数や名前はキットごとに違います（IRON STORM はスパークルやファイヤーなど、SOVEREIGN はトラ杢メイプル・バーズアイ・バール・キルト・マッカーサーなどの杢目）
+
 - シェルのパーツ（`*_Finish`）の `TextureID` に模様の画像を入れ、`Color` にシェルの色を入れます。
   画像の透明な部分にシェルの色が見えるので、模様 1 枚でどの色とも組み合わせられます
 - ロゴ（`*_HeadLogo`）も同じ仕組みで、エンブレムと文字のふちが差し色になります
 - 差し色はピンストライプ、バスドラムのフープのライン、フェルトにも使われます
 - 金物（クローム / ブラックニッケル / ゴールド）、シンバル（ブリリアント / ダーク / ブラック）、打面のヘッド（ホワイト / ブラック）も切り替えられます
+  （SOVEREIGN のシンバルはトラディショナル / ダーク / ブリリアント）
+- SOVEREIGN は、模様によってフープの色が変わります（シェルと同じ色、シェルより濃い色、黒）。フェルトは黒のままです
 
 **準備（画像のアップロードはユーザーの手作業）**
 
-1. `export/styles/` の 7 枚（`pattern_sparkle.png` / `pattern_flames.png` / `pattern_tiger.png` / `pattern_carbon.png` /
-   `pattern_burst.png` / `pattern_lightning.png` / `logo_overlay.png`）を、Studio のアセットマネージャー（一括インポート）か
-   Creator Dashboard でアップロードしてもらう
+1. 次の 14 枚を、Studio のアセットマネージャー（一括インポート）か Creator Dashboard でアップロードしてもらう
+   - IRON STORM: `export/styles/` の `pattern_sparkle.png` / `pattern_flames.png` / `pattern_tiger.png` / `pattern_carbon.png` /
+     `pattern_burst.png` / `pattern_lightning.png` / `logo_overlay.png`
+   - SOVEREIGN: `export/styles/sovereign/` の `pattern_flame.png` / `pattern_birdseye.png` / `pattern_burl.png` / `pattern_quilt.png` /
+     `pattern_stripe.png` / `pattern_flameburst.png` / `logo_overlay.png`
+   - 2 つの `logo_overlay.png` は別の画像です。フォルダ名を付けるなどして取り違えないようにしてください
 2. 出てきた画像の ID を、`DrumKitStyles.lua` の先頭の `Styles.TEXTURES` に `"rbxassetid://…"` の形で入れる。
+   キットごとに分かれています（`Styles.TEXTURES.IronStorm.flames`、`Styles.TEXTURES.Sovereign.flame` など）。
    ID が空の模様はソリッド（単色）で表示されるので、途中の状態でも壊れません
 
 **ゲームへの組み込み**
@@ -190,23 +228,28 @@ fx:setHiHatOpen(false)                           -- ペダルで閉じる
 local Styles = require(ReplicatedStorage.BeatDrummer.DrumKitStyles)
 
 -- サーバー: キットを置いたとき・見た目を変えたときに反映 (全員に同じ見た目が見える)
-Styles.apply(kitModel, Styles.decode(savedStyleString))
+local kitId = Styles.kitOf(kitModel)                    -- KitId 属性 ("IronStorm" / "Sovereign")
+Styles.apply(kitModel, Styles.decode(savedStyleString, kitId))
 
--- 保存 (DataStore には文字列 1 つ)
-local text = Styles.encode(style)   -- 例 "orange/flames/orange/black/dark/black"
+-- 保存 (DataStore には文字列 1 つ。キットごとに別々に保存する)
+local text = Styles.encode(style, kitId)   -- 例 "orange/flames/orange/black/dark/black"、"amber/flame/gold/gold/traditional/coated"
+Styles.apply(kitModel, Styles.preset("sovereign", "Sovereign"))   -- プリセットを使う
 ```
 
-- 選ぶ画面（ショップや装備画面）では、`Styles.Presets`（おすすめ 8 種）と、各項目の一覧
-  （`Styles.Colors` / `Patterns` / `Hardware` / `Cymbals` / `Heads`）をそのまま並べられます。
+- 選ぶ画面（ショップや装備画面）では、`Styles.catalog(kitId)` の `Presets`（おすすめ 8 種）と、各項目の一覧
+  （`Colors` / `Patterns` / `Accents` / `Hardware` / `Cymbals` / `Heads`）をそのまま並べられます。
   各項目に日本語名（`name`）と英語名（`nameEn`）が入っています
-- クライアントから届いた選択は、サーバーで `Styles.normalize` を通してから使ってください（知らない値は既定値に置き換わります）
-- 模様ごとに販売する場合は、`Styles.Patterns` の `id` を商品として扱い、持っていない模様を選べないようにサーバーで確認します
-- 見た目のイメージは `preview/beatdrummer/styles_lineup.jpg` と、ユーザーに渡した 3D プレビューで確認できます
+- `encode` / `decode` / `normalize` / `preset` は、最後の引数に `kitId` を渡します（省くと IRON STORM 扱い）。
+  保存した文字列はキットごとに違うので、DataStore には `{ IronStorm = "...", Sovereign = "..." }` のようにキット別に保存してください
+- クライアントから届いた選択は、サーバーで `Styles.normalize(style, kitId)` を通してから使ってください（知らない値は既定値に置き換わります）
+- 模様ごとに販売する場合は、`Styles.catalog(kitId).Patterns` の `id` を商品として扱い、持っていない模様を選べないようにサーバーで確認します
+- 見た目のイメージは `preview/beatdrummer/styles_lineup.jpg`、`preview/sovereign/styles_lineup.jpg` と、ユーザーに渡した 3D プレビューで確認できます
 
 ### 10. 確認
 
 - プレイテストで、9 つのキー（HH・CY・SL・SR・BD・HT・LT・FT・RD）すべてで、対応するパーツが動くこと（オートプレイで全曲を通す）
 - プリセット 8 種を順に適用して、模様・ロゴ・金物・シンバルの色が変わること。再入場しても選んだ見た目が残ること
+- 両方のキットで同じ確認をすること。キットを入れ替えたとき、それぞれのキットで選んだ見た目と音に切り替わること
 - スマホのエミュレーター（デバイス設定）で、フレームレートが下がらないこと
 - キットを入れ替えても、カメラ・ノーツ表示・バンドのメンバーの位置がずれないこと
 - 買っていないプレイヤーは装備できないこと、買った後は再入場しても持っていること

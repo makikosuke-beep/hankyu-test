@@ -1,0 +1,818 @@
+{
+ "DefaultKit": "IronStorm",
+ "Kits": {
+  "IronStorm": {
+   "name": "IRON STORM",
+   "texturesDir": "styles",
+   "description": "メタル仕様。ツインペダル、カーブラック、ロゴ入りフロントヘッド",
+   "Colors": [
+    {
+     "id": "black",
+     "name": "ブラック",
+     "nameEn": "Black",
+     "color": [
+      18,
+      18,
+      22
+     ]
+    },
+    {
+     "id": "red",
+     "name": "ブラッドレッド",
+     "nameEn": "Blood Red",
+     "color": [
+      150,
+      10,
+      24
+     ]
+    },
+    {
+     "id": "blue",
+     "name": "コバルトブルー",
+     "nameEn": "Cobalt Blue",
+     "color": [
+      28,
+      78,
+      210
+     ]
+    },
+    {
+     "id": "green",
+     "name": "トキシックグリーン",
+     "nameEn": "Toxic Green",
+     "color": [
+      70,
+      190,
+      30
+     ]
+    },
+    {
+     "id": "purple",
+     "name": "パープル",
+     "nameEn": "Purple",
+     "color": [
+      100,
+      32,
+      160
+     ]
+    },
+    {
+     "id": "orange",
+     "name": "オレンジ",
+     "nameEn": "Orange",
+     "color": [
+      235,
+      100,
+      12
+     ]
+    },
+    {
+     "id": "pink",
+     "name": "ピンク",
+     "nameEn": "Pink",
+     "color": [
+      232,
+      64,
+      150
+     ]
+    },
+    {
+     "id": "gold",
+     "name": "ゴールド",
+     "nameEn": "Gold",
+     "color": [
+      205,
+      155,
+      45
+     ]
+    },
+    {
+     "id": "white",
+     "name": "ホワイト",
+     "nameEn": "White",
+     "color": [
+      232,
+      232,
+      228
+     ]
+    },
+    {
+     "id": "gunmetal",
+     "name": "ガンメタル",
+     "nameEn": "Gunmetal",
+     "color": [
+      72,
+      76,
+      84
+     ]
+    }
+   ],
+   "Accents": "Colors",
+   "Patterns": [
+    {
+     "id": "solid",
+     "name": "ソリッド",
+     "nameEn": "Solid",
+     "reflectance": 0.12,
+     "hoop": "color"
+    },
+    {
+     "id": "sparkle",
+     "name": "スパークル",
+     "nameEn": "Sparkle",
+     "reflectance": 0.18,
+     "hoop": "color"
+    },
+    {
+     "id": "flames",
+     "name": "ファイヤー",
+     "nameEn": "Flames",
+     "reflectance": 0.1,
+     "hoop": "black"
+    },
+    {
+     "id": "tiger",
+     "name": "タイガー",
+     "nameEn": "Tiger",
+     "reflectance": 0.1,
+     "hoop": "black"
+    },
+    {
+     "id": "carbon",
+     "name": "カーボン",
+     "nameEn": "Carbon",
+     "reflectance": 0.08,
+     "hoop": "black"
+    },
+    {
+     "id": "burst",
+     "name": "バースト",
+     "nameEn": "Burst",
+     "reflectance": 0.12,
+     "hoop": "black"
+    },
+    {
+     "id": "lightning",
+     "name": "ライトニング",
+     "nameEn": "Lightning",
+     "reflectance": 0.1,
+     "hoop": "black"
+    }
+   ],
+   "Hardware": [
+    {
+     "id": "chrome",
+     "name": "クローム",
+     "nameEn": "Chrome",
+     "color": [
+      214,
+      216,
+      222
+     ],
+     "reflectance": 0.4,
+     "material": "SmoothPlastic"
+    },
+    {
+     "id": "black",
+     "name": "ブラックニッケル",
+     "nameEn": "Black Nickel",
+     "color": [
+      40,
+      40,
+      46
+     ],
+     "reflectance": 0.22,
+     "material": "SmoothPlastic"
+    },
+    {
+     "id": "gold",
+     "name": "ゴールド",
+     "nameEn": "Gold",
+     "color": [
+      214,
+      170,
+      72
+     ],
+     "reflectance": 0.3,
+     "material": "SmoothPlastic"
+    }
+   ],
+   "Cymbals": [
+    {
+     "id": "brilliant",
+     "name": "ブリリアント",
+     "nameEn": "Brilliant",
+     "main": [
+      214,
+      160,
+      80
+     ],
+     "dark": [
+      150,
+      100,
+      48
+     ],
+     "reflectance": 0.1,
+     "material": "Metal"
+    },
+    {
+     "id": "dark",
+     "name": "ダーク",
+     "nameEn": "Dark",
+     "main": [
+      120,
+      84,
+      42
+     ],
+     "dark": [
+      90,
+      60,
+      30
+     ],
+     "reflectance": 0.04,
+     "material": "Metal"
+    },
+    {
+     "id": "black",
+     "name": "ブラック",
+     "nameEn": "Black",
+     "main": [
+      32,
+      30,
+      30
+     ],
+     "dark": [
+      26,
+      24,
+      24
+     ],
+     "reflectance": 0.18,
+     "material": "Metal"
+    }
+   ],
+   "Heads": [
+    {
+     "id": "coated",
+     "name": "ホワイト",
+     "nameEn": "Coated White",
+     "color": [
+      236,
+      234,
+      226
+     ]
+    },
+    {
+     "id": "black",
+     "name": "ブラック",
+     "nameEn": "Black",
+     "color": [
+      22,
+      22,
+      24
+     ]
+    }
+   ],
+   "Presets": [
+    {
+     "id": "iron_storm",
+     "name": "IRON STORM",
+     "style": {
+      "color": "black",
+      "pattern": "sparkle",
+      "accent": "red",
+      "hardware": "chrome",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "hellfire",
+     "name": "HELLFIRE",
+     "style": {
+      "color": "orange",
+      "pattern": "flames",
+      "accent": "orange",
+      "hardware": "black",
+      "cymbals": "dark",
+      "heads": "black"
+     }
+    },
+    {
+     "id": "blue_thunder",
+     "name": "BLUE THUNDER",
+     "style": {
+      "color": "blue",
+      "pattern": "lightning",
+      "accent": "blue",
+      "hardware": "chrome",
+      "cymbals": "brilliant",
+      "heads": "black"
+     }
+    },
+    {
+     "id": "toxic",
+     "name": "TOXIC",
+     "style": {
+      "color": "green",
+      "pattern": "carbon",
+      "accent": "green",
+      "hardware": "black",
+      "cymbals": "black",
+      "heads": "black"
+     }
+    },
+    {
+     "id": "royal_venom",
+     "name": "ROYAL VENOM",
+     "style": {
+      "color": "purple",
+      "pattern": "burst",
+      "accent": "gold",
+      "hardware": "gold",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "white_tiger",
+     "name": "WHITE TIGER",
+     "style": {
+      "color": "white",
+      "pattern": "tiger",
+      "accent": "red",
+      "hardware": "chrome",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "golden_god",
+     "name": "GOLDEN GOD",
+     "style": {
+      "color": "gold",
+      "pattern": "sparkle",
+      "accent": "white",
+      "hardware": "gold",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "ghost",
+     "name": "GHOST",
+     "style": {
+      "color": "gunmetal",
+      "pattern": "carbon",
+      "accent": "white",
+      "hardware": "black",
+      "cymbals": "dark",
+      "heads": "black"
+     }
+    }
+   ],
+   "Default": {
+    "color": "black",
+    "pattern": "sparkle",
+    "accent": "red",
+    "hardware": "chrome",
+    "cymbals": "brilliant",
+    "heads": "coated"
+   },
+   "FeltColor": null
+  },
+  "Sovereign": {
+   "name": "SOVEREIGN",
+   "texturesDir": "styles/sovereign",
+   "description": "スタンダードの最高峰。杢目の突板、ゴールド金物、スタンド配置、槌目シンバル",
+   "Colors": [
+    {
+     "id": "natural",
+     "name": "ナチュラル",
+     "nameEn": "Natural",
+     "color": [
+      214,
+      164,
+      100
+     ]
+    },
+    {
+     "id": "amber",
+     "name": "アンバー",
+     "nameEn": "Amber",
+     "color": [
+      178,
+      92,
+      26
+     ]
+    },
+    {
+     "id": "cherry",
+     "name": "チェリー",
+     "nameEn": "Cherry",
+     "color": [
+      150,
+      42,
+      30
+     ]
+    },
+    {
+     "id": "wine",
+     "name": "ワインレッド",
+     "nameEn": "Wine Red",
+     "color": [
+      112,
+      20,
+      40
+     ]
+    },
+    {
+     "id": "walnut",
+     "name": "ウォルナット",
+     "nameEn": "Walnut",
+     "color": [
+      104,
+      64,
+      38
+     ]
+    },
+    {
+     "id": "ebony",
+     "name": "エボニー",
+     "nameEn": "Ebony",
+     "color": [
+      34,
+      26,
+      22
+     ]
+    },
+    {
+     "id": "emerald",
+     "name": "エメラルド",
+     "nameEn": "Emerald",
+     "color": [
+      22,
+      112,
+      72
+     ]
+    },
+    {
+     "id": "sapphire",
+     "name": "サファイア",
+     "nameEn": "Sapphire",
+     "color": [
+      26,
+      66,
+      142
+     ]
+    },
+    {
+     "id": "smoke",
+     "name": "スモーク",
+     "nameEn": "Smoke",
+     "color": [
+      112,
+      110,
+      106
+     ]
+    },
+    {
+     "id": "ivory",
+     "name": "アイボリー",
+     "nameEn": "Ivory",
+     "color": [
+      238,
+      230,
+      212
+     ]
+    }
+   ],
+   "Accents": [
+    {
+     "id": "gold",
+     "name": "ゴールド",
+     "nameEn": "Gold",
+     "color": [
+      205,
+      165,
+      75
+     ]
+    },
+    {
+     "id": "silver",
+     "name": "シルバー",
+     "nameEn": "Silver",
+     "color": [
+      200,
+      202,
+      208
+     ]
+    },
+    {
+     "id": "ivory",
+     "name": "アイボリー",
+     "nameEn": "Ivory",
+     "color": [
+      232,
+      222,
+      198
+     ]
+    },
+    {
+     "id": "black",
+     "name": "ブラック",
+     "nameEn": "Black",
+     "color": [
+      24,
+      22,
+      22
+     ]
+    },
+    {
+     "id": "red",
+     "name": "レッド",
+     "nameEn": "Red",
+     "color": [
+      150,
+      22,
+      32
+     ]
+    }
+   ],
+   "Patterns": [
+    {
+     "id": "solid",
+     "name": "ピアノラッカー",
+     "nameEn": "Piano Lacquer",
+     "reflectance": 0.18,
+     "hoop": "color"
+    },
+    {
+     "id": "flame",
+     "name": "トラ杢メイプル",
+     "nameEn": "Flamed Maple",
+     "reflectance": 0.16,
+     "hoop": "darker"
+    },
+    {
+     "id": "birdseye",
+     "name": "バーズアイ",
+     "nameEn": "Birdseye Maple",
+     "reflectance": 0.16,
+     "hoop": "darker"
+    },
+    {
+     "id": "burl",
+     "name": "バール",
+     "nameEn": "Burl",
+     "reflectance": 0.16,
+     "hoop": "darker"
+    },
+    {
+     "id": "quilt",
+     "name": "キルト",
+     "nameEn": "Quilted Maple",
+     "reflectance": 0.16,
+     "hoop": "darker"
+    },
+    {
+     "id": "stripe",
+     "name": "マッカーサー",
+     "nameEn": "Macassar",
+     "reflectance": 0.16,
+     "hoop": "darker"
+    },
+    {
+     "id": "flameburst",
+     "name": "トラ杢バースト",
+     "nameEn": "Flamed Burst",
+     "reflectance": 0.16,
+     "hoop": "black"
+    }
+   ],
+   "Hardware": [
+    {
+     "id": "gold",
+     "name": "ゴールド",
+     "nameEn": "Gold",
+     "color": [
+      214,
+      170,
+      72
+     ],
+     "material": "SmoothPlastic",
+     "reflectance": 0.3
+    },
+    {
+     "id": "chrome",
+     "name": "クローム",
+     "nameEn": "Chrome",
+     "color": [
+      214,
+      216,
+      222
+     ],
+     "material": "SmoothPlastic",
+     "reflectance": 0.4
+    },
+    {
+     "id": "black",
+     "name": "ブラックニッケル",
+     "nameEn": "Black Nickel",
+     "color": [
+      40,
+      40,
+      46
+     ],
+     "material": "SmoothPlastic",
+     "reflectance": 0.22
+    }
+   ],
+   "Cymbals": [
+    {
+     "id": "traditional",
+     "name": "トラディショナル",
+     "nameEn": "Traditional",
+     "main": [
+      196,
+      146,
+      74
+     ],
+     "dark": [
+      140,
+      96,
+      46
+     ],
+     "material": "Metal",
+     "reflectance": 0.06
+    },
+    {
+     "id": "dark",
+     "name": "ダーク",
+     "nameEn": "Dark",
+     "main": [
+      112,
+      80,
+      42
+     ],
+     "dark": [
+      86,
+      58,
+      30
+     ],
+     "material": "Metal",
+     "reflectance": 0.03
+    },
+    {
+     "id": "brilliant",
+     "name": "ブリリアント",
+     "nameEn": "Brilliant",
+     "main": [
+      222,
+      172,
+      92
+     ],
+     "dark": [
+      160,
+      110,
+      52
+     ],
+     "material": "Metal",
+     "reflectance": 0.12
+    }
+   ],
+   "Heads": [
+    {
+     "id": "coated",
+     "name": "ホワイト",
+     "nameEn": "Coated White",
+     "color": [
+      236,
+      234,
+      226
+     ]
+    },
+    {
+     "id": "black",
+     "name": "ブラック",
+     "nameEn": "Black",
+     "color": [
+      22,
+      22,
+      24
+     ]
+    }
+   ],
+   "Presets": [
+    {
+     "id": "sovereign",
+     "name": "SOVEREIGN",
+     "style": {
+      "color": "amber",
+      "pattern": "flame",
+      "accent": "gold",
+      "hardware": "gold",
+      "cymbals": "traditional",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "noir",
+     "name": "NOIR",
+     "style": {
+      "color": "ebony",
+      "pattern": "solid",
+      "accent": "silver",
+      "hardware": "chrome",
+      "cymbals": "dark",
+      "heads": "black"
+     }
+    },
+    {
+     "id": "emerald_crown",
+     "name": "EMERALD CROWN",
+     "style": {
+      "color": "emerald",
+      "pattern": "birdseye",
+      "accent": "gold",
+      "hardware": "gold",
+      "cymbals": "traditional",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "vintage_burl",
+     "name": "VINTAGE BURL",
+     "style": {
+      "color": "walnut",
+      "pattern": "burl",
+      "accent": "ivory",
+      "hardware": "chrome",
+      "cymbals": "dark",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "sapphire_burst",
+     "name": "SAPPHIRE BURST",
+     "style": {
+      "color": "sapphire",
+      "pattern": "flameburst",
+      "accent": "silver",
+      "hardware": "chrome",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "bordeaux",
+     "name": "BORDEAUX",
+     "style": {
+      "color": "wine",
+      "pattern": "quilt",
+      "accent": "gold",
+      "hardware": "gold",
+      "cymbals": "traditional",
+      "heads": "coated"
+     }
+    },
+    {
+     "id": "macassar",
+     "name": "MACASSAR",
+     "style": {
+      "color": "natural",
+      "pattern": "stripe",
+      "accent": "black",
+      "hardware": "black",
+      "cymbals": "dark",
+      "heads": "black"
+     }
+    },
+    {
+     "id": "ivory_classic",
+     "name": "IVORY CLASSIC",
+     "style": {
+      "color": "ivory",
+      "pattern": "solid",
+      "accent": "gold",
+      "hardware": "gold",
+      "cymbals": "brilliant",
+      "heads": "coated"
+     }
+    }
+   ],
+   "Default": {
+    "color": "amber",
+    "pattern": "flame",
+    "accent": "gold",
+    "hardware": "gold",
+    "cymbals": "traditional",
+    "heads": "coated"
+   },
+   "FeltColor": [
+    38,
+    38,
+    40
+   ]
+  }
+ }
+}

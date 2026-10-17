@@ -33,6 +33,31 @@ Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構�
 模様は、透明な部分にシェルの色が見える画像なので、どの色とも組み合わせられます
 （スパークル、ファイヤー、タイガー、カーボン、バースト、ライトニング、ソリッド）。
 
+## SOVEREIGN（スタンダードの最高峰）
+
+![SOVEREIGN](preview/sovereign/bd_front.jpg)
+
+Beat Drummer 用の 2 台目のキットです。IRON STORM と同じ 9 キー・タム 3 つ（HT・LT・FT）の構成で、
+置き場所もそろえてあるので、そのまま入れ替えられます（70,464 ポリゴン / MeshPart 69 個）。
+
+- 杢目の突板（トラ杢メイプル、バーズアイ、バール、キルト、マッカーサーなど）とピアノラッカー仕上げ
+- ゴールド金物、ビーバーテイル型のラグ、ダイキャストフープ
+- ラックを使わず、シンバルはブームスタンド、タムはバスドラム上のタムホルダーに取り付け
+- シングルペダル、穴なしのエンブレム入りフロントヘッド、槌目（ハンマリング）のシンバル
+
+| ドラマー視点 | タムホルダー | 足元 |
+| --- | --- | --- |
+| ![ドラマー視点](preview/sovereign/bd_drummer.jpg) | ![タムホルダー](preview/sovereign/bd_holder.jpg) | ![足元](preview/sovereign/bd_pedals.jpg) |
+
+![プリセット](preview/sovereign/styles_lineup.jpg)
+
+- モデル: `export/sovereign/BeatDrummer_Sovereign.fbx`（OBJ もあり）
+- セットアップ: `export/sovereign/BeatDrummer_Sovereign_Setup.lua`（`KitId = "Sovereign"` の属性も付けます）
+- 杢目とロゴの画像: `export/styles/sovereign/`
+- 構成の設定: `generator/specs/sovereign_spec.json`
+- 色と模様の切り替えは IRON STORM と同じ `roblox/DrumKitStyles.lua` で、Model の `KitId` 属性からキットを見分けます。
+  選択肢は `generator/styles_catalog.json` にまとめてあり、`python make_styles_lua.py` で Lua を作り直せます
+
 ## 構成（ショーケース版）
 
 | 区分 | 内容 |
@@ -99,7 +124,7 @@ Beat Drummer の今のキットと同じ、タム 3 つ（HT・LT・FT）の構�
 cd generator
 pip install numpy scipy shapely trimesh mapbox_earcut pillow   # OBJ とロゴ
 pip install bpy                                                # FBX / GLB / レンダリング用（Blender モジュール）
-./build_all.sh            # すべて書き出し（RENDER=0 でレンダリングを省略）
+./build_all.sh            # すべて書き出し（3 キット分。RENDER=0 でレンダリングを省略）
 python drumkit.py --detail 0.7 --name MyKit --out ../export    # 細かさを変えた OBJ を作る
 ```
 
