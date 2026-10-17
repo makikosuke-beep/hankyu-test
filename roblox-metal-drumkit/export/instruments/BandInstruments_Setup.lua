@@ -27,9 +27,9 @@ local INSTRUMENTS = {
 	Skyline = {
 		kind = "Guitar", name = "スカイライン", nameEn = "SKYLINE", style = "ST タイプ",
 		primary = "Skyline_Body",
-		wear = Vector3.new(0.00139, 0.00082, -0.08036),
-		neck = Vector3.new(0.00235, 1.15037, 0.11964),
-		strum = Vector3.new(0.00235, -0.14423, 0.11964),
+		wear = Vector3.new(0.00137, 0.00153, -0.08036),
+		neck = Vector3.new(0.00233, 1.15104, 0.11964),
+		strum = Vector3.new(0.00233, -0.14356, 0.11964),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -133,9 +133,9 @@ local INSTRUMENTS = {
 	Velvet = {
 		kind = "Bass", name = "ヴェルヴェット", nameEn = "VELVET", style = "JB タイプ",
 		primary = "Velvet_Body",
-		wear = Vector3.new(-0.00046, 0.00076, -0.08036),
-		neck = Vector3.new(-0.00078, 1.48732, 0.12679),
-		strum = Vector3.new(-0.00078, -0.32215, 0.12679),
+		wear = Vector3.new(-0.00538, 0.00043, -0.08036),
+		neck = Vector3.new(-0.00906, 1.40285, 0.12679),
+		strum = Vector3.new(-0.00906, -0.40662, 0.12679),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -153,9 +153,9 @@ local INSTRUMENTS = {
 	Foundation = {
 		kind = "Bass", name = "ファウンデーション", nameEn = "FOUNDATION", style = "PB タイプ",
 		primary = "Foundation_Body",
-		wear = Vector3.new(0.00054, 0.00008, -0.08036),
-		neck = Vector3.new(0.00090, 1.49537, 0.12679),
-		strum = Vector3.new(0.00090, -0.31409, 0.12679),
+		wear = Vector3.new(-0.00011, 0.00136, -0.08036),
+		neck = Vector3.new(-0.00016, 1.42343, 0.12679),
+		strum = Vector3.new(-0.00016, -0.38604, 0.12679),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(62, 36, 26), Material = "Wood", Reflectance = 0.00 },
@@ -173,9 +173,9 @@ local INSTRUMENTS = {
 	Manta = {
 		kind = "Bass", name = "マンタ", nameEn = "MANTA", style = "SR タイプ",
 		primary = "Manta_Body",
-		wear = Vector3.new(0.00023, 0.00103, -0.08036),
-		neck = Vector3.new(0.00029, 1.56875, 0.12679),
-		strum = Vector3.new(0.00029, -0.24072, 0.12679),
+		wear = Vector3.new(0.00022, 0.00004, -0.08036),
+		neck = Vector3.new(0.00029, 1.57200, 0.12679),
+		strum = Vector3.new(0.00029, -0.23747, 0.12679),
 		palette = {
 			Neck = { Color = Color3.fromRGB(232, 196, 140), Material = "Wood", Reflectance = 0.05 },
 			Board = { Color = Color3.fromRGB(228, 190, 132), Material = "Wood", Reflectance = 0.00 },

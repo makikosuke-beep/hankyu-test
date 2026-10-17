@@ -2,7 +2,7 @@
  "parts": [
   {
    "name": "Skyline_Body",
-   "triangles": 2182
+   "triangles": 2174
   },
   {
    "name": "Skyline_Neck",
@@ -34,7 +34,7 @@
   },
   {
    "name": "Skyline_Guard",
-   "triangles": 655
+   "triangles": 654
   },
   {
    "name": "Skyline_Cover",
@@ -234,11 +234,11 @@
   },
   {
    "name": "Velvet_Body",
-   "triangles": 2222
+   "triangles": 2078
   },
   {
    "name": "Velvet_Neck",
-   "triangles": 968
+   "triangles": 950
   },
   {
    "name": "Velvet_Board",
@@ -258,7 +258,7 @@
   },
   {
    "name": "Velvet_Hardware",
-   "triangles": 2146
+   "triangles": 2104
   },
   {
    "name": "Velvet_Knob",
@@ -270,7 +270,7 @@
   },
   {
    "name": "Velvet_Guard",
-   "triangles": 649
+   "triangles": 647
   },
   {
    "name": "Velvet_Pickup",
@@ -278,11 +278,11 @@
   },
   {
    "name": "Foundation_Body",
-   "triangles": 2248
+   "triangles": 2152
   },
   {
    "name": "Foundation_Neck",
-   "triangles": 974
+   "triangles": 956
   },
   {
    "name": "Foundation_Board",
@@ -302,7 +302,7 @@
   },
   {
    "name": "Foundation_Hardware",
-   "triangles": 1728
+   "triangles": 1498
   },
   {
    "name": "Foundation_Knob",
@@ -314,7 +314,7 @@
   },
   {
    "name": "Foundation_Guard",
-   "triangles": 642
+   "triangles": 655
   },
   {
    "name": "Foundation_Pickup",
@@ -322,7 +322,7 @@
   },
   {
    "name": "Manta_Body",
-   "triangles": 2166
+   "triangles": 2146
   },
   {
    "name": "Manta_Neck",
@@ -358,7 +358,7 @@
   },
   {
    "name": "Manta_Guard",
-   "triangles": 656
+   "triangles": 654
   },
   {
    "name": "Manta_Pickup",
@@ -457,23 +457,23 @@
   "Skyline": {
    "primary": "Skyline_Body",
    "wear": [
-    0.00139,
-    0.00082,
+    0.00137,
+    0.00153,
     -0.08036
    ],
    "neck": [
-    0.00235,
-    1.15037,
+    0.00233,
+    1.15104,
     0.11964
    ],
    "strum": [
-    0.00235,
-    -0.14423,
+    0.00233,
+    -0.14356,
     0.11964
    ],
    "length_studs": 3.455,
    "kind": "Guitar",
-   "triangles": 8479,
+   "triangles": 8470,
    "parts": 11
   },
   "Prairie": {
@@ -567,67 +567,67 @@
   "Velvet": {
    "primary": "Velvet_Body",
    "wear": [
-    -0.00046,
-    0.00076,
+    -0.00538,
+    0.00043,
     -0.08036
    ],
    "neck": [
-    -0.00078,
-    1.48732,
+    -0.00906,
+    1.40285,
     0.12679
    ],
    "strum": [
-    -0.00078,
-    -0.32215,
+    -0.00906,
+    -0.40662,
     0.12679
    ],
-   "length_studs": 4.288,
+   "length_studs": 4.138,
    "kind": "Bass",
-   "triangles": 7737,
+   "triangles": 7531,
    "parts": 11
   },
   "Foundation": {
    "primary": "Foundation_Body",
    "wear": [
-    0.00054,
-    8e-05,
+    -0.00011,
+    0.00136,
     -0.08036
    ],
    "neck": [
-    0.0009,
-    1.49537,
+    -0.00016,
+    1.42343,
     0.12679
    ],
    "strum": [
-    0.0009,
-    -0.31409,
+    -0.00016,
+    -0.38604,
     0.12679
    ],
-   "length_studs": 4.273,
+   "length_studs": 4.148,
    "kind": "Bass",
-   "triangles": 7272,
+   "triangles": 6941,
    "parts": 11
   },
   "Manta": {
    "primary": "Manta_Body",
    "wear": [
-    0.00023,
-    0.00103,
+    0.00022,
+    4e-05,
     -0.08036
    ],
    "neck": [
     0.00029,
-    1.56875,
+    1.572,
     0.12679
    ],
    "strum": [
     0.00029,
-    -0.24072,
+    -0.23747,
     0.12679
    ],
    "length_studs": 4.126,
    "kind": "Bass",
-   "triangles": 7510,
+   "triangles": 7488,
    "parts": 11
   },
   "Tempest": {
